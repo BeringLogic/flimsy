@@ -1,4 +1,4 @@
-<html>
+<!DOCTYPE html>
 <head>
   <title>Flimsy</title>
   <link rel="stylesheet" href="style.css">
