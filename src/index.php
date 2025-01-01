@@ -34,21 +34,6 @@
     </div>
   </div>
 
-  <div class="block">
-    <h2>Block 2</h2>
-    <div class="items">
-      <div class="item">Item 1</div>
-      <div class="item">Item 2</div>
-      <div class="item">Item 3</div>
-      <div class="item">Item 4</div>
-      <div class="item">Item 5</div>
-      <div class="item">Item 6</div>
-      <div class="item">Item 7</div>
-      <div class="item">Item 8</div>
-      <div class="item">Item 9</div>
-    </div>
-  </div>
-
   <script type="text/javascript">
     function initData() {
       <?php if (!file_exists('/data/data.json')) {
@@ -57,14 +42,61 @@
           error_log("/data/data.json could not be created! Check permissions. Owner must be www-data.");
           return false;
         }
-        file_put_contents('/data/data.json', '{}');
+        file_put_contents('/data/data.json', '[]');
         return true;
       }?>
     }
+
     function readData() {
-      return <?php echo json_encode(file_get_contents('/data/data.json')); ?>;
+      return <?php echo file_get_contents('/data/data.json'); ?>;
     }
-  
+
+    function render(data) {
+      data.forEach(block => {
+        const blockEl = document.createElement('div');
+        blockEl.classList.add('block');
+
+        // h2 title
+        h2El = document.createElement('h2');
+        h2El.innerText = block.title;
+        blockEl.appendChild(h2El);
+
+        // div.items
+        const itemsEl = document.createElement('div');
+        itemsEl.classList.add('items');
+        block.items.forEach(item => {
+          const itemEl = document.createElement('div');
+          itemEl.classList.add('item');
+
+          // img
+          const itemImgEl = document.createElement('img');
+          itemImgEl.classList.add('icon');
+          itemImgEl.src = item.icon;
+          // div.details
+          const itemDetailsEl = document.createElement('div');
+          itemDetailsEl.classList.add('details');
+          // div.title
+          const itemTitleEl = document.createElement('div');
+          itemTitleEl.classList.add('title');
+          itemTitleEl.innerText = item.title;
+          // div.desc
+          const itemDescEl = document.createElement('div');
+          itemDescEl.classList.add('desc');
+          itemDescEl.innerText = item.desc;
+
+          itemDetailsEl.appendChild(itemTitleEl);
+          itemDetailsEl.appendChild(itemDescEl);
+          itemEl.appendChild(itemImgEl);
+          itemEl.appendChild(itemDetailsEl);
+
+          itemsEl.appendChild(itemEl);
+        });
+
+        blockEl.appendChild(itemsEl);
+        document.body.appendChild(blockEl);
+      })
+    }
+
     window.onload = () => {
       if (initData() === false) {
         alert("/data is not writable by the www-data user!");
@@ -72,6 +104,7 @@
       }
       const data = readData();
       console.log(data);
+      render(data);
     }
   </script>
 
