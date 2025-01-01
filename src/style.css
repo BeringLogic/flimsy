@@ -1,0 +1,60 @@
+
+body {
+  background-color: #0d1117;
+  color: lightgrey;
+}
+
+header {
+  margin: 50px;
+}
+
+div.weather {
+  float:right;
+  text-align: center;
+} 
+  div.weather div.temp {
+    margin-top: -20px;
+  }
+
+div.block {
+  margin: 50px; 
+}
+
+  div.block h2 {
+    font-size: xx-large;
+  }
+
+  div.block div.items {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-content: space-evenly;
+    gap: 10px;
+  }
+
+    div.item {
+      border: 3px solid darkgreen;
+      border-radius: 5px;
+      padding: 5px;
+      background-color: #151b23;
+    }
+
+    div.item img.icon {
+      display: inline-block;
+      width: 64px;
+      height: 64px;
+      padding: 5px;
+      vertical-align: -12px;
+    }
+
+    div.item div.details {
+      display: inline-block;
+    }
+
+    div.item div.title {
+      font-size: xx-large;
+    }
+
+    div.item div.desc {
+      font-size: large;
+    }
+

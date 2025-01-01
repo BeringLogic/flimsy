@@ -1,44 +1,7 @@
 <html>
 <head>
   <title>Flimsy</title>
-  <style>
-    body {
-      background-color: #0d1117;
-      color: #fff;
-    }
-    div.block {
-      margin: 50px; 
-    }
-      div.block h2 {
-      }
-      div.block div.items {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        justify-content: space-evenly;
-        gap: 10px;
-      }
-        div.item {
-          border: 3px solid darkgreen;
-          border-radius: 5px;
-          padding: 5px;
-        }
-        div.item img.icon {
-          display: inline-block;
-          width: 64px;
-          height: 64px;
-          padding: 5px;
-          vertical-align: -12px;
-        }
-          div.item div.details {
-          display: inline-block;
-        }
-        div.item div.title {
-          font-size: xx-large;
-        }
-        div.item div.desc {
-          font-size: large;
-        }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -80,8 +43,6 @@
     </div>
   </div>
 
-
-</div>
-
 </body>
+
 </html>
