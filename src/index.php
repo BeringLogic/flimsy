@@ -34,6 +34,8 @@
     </div>
   </div>
 
+  <div id="addBlock" class="block">➕</div>
+
   <script type="text/javascript">
     function initData() {
       <?php if (!file_exists('/data/data.json')) {
