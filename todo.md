@@ -5,4 +5,5 @@
 * [ ] Add block GUI
 * [ ] Add item GUI
 * [ ] Weather Thingy
+* [ ] Docker integration
 
