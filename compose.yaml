@@ -1,9 +1,14 @@
 services:
-  flimsy:
+  app:
     build:
       context: .
     ports:
       - 8888:80
     volumes:
-      - ./src:/var/www/html
+      - ./data:/data
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /var/www/html
 
