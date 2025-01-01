@@ -5,7 +5,13 @@
 </head>
 
 <body>
-  <h1>Flimsy Home Page Dev</h1>
+  <header>
+    <div class="weather">
+      <img src="https://openweathermap.org/img/wn/10d@2x.png">
+      <div class="temp">5°C</div>
+    </div>
+    <h1>Flimsy Home Page Dev</h1>
+  </header>
 
   <div class="block">
     <h2>Block 1</h2>
