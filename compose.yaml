@@ -1,0 +1,9 @@
+services:
+  flimsy:
+    build:
+      context: .
+    ports:
+      - 8888:80
+    volumes:
+      - ./src:/var/www/html
+
