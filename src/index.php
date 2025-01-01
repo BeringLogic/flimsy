@@ -49,6 +49,31 @@
     </div>
   </div>
 
-</body>
+  <script type="text/javascript">
+    function initData() {
+      <?php if (!file_exists('/data/data.json')) {
+        error_log("Creating /data/data.json...");
+        if (!@touch('/data/data.json')) {
+          error_log("/data/data.json could not be created! Check permissions. Owner must be www-data.");
+          return false;
+        }
+        file_put_contents('/data/data.json', '{}');
+        return true;
+      }?>
+    }
+    function readData() {
+      return <?php echo json_encode(file_get_contents('/data/data.json')); ?>;
+    }
+  
+    window.onload = () => {
+      if (initData() === false) {
+        alert("/data is not writable by the www-data user!");
+        return;
+      }
+      const data = readData();
+      console.log(data);
+    }
+  </script>
 
+</body>
 </html>
