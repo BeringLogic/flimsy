@@ -2,6 +2,7 @@
 <head>
   <title>Flimsy</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
   <script
 			  src="https://code.jquery.com/jquery-3.7.1.min.js"
 			  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
@@ -42,14 +43,15 @@
     </div>
   </div>
 
-  <div id="addList" class="list">➕</div>
+  <button id="addList" class="list">➕</button>
 
   <div id="addListDialog" class="dialog">
-    <h2>Add List</h2>
-    <div class="dialog-field">
-      <label for="title">Title</label>
-      <input type="text" id="title">
-    </div>
+    <form action="addList.php" method="post">
+      <div class="dialog-field">
+        <label for="listTitle">Title</label>
+        <input id="listTitle" type="text" name="title" required>
+      </div>
+    </form>
   </div>
 
   <script type="text/javascript">
@@ -100,6 +102,26 @@
       const data = readData();
       console.log(data);
       render(data);
+
+      $('#addListDialog').dialog({
+        title: 'Add List',
+        autoOpen: false,
+        modal: true,
+        buttons: {
+          "Add": () => {
+            if ($('#addListDialog :invalid').length > 0) {
+              return;
+            }
+            $('#addListDialog form').submit();
+          },
+          "Cancel": () => {
+            $('#addListDialog').dialog('close');
+          }
+        }
+      });
+      $('#addList').click(() => {
+        $('#addListDialog').dialog('open');
+      });
     }
   </script>
 
