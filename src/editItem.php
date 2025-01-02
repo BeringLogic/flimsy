@@ -3,14 +3,14 @@ require('db.php');
 
 $db = new DB();
 $listId = $_GET['listId'];
-
-$itemId = $db->getNewId();
+$itemId = $_GET['itemId'];
 $title = $_POST['title'];
 $href = $_POST['href'];
 $icon = $_POST['icon'];
 
-if ($db->AddItem($listId, $itemId, $title, $href, $icon) === false) {
-  error_log("ERROR: Could not add Item!");
+if ($db->EditItem($listId, $itemId, $title, $href, $icon) === false) {
+  error_log("ERROR: Could not edit Item!");
 }
 
 header("Location: /index.php");
+

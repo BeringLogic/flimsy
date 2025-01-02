@@ -55,7 +55,7 @@
     </form>
   </div>
 
-  <div id="addItemDialog" class="dialog">
+  <div id="editItemDialog" class="dialog">
     <form action="addItem.php" method="post">
       <div class="dialog-field">
         <label for="itemTitle">Title</label>
@@ -81,7 +81,7 @@
 
         b.items.forEach(i => {
           var item = $('<div class="item"></div>');
-          item.append($('<button id="removeItem_' + b.id + '" class="removeItem">❌</button><button id="editItem_' + b.id + '" class="editItem">✍️</button>'));
+          item.append($('<button id="removeItem_' + b.id + '" class="removeItem">❌</button><button id="editItem_' + b.id + '_' + i.id + '" class="editItem">✍️</button>'));
           item.append($('<img class="icon" src="' + i.icon + '" />'));
 
           var details = $('<div class="details"></div>');
@@ -105,21 +105,37 @@
         success: (data) => {
           render(data);
 
-          $('div.addItem button').click((e) => {
-            const id = e.target.id.replace('addItem_', '');
-            $('#addItemDialog form').attr('action', 'addItem.php?id=' + id);
-            $('#addItemDialog').dialog('open');
-          });
-
           $('button.editList').click((e) => {
             const id = e.target.id.replace('editList_', '');
             $('#editListDialog form').attr('action', 'editList.php?id=' + id);
+            $('#editListDialog form #listTitle').val(data.find(l => l.id == id).title);
             $('#editListDialog').dialog('open');
           });
           $('#addList').click(() => {
             $('#editListDialog form').attr('action', 'addList.php');
+            $('#editListDialog form #listTitle').val('');
             $('#editListDialog').dialog('open');
           });
+
+          $('button.editItem').click((e) => {
+            const idParts = e.target.id.split('_');
+            const listId = idParts[1];
+            const itemId = idParts[2];
+            $('#editItemDialog form').attr('action', 'editItem.php?listId=' + listId + '&itemId=' + itemId);
+            $('#editItemDialog form #itemTitle').val(data.find(l => l.id == listId).items.find(i => i.id == itemId).title);
+            $('#editItemDialog form #itemHref').val(data.find(l => l.id == listId).items.find(i => i.id == itemId).href);
+            $('#editItemDialog form #itemIcon').val(data.find(l => l.id == listId).items.find(i => i.id == itemId).icon);
+            $('#editItemDialog').dialog('open');
+          });
+          $('div.addItem button').click((e) => {
+            const listId = e.target.id.replace('addItem_', '');
+            $('#editItemDialog form').attr('action', 'addItem.php?listId=' + listId);
+            $('#editItemDialog form #itemTitle').val('');
+            $('#editItemDialog form #itemHref').val('');
+            $('#editItemDialog form #itemIcon').val('');
+            $('#editItemDialog').dialog('open');
+          });
+
         },
         error: (error, status, xhr) => {
           alert("An error occured while loading the data! Make sure /data is writable by the www-data user (UID 33, GID 33).");
@@ -147,19 +163,19 @@
         }
       });
 
-      $('#addItemDialog').dialog({
-        title: 'Add Item',
+      $('#editItemDialog').dialog({
+        title: 'Edit Item',
         autoOpen: false,
         modal: true,
         buttons: {
-          "Add": () => {
-            if ($('#addItemDialog :invalid').length > 0) {
+          "Save": () => {
+            if ($('#editItemDialog :invalid').length > 0) {
               return;
             }
-            $('#addItemDialog form').submit();
+            $('#editItemDialog form').submit();
           },
           "Cancel": () => {
-            $('#addItemDialog').dialog('close');
+            $('#editItemDialog').dialog('close');
           }
         }
       });

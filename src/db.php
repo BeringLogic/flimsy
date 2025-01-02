@@ -60,7 +60,7 @@ class DB {
       return false;
     }
   
-    $listIndex = $this->getListIndex($data, $id);
+    $listIndex = $this->getIndex($data, $id);
     if ($listIndex === null) {
       error_log("ERROR: List with id $id not found");
       return false;
@@ -71,14 +71,14 @@ class DB {
     return $this->saveData($data);
   }
 
-  public function SaveItem($listId, $itemId, $title, $href, $icon) {
+  public function AddItem($listId, $itemId, $title, $href, $icon) {
     $data = $this->loadData();
     if ($data === null) {
       error_log("ERROR: Could not load data");
       return false;
     }
 
-    $listIndex = $this->getListIndex($data, $listId);
+    $listIndex = $this->getIndex($data, $listId);
     if ($listIndex === null) {
       error_log("ERROR: List with id $listId not found");
       return false;
@@ -89,12 +89,38 @@ class DB {
     return $this->saveData($data);
   }
 
+  public function EditItem($listId, $itemId, $title, $href, $icon) {
+    $data = $this->loadData();
+    if ($data === null) {
+      error_log("ERROR: Could not load data");
+      return false;
+    }
+
+    $listIndex = $this->getIndex($data, $listId);
+    if ($listIndex === null) {
+      error_log("ERROR: List with id $listId not found");
+      return false;
+    }
+
+    $itemIndex = $this->getIndex($data[$listIndex]['items'], $itemId);
+    if ($itemIndex === null) {
+      error_log("ERROR: Item with id $itemId not found");
+      return false;
+    }
+
+    $data[$listIndex]['items'][$itemIndex]['title'] = $title;
+    $data[$listIndex]['items'][$itemIndex]['href'] = $href;
+    $data[$listIndex]['items'][$itemIndex]['icon'] = $icon;
+
+    return $this->saveData($data);
+  }
+
   public function getNewId() {
     return bin2hex(random_bytes(32));
   }
 
 
-  private function getListIndex($data, $id) {
+  private function getIndex($data, $id) {
     foreach ($data as $index=>$item) {
       if ($item['id'] == $id) {
         return $index;

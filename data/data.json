@@ -26,6 +26,12 @@
                 "title": "pi-hole",
                 "href": "http:\/\/pihole:8080",
                 "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/pi-hole.png"
+            },
+            {
+                "id": "f02e5abf3a6d8c750d5cbbabeede2e7bc5d32ce542ef64e8ea59e64e22025392",
+                "title": "Test",
+                "href": "http:\/\/example3.com",
+                "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/vscode.png"
             }
         ]
     },
@@ -35,14 +41,26 @@
         "items": [
             {
                 "id": "3fce18d7e642784c7266af9c9ddb147c6008e51a05f8fa6bacbd5f19f740a07d",
-                "title": "Portainer",
+                "title": "Portainer 1",
                 "href": "http:\/\/example.com",
                 "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/portainer.png"
             },
             {
                 "id": "ce614437ab2878f50a929c4a37ef10e7fb07b978476709a8b7ba835cd7ca2292",
-                "title": "Portainer",
+                "title": "Portainer 2",
                 "href": "http:\/\/example2.com",
+                "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/portainer.png"
+            },
+            {
+                "id": "ec643309485d3e5da5f7fbd753f76609f5af18151bc1abf58af63f22b8d54059",
+                "title": "Portainer 3",
+                "href": "http:\/\/example3.com",
+                "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/portainer.png"
+            },
+            {
+                "id": "48e08da7f3778447e4b2e3578aa3161b0ecfca2523e8d4b3fd272c73eeb6a5bf",
+                "title": "Portainer 4",
+                "href": "http:\/\/example4.com",
                 "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/portainer.png"
             }
         ]
@@ -59,7 +77,12 @@
     },
     {
         "id": "d98e99308fae9d44c86a7c9a51d43ed033c9abb7b3917dd9697c53efc0e4e0d4",
-        "title": "Testing new AddList()",
+        "title": "Testing new EditList()",
+        "items": []
+    },
+    {
+        "id": "d46605925db5b07cfb513e95271f76895be29bf8116dbdedeaed0ba88b8be61c",
+        "title": "Final tests before commit",
         "items": []
     }
 ]

@@ -5,6 +5,7 @@
 * [x] Add list GUI
 * [x] Add item GUI
 * [ ] Preserve icons aspect ratio
+* [ ] Download icons and use locally
 * [ ] Make items clickable
 * [ ] auth to edit
 * [ ] Find the proper way to deal with /data
@@ -19,4 +20,4 @@
 * [ ] Find the proper way to deal with Dev and Production
 * [ ] Docker integration
 * [ ] Color in errors in Docker logs?
-
+* [ ] Rename b(lock) to l(ist) in index.php
