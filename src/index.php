@@ -2,6 +2,14 @@
 <head>
   <title>Flimsy</title>
   <link rel="stylesheet" href="style.css">
+  <script
+			  src="https://code.jquery.com/jquery-3.7.1.min.js"
+			  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+			  crossorigin="anonymous"></script>
+  <script
+			  src="https://code.jquery.com/ui/1.14.1/jquery-ui.min.js"
+			  integrity="sha256-AlTido85uXPlSyyaZNsjJXeCs07eSv3r43kyCVc8ChI="
+			  crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -54,49 +62,26 @@
     }
 
     function render(data) {
-      data.forEach(block => {
-        const blockEl = document.createElement('div');
-        blockEl.classList.add('block');
+      data.forEach(b => {
+        var block = $('<div class="block"></div>');
+        block.append($('<h2>' + b.title + '</h2>'));
+        items = $('<div class="items"></div>');
 
-        // h2 title
-        h2El = document.createElement('h2');
-        h2El.innerText = block.title;
-        blockEl.appendChild(h2El);
+        b.items.forEach(i => {
+          var item = $('<div class="item"></div>');
+          item.append($('<img class="icon" src="' + i.icon + '" />'));
 
-        // div.items
-        const itemsEl = document.createElement('div');
-        itemsEl.classList.add('items');
-        block.items.forEach(item => {
-          const itemEl = document.createElement('div');
-          itemEl.classList.add('item');
+          var details = $('<div class="details"></div>');
+          details.append($('<div class="title">' + i.title + '</div>'));
+          details.append($('<div class="desc">' + i.desc + '</div>'));
 
-          // img
-          const itemImgEl = document.createElement('img');
-          itemImgEl.classList.add('icon');
-          itemImgEl.src = item.icon;
-          // div.details
-          const itemDetailsEl = document.createElement('div');
-          itemDetailsEl.classList.add('details');
-          // div.title
-          const itemTitleEl = document.createElement('div');
-          itemTitleEl.classList.add('title');
-          itemTitleEl.innerText = item.title;
-          // div.desc
-          const itemDescEl = document.createElement('div');
-          itemDescEl.classList.add('desc');
-          itemDescEl.innerText = item.desc;
-
-          itemDetailsEl.appendChild(itemTitleEl);
-          itemDetailsEl.appendChild(itemDescEl);
-          itemEl.appendChild(itemImgEl);
-          itemEl.appendChild(itemDetailsEl);
-
-          itemsEl.appendChild(itemEl);
+          item.append(details);
+          items.append(item);
         });
 
-        blockEl.appendChild(itemsEl);
-        document.body.appendChild(blockEl);
-      })
+        block.append(items);
+        block.insertBefore($('#addBlock'));
+      });
     }
 
     window.onload = () => {
