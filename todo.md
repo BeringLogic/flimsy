@@ -12,7 +12,7 @@
 * [ ] SQLite
 * [x] Edit list
 * [ ] Edit item
-* [ ] Delete list
+* [x] Delete list
 * [ ] Delete item
 * [ ] Reorder list
 * [ ] Reorder items

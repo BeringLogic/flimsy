@@ -66,6 +66,11 @@
         ]
     },
     {
+        "id": "c91c9a1222263ea957a27414de45c2024b63c7c9752b335f6505b0746f0a1c0c",
+        "title": "Make sure add list still works",
+        "items": []
+    },
+    {
         "id": "d98e99308fae9d44c86a7c9a51d43ed033c9abb7b3917dd9697c53efc0e4e0d4",
         "title": "Testing new EditList()",
         "items": []

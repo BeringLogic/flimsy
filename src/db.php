@@ -71,6 +71,24 @@ class DB {
     return $this->saveData($data);
   }
 
+  public function RemoveList($id) {
+    $data = $this->loadData();
+    if ($data === null) {
+      error_log("ERROR: Could not load data");
+      return false;
+    }
+
+    $listIndex = $this->getIndex($data, $id);
+    if ($listIndex === null) {
+      error_log("ERROR: List with id $id not found");
+      return false;
+    }
+
+    unset($data[$listIndex]);
+
+    return $this->saveData(array_values($data));
+  }
+
   public function AddItem($listId, $itemId, $title, $href, $icon) {
     $data = $this->loadData();
     if ($data === null) {

@@ -76,7 +76,7 @@
     function render(data) {
       data.forEach(b => {
         var list = $('<div class="list"></div>');
-        list.append($('<h2>' + b.title + ' <button id="editList_' + b.id + '" class="editList">✍️</button><button id="removeList_' + b.id + '" class="removeClass">❌</button></h2>'));
+        list.append($('<h2>' + b.title + ' <button id="editList_' + b.id + '" class="editList">✍️</button><button id="removeList_' + b.id + '" class="removeList">❌</button></h2>'));
         items = $('<div class="items"></div>');
 
         b.items.forEach(i => {
@@ -115,6 +115,13 @@
             $('#editListDialog form').attr('action', 'addList.php');
             $('#editListDialog form #listTitle').val('');
             $('#editListDialog').dialog('open');
+          });
+          $('button.removeList').click((e) => {
+            const id = e.target.id.replace('removeList_', '');
+            if (!confirm('Are you sure you want to remove this list, and all its items?')) {
+              return;
+            }
+            location.href = 'removeList.php?id=' + id;
           });
 
           $('button.editItem').click((e) => {
