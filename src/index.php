@@ -73,22 +73,6 @@
   </div>
 
   <script type="text/javascript">
-    function initData() {
-      <?php if (!file_exists('/data/data.json')) {
-        error_log("Creating /data/data.json...");
-        if (!@touch('/data/data.json')) {
-          error_log("/data/data.json could not be created! Check permissions. Owner must be www-data.");
-          return false;
-        }
-        file_put_contents('/data/data.json', '[]');
-        return true;
-      }?>
-    }
-
-    function readData() {
-      return <?php echo rtrim(file_get_contents("/data/data.json")); ?>;
-    }
-
     function render(data) {
       data.forEach(b => {
         var list = $('<div class="list"></div>');
@@ -115,11 +99,6 @@
     }
 
     window.onload = () => {
-      if (initData() === false) {
-        alert("/data is not writable by the www-data user!");
-        return;
-      }
-
       $.ajax({
         url: 'getAllData.php',
         success: (data) => {
@@ -136,7 +115,7 @@
           });
         },
         error: (error, status, xhr) => {
-          alert("An error occured while loading the data!");
+          alert("An error occured while loading the data! Make sure /data is writable by the www-data user (UID 33, GID 33).");
           console.log(error);
           console.log(status);
           console.log(xhr);
