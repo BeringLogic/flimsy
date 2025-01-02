@@ -6,17 +6,23 @@
             {
                 "id": 1,
                 "title": "Item 1",
-                "href": "https:\/\/item1.example.com:8080",
-                "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/dockge-light.png"
+                "href": "http:\/\/example.com",
+                "icon": "http:\/\/via.placeholder.com\/64x64"
             },
             {
-                "id": "b63adeb50a772a49cb909f6f27d91705de6c6c6fb75ce3292402ab62c0bba392",
+                "id": 2,
+                "title": "Item 2",
+                "href": "http:\/\/example.com",
+                "icon": "http:\/\/via.placeholder.com\/48x48"
+            },
+            {
+                "id": "5709ed05b872404e7cb536f5384e053c0588f37fd7b4686b8c603ffc607bcc29",
                 "title": "Portainer",
-                "href": "https:\/\/192.160.0.3:9443",
+                "href": "http:\/\/example.com",
                 "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/portainer.png"
             },
             {
-                "id": "12f466432137a111bf1cc603177ec40a351766598c7f3f58f23a14b3497596c9",
+                "id": "8e66ce4a2e0905ee52b8a90345e277f4f904750f97c2bd183a851e22303ed0bb",
                 "title": "pi-hole",
                 "href": "http:\/\/pihole:8080",
                 "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/pi-hole.png"
@@ -24,15 +30,20 @@
         ]
     },
     {
-        "id": 2,
-        "title": "Test",
+        "id": "eb3791c1fd4ee5d5e20628613196faac16f464a282e0d90497d74e98c771fea2",
+        "title": "Make sure add list still works",
         "items": [
             {
-                "id": "8ea21a4c54228b9d82d68e92977242622db56ff3a5bb0eabdd17401fab3611b5",
-                "title": "New Item",
-                "href": "https:\/\/example.com",
-                "icon": "http:\/\/via.placeholder.com\/64.png"
+                "id": "3fce18d7e642784c7266af9c9ddb147c6008e51a05f8fa6bacbd5f19f740a07d",
+                "title": "Portainer",
+                "href": "http:\/\/example.com",
+                "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/portainer.png"
             }
         ]
     },
+    {
+        "id": "7a82874543289cff53252de0355d5fcd7dcf8ac6c18e929d8df36afcfb655d1c",
+        "title": "Make sure add list still works",
+        "items": []
+    }
 ]

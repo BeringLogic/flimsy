@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "title": "List 2",
+    "items": [
+      {
+        "id": 1,
+        "title": "Item 1",
+        "href": "http://example.com",
+        "icon": "http://via.placeholder.com/64x64"
+      },
+      {
+        "id": 2,
+        "title": "Item 2",
+        "href": "http://example.com",
+        "icon": "http://via.placeholder.com/48x48"
+      }
+    ]
+  }
+]
