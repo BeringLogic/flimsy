@@ -21,8 +21,8 @@
     <h1>Flimsy Home Page Dev</h1>
   </header>
 
-  <div class="block">
-    <h2>Block 1</h2>
+  <div class="list">
+    <h2>List 1</h2>
     <div class="items">
       <div class="item">
         <img class="icon" src="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/dockge-light.png">
@@ -42,7 +42,15 @@
     </div>
   </div>
 
-  <div id="addBlock" class="block">➕</div>
+  <div id="addList" class="list">➕</div>
+
+  <div id="addListDialog" class="dialog">
+    <h2>Add List</h2>
+    <div class="dialog-field">
+      <label for="title">Title</label>
+      <input type="text" id="title">
+    </div>
+  </div>
 
   <script type="text/javascript">
     function initData() {
@@ -63,8 +71,8 @@
 
     function render(data) {
       data.forEach(b => {
-        var block = $('<div class="block"></div>');
-        block.append($('<h2>' + b.title + '</h2>'));
+        var list = $('<div class="list"></div>');
+        list.append($('<h2>' + b.title + '</h2>'));
         items = $('<div class="items"></div>');
 
         b.items.forEach(i => {
@@ -79,8 +87,8 @@
           items.append(item);
         });
 
-        block.append(items);
-        block.insertBefore($('#addBlock'));
+        list.append(items);
+        list.insertBefore($('#addList'));
       });
     }
 

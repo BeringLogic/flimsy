@@ -16,15 +16,15 @@ div.weather {
     margin-top: -20px;
   }
 
-div.block {
+div.list {
   margin: 50px; 
 }
 
-  div.block h2 {
+  div.list h2 {
     font-size: xx-large;
   }
 
-  div.block div.items {
+  div.list div.items {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     justify-content: space-evenly;
@@ -58,3 +58,6 @@ div.block {
       font-size: large;
     }
 
+div.dialog {
+  display: none;
+}
