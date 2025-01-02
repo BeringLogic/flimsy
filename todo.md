@@ -4,6 +4,8 @@
 * [x] Render data.json
 * [x] Add list GUI
 * [x] Add item GUI
+* [ ] Preserve icons aspect ratio
+* [ ] Make items clickable
 * [ ] Toggle buttons
 * [ ] Edit list
 * [ ] Edit item
