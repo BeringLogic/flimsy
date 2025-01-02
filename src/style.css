@@ -9,6 +9,7 @@ h1 {
   margin-top: 0;
 }
 
+
 div.weather {
   float:right;
   text-align: center;
@@ -16,6 +17,7 @@ div.weather {
   div.weather div.temp {
     margin-top: -20px;
   }
+
 
 div.list h2 {
   font-size: xx-large;
@@ -55,17 +57,28 @@ div.list div.items {
     font-size: large;
   }
 
+div.addItem {
+  align-content: center;
+}
+
 #addList {
   margin-top: 26px;
 }
+
 
 div.dialog {
   display: none;
 }
 
-div.dialog div.dialog-field {
-  margin-top: 10px;
-}
+  div.dialog div.dialog-field {
+    margin-top: 10px;
+  }
+  div.dialog div.dialog-field label {
+    display: block;
+  }
+  div.dialog div.dialog-field input {
+    width: 100%;
+  }
 
 input:invalid {
   box-shadow: 0 0 5px 1px red;

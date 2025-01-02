@@ -23,7 +23,7 @@
   </header>
 
   <div class="list">
-    <h2>List 1</h2>
+    <h2>List 1 </h2>
     <div class="items">
       <div class="item">
         <img class="icon" src="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/dockge-light.png">
@@ -40,16 +40,34 @@
       <div class="item">Item 7</div>
       <div class="item">Item 8</div>
       <div class="item">Item 9</div>
+      <div class="addItem"><button id="addItem_1">➕ Add Item</button></div>
     </div>
   </div>
 
-  <button id="addList" class="list">➕</button>
+  <button id="addList">➕ Add List</button>
 
   <div id="addListDialog" class="dialog">
     <form action="addList.php" method="post">
       <div class="dialog-field">
         <label for="listTitle">Title</label>
         <input id="listTitle" type="text" name="title" required>
+      </div>
+    </form>
+  </div>
+
+  <div id="addItemDialog" class="dialog">
+    <form action="addItem.php" method="post">
+      <div class="dialog-field">
+        <label for="itemTitle">Title</label>
+        <input id="itemTitle" type="text" name="title" required>
+      </div>
+      <div class="dialog-field">
+        <label for="itemDesc">Description</label>
+        <input id="itemDesc" type="text" name="desc" required>
+      </div>
+      <div class="dialog-field">
+        <label for="itemIcon">Icon</label>
+        <input id="itemIcon" type="text" name="icon" required>
       </div>
     </form>
   </div>
@@ -89,6 +107,8 @@
           items.append(item);
         });
 
+        items.append($('<div class="addItem"><button id="addItem_' + b.id + '">➕ Add Item</button></div>'));
+
         list.append(items);
         list.insertBefore($('#addList'));
       });
@@ -121,6 +141,28 @@
       });
       $('#addList').click(() => {
         $('#addListDialog').dialog('open');
+      });
+
+      $('#addItemDialog').dialog({
+        title: 'Add Item',
+        autoOpen: false,
+        modal: true,
+        buttons: {
+          "Add": () => {
+            if ($('#addItemDialog :invalid').length > 0) {
+              return;
+            }
+            $('#addItemDialog form').submit();
+          },
+          "Cancel": () => {
+            $('#addItemDialog').dialog('close');
+          }
+        }
+      });
+      $('div.addItem button').click((e) => {
+        const id = e.target.id.replace('addItem_', '');
+        $('#addItemDialog form').attr('action', 'addItem.php?id=' + id);
+        $('#addItemDialog').dialog('open');
       });
     }
   </script>

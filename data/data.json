@@ -1,1 +1,32 @@
-[{"id":1,"title":"Block 2","items":[{"title":"Item 1","desc":"https:\/\/item1.example.com:8080","icon":"https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/dockge-light.png"}]},{"id":2,"title":"Test","items":[]}]
+[
+    {
+        "id": 1,
+        "title": "List 2",
+        "items": [
+            {
+                "id": 1,
+                "title": "Item 1",
+                "desc": "https:\/\/item1.example.com:8080",
+                "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/dockge-light.png"
+            },
+            {
+                "id": "b63adeb50a772a49cb909f6f27d91705de6c6c6fb75ce3292402ab62c0bba392",
+                "title": "Portainer",
+                "desc": "https:\/\/192.160.0.3:9443",
+                "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/portainer.png"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Test",
+        "items": [
+            {
+                "id": "8ea21a4c54228b9d82d68e92977242622db56ff3a5bb0eabdd17401fab3611b5",
+                "title": "New Item",
+                "desc": "Desc",
+                "icon": "http:\/\/via.placeholder.com\/64.png"
+            }
+        ]
+    }
+]
