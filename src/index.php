@@ -29,7 +29,7 @@
         <img class="icon" src="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/dockge-light.png">
         <div class="details">
           <div class="title">Item 1</div>
-          <div class="desc">https://item1.example.com:8080</div>
+          <div class="href">https://item1.example.com:8080</div>
         </div>
       </div>
       <div class="item">Item 2</div>
@@ -62,8 +62,8 @@
         <input id="itemTitle" type="text" name="title" required>
       </div>
       <div class="dialog-field">
-        <label for="itemDesc">Description</label>
-        <input id="itemDesc" type="text" name="desc" required>
+        <label for="itemHref">URL</label>
+        <input id="itemHref" type="text" name="href" required>
       </div>
       <div class="dialog-field">
         <label for="itemIcon">Icon</label>
@@ -101,7 +101,7 @@
 
           var details = $('<div class="details"></div>');
           details.append($('<div class="title">' + i.title + '</div>'));
-          details.append($('<div class="desc">' + i.desc + '</div>'));
+          details.append($('<div class="href">' + i.href + '</div>'));
 
           item.append(details);
           items.append(item);

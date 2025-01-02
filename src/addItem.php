@@ -2,7 +2,7 @@
 
 $id = $_GET['id'];
 $title = $_POST['title'];
-$desc = $_POST['desc'];
+$href = $_POST['href'];
 $icon = $_POST['icon'];
 
 $newId = bin2hex(random_bytes(32));
@@ -23,7 +23,7 @@ if (file_exists("/data/data.json")) {
     error_log("List with id $id not found");
   }
   else {
-    $data[$listIndex]['items'][] = array("id" => $newId, "title" => $title, "desc" => $desc, "icon" => $icon);
+    $data[$listIndex]['items'][] = array("id" => $newId, "title" => $title, "href" => $href, "icon" => $icon);
     file_put_contents("/data/data.json", json_encode($data, JSON_PRETTY_PRINT));
   }
 }
