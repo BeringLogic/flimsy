@@ -28,6 +28,9 @@ div.weather {
 div.list h2 {
   font-size: xx-large;
 }
+  div.list h2 button {
+    vertical-align: 5px;
+  }
 
 div.list div.items {
   display: grid;
@@ -41,6 +44,10 @@ div.list div.items {
     border-radius: 5px;
     padding: 5px;
     background-color: #151b23;
+  }
+
+  div.item button {
+    float: right;
   }
 
   div.item img.icon {

@@ -41,14 +41,32 @@ class DB {
     return $fileContents;
   }
 
-  public function SaveList($id, $title, $items) {
+  public function AddList($title) {
     $data = $this->loadData();
     if ($data === null) {
       error_log("ERROR: Could not load data");
       return false;
     }
+  
+    $data[] = array("id" => $this->getNewId(), "title" => $title, "items" => array());
+  
+    return $this->saveData($data);
+  }
 
-    $data[] = array("id" => $id, "title" => $title, "items" => $items);
+  public function EditList($id, $title) {
+    $data = $this->loadData();
+    if ($data === null) {
+      error_log("ERROR: Could not load data");
+      return false;
+    }
+  
+    $listIndex = $this->getListIndex($data, $id);
+    if ($listIndex === null) {
+      error_log("ERROR: List with id $id not found");
+      return false;
+    }
+
+    $data[$listIndex]['title'] = $title;
   
     return $this->saveData($data);
   }

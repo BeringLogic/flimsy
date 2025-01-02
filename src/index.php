@@ -46,8 +46,8 @@
 
   <button id="addList">➕ Add List</button>
 
-  <div id="addListDialog" class="dialog">
-    <form action="addList.php" method="post">
+  <div id="editListDialog" class="dialog">
+    <form action="editList.php" method="post">
       <div class="dialog-field">
         <label for="listTitle">Title</label>
         <input id="listTitle" type="text" name="title" required>
@@ -76,11 +76,12 @@
     function render(data) {
       data.forEach(b => {
         var list = $('<div class="list"></div>');
-        list.append($('<h2>' + b.title + '</h2>'));
+        list.append($('<h2>' + b.title + ' <button id="editList_' + b.id + '" class="editList">✍️</button><button id="removeList_' + b.id + '" class="removeClass">❌</button></h2>'));
         items = $('<div class="items"></div>');
 
         b.items.forEach(i => {
           var item = $('<div class="item"></div>');
+          item.append($('<button id="removeItem_' + b.id + '" class="removeItem">❌</button><button id="editItem_' + b.id + '" class="editItem">✍️</button>'));
           item.append($('<img class="icon" src="' + i.icon + '" />'));
 
           var details = $('<div class="details"></div>');
@@ -110,8 +111,14 @@
             $('#addItemDialog').dialog('open');
           });
 
+          $('button.editList').click((e) => {
+            const id = e.target.id.replace('editList_', '');
+            $('#editListDialog form').attr('action', 'editList.php?id=' + id);
+            $('#editListDialog').dialog('open');
+          });
           $('#addList').click(() => {
-            $('#addListDialog').dialog('open');
+            $('#editListDialog form').attr('action', 'addList.php');
+            $('#editListDialog').dialog('open');
           });
         },
         error: (error, status, xhr) => {
@@ -123,19 +130,19 @@
 
       })
 
-      $('#addListDialog').dialog({
-        title: 'Add List',
+      $('#editListDialog').dialog({
+        title: 'Edit List',
         autoOpen: false,
         modal: true,
         buttons: {
-          "Add": () => {
-            if ($('#addListDialog :invalid').length > 0) {
+          "Save": () => {
+            if ($('#editListDialog :invalid').length > 0) {
               return;
             }
-            $('#addListDialog form').submit();
+            $('#editListDialog form').submit();
           },
           "Cancel": () => {
-            $('#addListDialog').dialog('close');
+            $('#editListDialog').dialog('close');
           }
         }
       });

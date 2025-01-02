@@ -31,12 +31,18 @@
     },
     {
         "id": "eb3791c1fd4ee5d5e20628613196faac16f464a282e0d90497d74e98c771fea2",
-        "title": "Make sure add list still works",
+        "title": "Portainer",
         "items": [
             {
                 "id": "3fce18d7e642784c7266af9c9ddb147c6008e51a05f8fa6bacbd5f19f740a07d",
                 "title": "Portainer",
                 "href": "http:\/\/example.com",
+                "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/portainer.png"
+            },
+            {
+                "id": "ce614437ab2878f50a929c4a37ef10e7fb07b978476709a8b7ba835cd7ca2292",
+                "title": "Portainer",
+                "href": "http:\/\/example2.com",
                 "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/portainer.png"
             }
         ]
@@ -44,6 +50,16 @@
     {
         "id": "7a82874543289cff53252de0355d5fcd7dcf8ac6c18e929d8df36afcfb655d1c",
         "title": "Make sure add list still works",
+        "items": []
+    },
+    {
+        "id": "c91c9a1222263ea957a27414de45c2024b63c7c9752b335f6505b0746f0a1c0c",
+        "title": "Make sure add list still works",
+        "items": []
+    },
+    {
+        "id": "d98e99308fae9d44c86a7c9a51d43ed033c9abb7b3917dd9697c53efc0e4e0d4",
+        "title": "Testing new AddList()",
         "items": []
     }
 ]
