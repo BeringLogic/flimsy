@@ -14,21 +14,37 @@ class DB {
 
     error_log("Creating /data/data.json...");
     if (!@touch('/data/data.json')) {
-      error_log("/data/data.json could not be created! Check permissions. Owner and Group must be www-data (UID 33 and GID 33).");
+      error_log("ERROR: /data/data.json could not be created! Check permissions. Owner and Group must be www-data (UID 33 and GID 33).");
       return false;
     }
 
-    if (!$this->saveData('[]')) {
-      error_log("/data/data.json could not be written to! Check permissions. Owner and Group must be www-data (UID 33 and GID 33).");
+    if ($this->saveData('[]') === false) {
+      error_log("ERROR: /data/data.json could not be written to! Check permissions. Owner and Group must be www-data (UID 33 and GID 33).");
       return false;
     }
 
     return true;
   }
 
+  public function getRawData() {
+    if (!file_exists($this->file)) {
+      error_log("ERROR: File does not exist!");
+      return null;
+    }
+
+    $fileContents = file_get_contents($this->file);
+    if ($fileContents === false) {
+      error_log("ERROR: Could not get file contents!");
+      return null;
+    }
+
+    return $fileContents;
+  }
+
   public function SaveList($id, $title, $items) {
     $data = $this->loadData();
     if ($data === null) {
+      error_log("ERROR: Could not load data");
       return false;
     }
 
@@ -40,12 +56,13 @@ class DB {
   public function SaveItem($listId, $itemId, $title, $href, $icon) {
     $data = $this->loadData();
     if ($data === null) {
+      error_log("ERROR: Could not load data");
       return false;
     }
 
     $listIndex = $this->getListIndex($data, $listId);
     if ($listIndex === null) {
-      error_log("List with id $listId not found");
+      error_log("ERROR: List with id $listId not found");
       return false;
     }
 
@@ -69,19 +86,29 @@ class DB {
   }
 
   private function loadData() {
-    if (!file_exists($this->file)) {
+    $fileContents = $this->getRawData();
+    if ($fileContents === null) {
       return null;
     }
 
-    return json_decode(file_get_contents($this->file), true);
+    $data = json_decode($fileContents, true);
+    if ($data === null) {
+      error_log("ERROR: Could not decode file contents!");
+      error_log(print_r($fileContents, true));
+      return null;
+    }
+
+    return $data;
   }
 
   private function saveData($data) {
     if (!file_exists($this->file)) {
+      error_log("ERROR: File does not exist!");
       return false;
     }
 
     if (@file_put_contents($this->file, json_encode($data, JSON_PRETTY_PRINT)) === false) {
+      error_log("ERROR: Could not write to file!");
       return false;
     }
 

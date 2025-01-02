@@ -86,7 +86,7 @@
     }
 
     function readData() {
-      return <?php echo file_get_contents('/data/data.json'); ?>;
+      return <?php echo rtrim(file_get_contents("/data/data.json")); ?>;
     }
 
     function render(data) {
@@ -119,9 +119,30 @@
         alert("/data is not writable by the www-data user!");
         return;
       }
-      const data = readData();
-      console.log(data);
-      render(data);
+
+      $.ajax({
+        url: 'getAllData.php',
+        success: (data) => {
+          render(data);
+
+          $('div.addItem button').click((e) => {
+            const id = e.target.id.replace('addItem_', '');
+            $('#addItemDialog form').attr('action', 'addItem.php?id=' + id);
+            $('#addItemDialog').dialog('open');
+          });
+
+          $('#addList').click(() => {
+            $('#addListDialog').dialog('open');
+          });
+        },
+        error: (error, status, xhr) => {
+          alert("An error occured while loading the data!");
+          console.log(error);
+          console.log(status);
+          console.log(xhr);
+        }
+
+      })
 
       $('#addListDialog').dialog({
         title: 'Add List',
@@ -139,9 +160,6 @@
           }
         }
       });
-      $('#addList').click(() => {
-        $('#addListDialog').dialog('open');
-      });
 
       $('#addItemDialog').dialog({
         title: 'Add Item',
@@ -158,11 +176,6 @@
             $('#addItemDialog').dialog('close');
           }
         }
-      });
-      $('div.addItem button').click((e) => {
-        const id = e.target.id.replace('addItem_', '');
-        $('#addItemDialog form').attr('action', 'addItem.php?id=' + id);
-        $('#addItemDialog').dialog('open');
       });
     }
   </script>

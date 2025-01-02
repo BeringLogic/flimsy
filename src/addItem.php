@@ -9,7 +9,7 @@ $title = $_POST['title'];
 $href = $_POST['href'];
 $icon = $_POST['icon'];
 
-if (!$db->SaveItem($listId, $itemId, $title, $href, $icon)) {
+if ($db->SaveItem($listId, $itemId, $title, $href, $icon) === false) {
   error_log("ERROR: Could not save Item!");
 }
 
