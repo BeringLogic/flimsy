@@ -1,31 +1,16 @@
 <?php
+require('db.php');
 
-$id = $_GET['id'];
+$db = new DB();
+$listId = $_GET['id'];
+
+$itemId = $db->getNewId();
 $title = $_POST['title'];
 $href = $_POST['href'];
 $icon = $_POST['icon'];
 
-$newId = bin2hex(random_bytes(32));
-
-function findList($data, $id) {
-  foreach ($data as $index=>$item) {
-    if ($item['id'] == $id) {
-      return $index;
-    }
-  }
-  return null;
-}
-
-if (file_exists("/data/data.json")) {
-  $data = json_decode(file_get_contents("/data/data.json"), true);
-  $listIndex = findList($data, $id);
-  if ($listIndex === null) {
-    error_log("List with id $id not found");
-  }
-  else {
-    $data[$listIndex]['items'][] = array("id" => $newId, "title" => $title, "href" => $href, "icon" => $icon);
-    file_put_contents("/data/data.json", json_encode($data, JSON_PRETTY_PRINT));
-  }
+if (!$db->SaveItem($listId, $itemId, $title, $href, $icon)) {
+  error_log("ERROR: Could not save Item!");
 }
 
 header("Location: /index.php");

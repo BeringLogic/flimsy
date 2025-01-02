@@ -1,12 +1,13 @@
 <?php
+require('db.php');
 
-$id = bin2hex(random_bytes(32));
+$db = new DB();
+$id = $db->getNewId();
 $title = $_POST['title'];
+$items = array();
 
-if (file_exists("/data/data.json")) {
-  $data = json_decode(file_get_contents("/data/data.json"), true);
-  $data[] = array("id" => $id, "title" => $title, "items" => array());
-  file_put_contents("/data/data.json", json_encode($data, JSON_PRETTY_PRINT));
+if (!$db->SaveList($id, $title, $items)) {
+  error_log("ERROR: Could not save List!");
 }
 
 header("Location: /index.php");

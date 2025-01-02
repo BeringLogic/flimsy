@@ -10,6 +10,9 @@ h1 {
 }
 
 
+/*
+* Weather
+*/
 div.weather {
   float:right;
   text-align: center;
@@ -19,6 +22,9 @@ div.weather {
   }
 
 
+/*
+* Lists and Items
+*/
 div.list h2 {
   font-size: xx-large;
 }
@@ -66,6 +72,9 @@ div.addItem {
 }
 
 
+/*
+* Dialogs
+*/
 div.dialog {
   display: none;
 }

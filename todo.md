@@ -18,4 +18,5 @@
 * [ ] Weather Thingy
 * [ ] Find the proper way to deal with Dev and Production
 * [ ] Docker integration
+* [ ] Color in errors in Docker logs?
 
