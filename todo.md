@@ -6,7 +6,9 @@
 * [x] Add item GUI
 * [ ] Preserve icons aspect ratio
 * [ ] Make items clickable
-* [ ] Toggle buttons
+* [ ] auth to edit
+* [ ] Find the proper way to deal with /data
+* [ ] SQLite
 * [ ] Edit list
 * [ ] Edit item
 * [ ] Delete list
@@ -14,5 +16,6 @@
 * [ ] Reorder list
 * [ ] Reorder items
 * [ ] Weather Thingy
+* [ ] Find the proper way to deal with Dev and Production
 * [ ] Docker integration
 
