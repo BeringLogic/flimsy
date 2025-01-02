@@ -81,7 +81,7 @@
 
         b.items.forEach(i => {
           var item = $('<div class="item"></div>');
-          item.append($('<button id="removeItem_' + b.id + '" class="removeItem">❌</button><button id="editItem_' + b.id + '_' + i.id + '" class="editItem">✍️</button>'));
+          item.append($('<button id="removeItem_' + b.id + '_' + i.id + '" class="removeItem">❌</button><button id="editItem_' + b.id + '_' + i.id + '" class="editItem">✍️</button>'));
           item.append($('<img class="icon" src="' + i.icon + '" />'));
 
           var details = $('<div class="details"></div>');
@@ -142,7 +142,16 @@
             $('#editItemDialog form #itemIcon').val('');
             $('#editItemDialog').dialog('open');
           });
-
+          $('button.removeItem').click((e) => {
+            const idParts = e.target.id.split('_');
+            const listId = idParts[1];
+            const itemId = idParts[2];
+            if (!confirm('Are you sure you want to remove this item?')) {
+              return;
+            }
+            location.href = 'removeItem.php?listId=' + listId + '&itemId=' + itemId;
+          });
+          
         },
         error: (error, status, xhr) => {
           alert("An error occured while loading the data! Make sure /data is writable by the www-data user (UID 33, GID 33).");

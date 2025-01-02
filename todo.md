@@ -11,9 +11,9 @@
 * [ ] Find the proper way to deal with /data
 * [ ] SQLite
 * [x] Edit list
-* [ ] Edit item
+* [x] Edit item
 * [x] Delete list
-* [ ] Delete item
+* [x] Delete item
 * [ ] Reorder list
 * [ ] Reorder items
 * [ ] Weather Thingy

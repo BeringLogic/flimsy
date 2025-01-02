@@ -133,6 +133,34 @@ class DB {
     return $this->saveData($data);
   }
 
+  public function RemoveItem($listId, $itemId) {
+    $data = $this->loadData();
+    if ($data === null) {
+      error_log("ERROR: Could not load data");
+      return false;
+    }
+
+    $listIndex = $this->getIndex($data, $listId);
+    if ($listIndex === null) {
+      error_log("ERROR: List with id $listId not found");
+      return false;
+    }
+
+    $itemIndex = $this->getIndex($data[$listIndex]['items'], $itemId);
+    if ($itemIndex === null) {
+      error_log("ERROR: Item with id $itemId not found");
+      return false;
+    }
+
+    unset($data[$listIndex]['items'][$itemIndex]);
+    $data[$listIndex]['items'] = array_values($data[$listIndex]['items']);
+
+    return $this->saveData($data);
+  }
+
+
+
+
   public function getNewId() {
     return bin2hex(random_bytes(32));
   }
