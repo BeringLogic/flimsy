@@ -9,7 +9,7 @@
 * [ ] auth to edit
 * [ ] Find the proper way to deal with /data
 * [ ] SQLite
-* [ ] Edit list
+* [x] Edit list
 * [ ] Edit item
 * [ ] Delete list
 * [ ] Delete item
