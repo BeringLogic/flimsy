@@ -132,13 +132,16 @@
 
           $('button.editItem').click((e) => {
             const itemId = e.target.id.replace('editItem_', '');
-            const listId = data.find(l => l.id == l.items.find(i => i.id == itemId).list_id).id;
-            console.log(itemId, listId);
-            $('#editItemDialog form').attr('action', 'editItem.php?itemId=' + itemId);
-            $('#editItemDialog form #itemTitle').val(data.find(l => l.id == listId).items.find(i => i.id == itemId).title);
-            $('#editItemDialog form #itemHref').val(data.find(l => l.id == listId).items.find(i => i.id == itemId).href);
-            $('#editItemDialog form #itemIcon').val(data.find(l => l.id == listId).items.find(i => i.id == itemId).icon);
-            $('#editItemDialog').dialog('open');
+            $.ajax({
+              url: 'getItem.php?id=' + itemId,
+              success: (item) => {
+                $('#editItemDialog form').attr('action', 'editItem.php?itemId=' + item.id);
+                $('#editItemDialog form #itemTitle').val(item.title);
+                $('#editItemDialog form #itemHref').val(item.href);
+                $('#editItemDialog form #itemIcon').val(item.icon);
+                $('#editItemDialog').dialog('open');
+              }
+            });
           });
           $('div.addItem button').click((e) => {
             const listId = e.target.id.replace('addItem_', '');

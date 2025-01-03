@@ -73,25 +73,6 @@ class DB {
     return $data;
   }
 
-  public function getRawData() {
-    $config = $this->dbh->querySingle('SELECT * FROM config WHERE id = 1');
-    echo "config = "; print_r($config);
-
-    $list = $this->dbh->querySingle('SELECT * FROM list');
-    echo "list = "; print_r($list);
-
-    $item = $this->dbh->querySingle('SELECT * FROM item');
-    echo "item = "; print_r($item);
-
-
-    $stmt = $this->dbh->prepare('SELECT * FROM config');
-    $result = $stmt->execute();
-    $data = $result->fetchArray(SQLITE3_ASSOC);
-    echo "data = "; print_r($data);
-    $result->finalize();
-    return false;
-  }
-
   public function AddList($title) {
     $stmt = $this->dbh->prepare('INSERT INTO list (title) VALUES (:title)');
     $stmt->bindValue(':title', $title);
@@ -118,6 +99,15 @@ class DB {
     $stmt->bindValue(':href', $href);
     $stmt->bindValue(':icon', $icon);
     return $stmt->execute() !== false;
+  }
+
+  public function GetItem($itemId) {
+    $stmt = $this->dbh->prepare('SELECT * FROM item WHERE id = :id');
+    $stmt->bindValue(':id', $itemId);
+    $result = $stmt->execute();
+    $data = $result->fetchArray(SQLITE3_ASSOC);
+    $result->finalize();
+    return $data;
   }
 
   public function EditItem($itemId, $title, $href, $icon) {
