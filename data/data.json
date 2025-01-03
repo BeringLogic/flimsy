@@ -4,34 +4,28 @@
         "title": "List 1",
         "items": [
             {
-                "id": 1,
-                "title": "Item 1",
-                "href": "http:\/\/example.com",
-                "icon": "http:\/\/via.placeholder.com\/64x64"
-            },
-            {
                 "id": 2,
-                "title": "Item 2",
-                "href": "http:\/\/example.com",
-                "icon": "http:\/\/via.placeholder.com\/48x48"
+                "title": "Dockge",
+                "href": "http:\/\/localhost:5001",
+                "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/dockge-light.png"
             },
             {
                 "id": "5709ed05b872404e7cb536f5384e053c0588f37fd7b4686b8c603ffc607bcc29",
                 "title": "Portainer",
-                "href": "http:\/\/example.com",
+                "href": "http:\/\/localhost:9443",
                 "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/portainer.png"
             },
             {
                 "id": "8e66ce4a2e0905ee52b8a90345e277f4f904750f97c2bd183a851e22303ed0bb",
                 "title": "pi-hole",
-                "href": "http:\/\/pihole:8080",
+                "href": "http:\/\/localhost:81",
                 "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/pi-hole.png"
             },
             {
                 "id": "f02e5abf3a6d8c750d5cbbabeede2e7bc5d32ce542ef64e8ea59e64e22025392",
                 "title": "Test",
-                "href": "http:\/\/example3.com",
-                "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/vscode.png"
+                "href": "http:\/\/example.com",
+                "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/docker.png"
             }
         ]
     },
@@ -64,15 +58,5 @@
                 "icon": "https:\/\/cdn.jsdelivr.net\/gh\/walkxcode\/dashboard-icons\/png\/portainer.png"
             }
         ]
-    },
-    {
-        "id": "d98e99308fae9d44c86a7c9a51d43ed033c9abb7b3917dd9697c53efc0e4e0d4",
-        "title": "Testing new EditList()",
-        "items": []
-    },
-    {
-        "id": "d46605925db5b07cfb513e95271f76895be29bf8116dbdedeaed0ba88b8be61c",
-        "title": "Final tests before commit",
-        "items": []
     }
 ]
