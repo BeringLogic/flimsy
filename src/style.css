@@ -68,10 +68,10 @@ div.list div.items {
 
   div.item img.icon {
     display: inline-block;
+    vertical-align: middle;
     max-width: 64px;
     max-height: 64px;
     padding: 5px;
-    vertical-align: text-bottom;
   }
 
   div.item div.details {
