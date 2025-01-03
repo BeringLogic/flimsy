@@ -80,13 +80,17 @@
         b.items.forEach(i => {
           var item = $('<div class="item"></div>');
           item.append($('<button id="removeItem_' + b.id + '_' + i.id + '" class="removeItem">❌</button><button id="editItem_' + b.id + '_' + i.id + '" class="editItem">✍️</button>'));
-          item.append($('<img class="icon" src="' + i.icon + '" />'));
+
+          var link = $('<a class="href" href="' + i.href + '" target="_blank"></a>');
+          link.append($('<img class="icon" src="' + i.icon + '" />'));
 
           var details = $('<div class="details"></div>');
           details.append($('<div class="title">' + i.title + '</div>'));
           details.append($('<div class="href">' + i.href + '</div>'));
 
-          item.append(details);
+          link.append(details);
+          item.append(link);
+
           items.append(item);
         });
 

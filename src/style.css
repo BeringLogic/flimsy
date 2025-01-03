@@ -57,6 +57,10 @@ div.list div.items {
     padding: 5px;
     background-color: #151b23;
   }
+  div.item a {
+    color: lightgrey;
+    text-decoration: none;
+  }
 
   div.item button {
     float: right;
@@ -72,6 +76,8 @@ div.list div.items {
 
   div.item div.details {
     display: inline-block;
+    margin-left: 5px;
+    width: calc(100% - 135px);
   }
 
   div.item div.title {
