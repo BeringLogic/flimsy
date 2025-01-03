@@ -26,30 +26,8 @@
       <img src="https://openweathermap.org/img/wn/10d@2x.png">
       <div class="temp">5°C</div>
     </div>
-    <h1>Flimsy Home Page Dev</h1>
+    <h1>Flimsy Home Page</h1>
   </header>
-
-  <div class="list">
-    <h2>List 1 </h2>
-    <div class="items">
-      <div class="item">
-        <img class="icon" src="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/dockge-light.png">
-        <div class="details">
-          <div class="title">Item 1</div>
-          <div class="href">https://item1.example.com:8080</div>
-        </div>
-      </div>
-      <div class="item">Item 2</div>
-      <div class="item">Item 3</div>
-      <div class="item">Item 4</div>
-      <div class="item">Item 5</div>
-      <div class="item">Item 6</div>
-      <div class="item">Item 7</div>
-      <div class="item">Item 8</div>
-      <div class="item">Item 9</div>
-      <div class="addItem"><button id="addItem_1">➕ Add Item</button></div>
-    </div>
-  </div>
 
   <button id="addList">➕ Add List</button>
 
