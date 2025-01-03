@@ -11,7 +11,7 @@
 * [x] Make items clickable
 * [x] Login to edit
 * [x] Preserve icons aspect ratio
-* [ ] Deal with overflow in lists and items
+* [x] Deal with really long items
 * [ ] Download icons and use locally
 * [ ] Customizable favicon
 * [ ] Customizable icon in h1
