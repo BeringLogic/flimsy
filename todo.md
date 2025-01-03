@@ -15,9 +15,11 @@
 * [x] Weather widget
 * [x] Default colors based on Catppucchin-mocha
 * [x] Download icon when saving items and use local copy
+* [x] SQLite
 * [ ] Customizable favicon
 * [ ] Customizable icon in h1
 * [ ] Customizable title in h1
+* [ ] Customizable background image
 * [ ] Customizable number of columns (customizable per list?)
 * [ ] Customizable login env variables overrides
 * [ ] Customizable weather widget env variables overrides
@@ -25,11 +27,10 @@
 * [ ] Login feedback to display AFTER the list has loaded
 * [ ] Docker secrets
 * [ ] Find the proper way to deal with /data
-* [ ] SQLite
 * [ ] Drag & Drop to reorder list
 * [ ] Drag & Drop to reorder items
 * [ ] Find the proper way to deal with Dev and Production
 * [ ] Docker integration
 * [ ] Color in errors in Docker logs?
-* [ ] Rename b(lock) to l(ist) in index.php
+* [x] Rename b(lock) to l(ist) in index.php
 * [ ] Customizable theme, or at least light and dark modes from catppuccin 
