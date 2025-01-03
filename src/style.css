@@ -9,6 +9,16 @@ h1 {
   margin-top: 0;
 }
 
+button {
+  display: none;
+}
+
+a.login,
+a.logout {
+  float: right;
+  color: white;
+}
+
 
 /*
 * Weather
@@ -40,6 +50,8 @@ div.list div.items {
 }
 
   div.item {
+    display: inline-block;
+    align-content: center;
     border: 3px solid darkgrey;
     border-radius: 5px;
     padding: 5px;

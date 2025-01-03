@@ -4,6 +4,9 @@ services:
       context: .
     ports:
       - 8888:80
+    environment:
+      - FLIMSY_USERNAME=${FLIMSY_USERNAME}
+      - FLIMSY_PASSWORD=${FLIMSY_PASSWORD}
     volumes:
       - ./data:/data
     develop:

@@ -5,9 +5,13 @@
 * [x] Add list GUI
 * [x] Add item GUI
 * [ ] Preserve icons aspect ratio
+* [ ] Deal with overflow in lists and items
 * [ ] Download icons and use locally
+* [ ] favicon
+* [ ] Configurable icon and title in h1
 * [ ] Make items clickable
 * [ ] auth to edit
+* [ ] Docker secrets
 * [ ] Find the proper way to deal with /data
 * [ ] SQLite
 * [x] Edit list

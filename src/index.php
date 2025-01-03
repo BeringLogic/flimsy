@@ -1,3 +1,5 @@
+<?php session_start(); ?>
+
 <!DOCTYPE html>
 <head>
   <title>Flimsy</title>
@@ -15,6 +17,11 @@
 
 <body>
   <header>
+    <?php if (empty($_SESSION['loggedIn'])) { ?>
+      <a class="login" href="#">Login</a>
+    <?php } else { ?>
+      <a class="logout" href="logout.php">Logout</a>
+    <?php } ?>
     <div class="weather">
       <img src="https://openweathermap.org/img/wn/10d@2x.png">
       <div class="temp">5°C</div>
@@ -45,6 +52,19 @@
   </div>
 
   <button id="addList">➕ Add List</button>
+
+  <div id="loginDialog" class="dialog">
+    <form action="login.php" method="post">
+      <div class="dialog-field">
+        <label for="username">Username</label>
+        <input id="username" type="text" name="username" required>
+      </div>
+      <div class="dialog-field">
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password" required>
+      </div>
+    </form>
+  </div>
 
   <div id="editListDialog" class="dialog">
     <form action="editList.php" method="post">
@@ -97,6 +117,10 @@
         list.append(items);
         list.insertBefore($('#addList'));
       });
+
+      if (<?php echo !empty($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true ? "true" : "false"; ?>) {
+        $('button').css('display', 'inline-block');
+      }
     }
 
     window.onload = () => {
@@ -151,7 +175,7 @@
             }
             location.href = 'removeItem.php?listId=' + listId + '&itemId=' + itemId;
           });
-          
+
         },
         error: (error, status, xhr) => {
           alert("An error occured while loading the data! Make sure /data is writable by the www-data user (UID 33, GID 33).");
@@ -161,6 +185,26 @@
         }
 
       })
+
+      $('#loginDialog').dialog({
+        title: 'Login',
+        autoOpen: false,
+        modal: true,
+        buttons: {
+          "Login": () => {
+            if ($('#loginDialog :invalid').length > 0) {
+              return;
+            }
+            $('#loginDialog form').submit();
+          },
+          "Cancel": () => {
+            $('#loginDialog').dialog('close');
+          }
+        }
+      });
+      $('a.login').click(() => {
+        $('#loginDialog').dialog('open');
+      });
 
       $('#editListDialog').dialog({
         title: 'Edit List',
