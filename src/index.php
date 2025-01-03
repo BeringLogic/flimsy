@@ -83,7 +83,7 @@
           item.append($('<button id="removeItem_' + b.id + '_' + i.id + '" class="removeItem">❌</button><button id="editItem_' + b.id + '_' + i.id + '" class="editItem">✍️</button>'));
 
           var link = $('<a class="href" href="' + i.href + '" target="_blank"></a>');
-          link.append($('<img class="icon" src="' + i.icon + '" />'));
+          link.append($('<img class="icon" src="dashboard-icons/' + i.icon + '.png" />'));
 
           var details = $('<div class="details"></div>');
           details.append($('<div class="title">' + i.title + '</div>'));

@@ -14,7 +14,7 @@
 * [x] Deal with really long items
 * [x] Weather widget
 * [x] Default colors based on Catppucchin-mocha
-* [ ] Download icon when saving items and use local copy
+* [x] Download icon when saving items and use local copy
 * [ ] Customizable favicon
 * [ ] Customizable icon in h1
 * [ ] Customizable title in h1
