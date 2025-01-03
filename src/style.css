@@ -1,7 +1,7 @@
 
 body {
-  background-color: #0d1117;
-  color: lightgrey;
+  background-color: #1e1e2e;
+  color: #cdd6f4;
   padding: 50px;
 }
 
@@ -59,10 +59,10 @@ div.list div.items {
     border: 3px solid darkgrey;
     border-radius: 5px;
     padding: 5px;
-    background-color: #151b23;
+    background-color: #585b70;
   }
   div.item a {
-    color: lightgrey;
+    color: #cdd6f4;
     text-decoration: none;
   }
 
