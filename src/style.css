@@ -68,14 +68,15 @@ div.list div.items {
 
   div.item img.icon {
     display: inline-block;
-    width: 64px;
-    height: 64px;
+    max-width: 64px;
+    max-height: 64px;
     padding: 5px;
-    vertical-align: -12px;
+    vertical-align: text-bottom;
   }
 
   div.item div.details {
     display: inline-block;
+    vertical-align: middle;
     margin-left: 5px;
     width: calc(100% - 135px);
   }
