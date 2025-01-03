@@ -79,6 +79,9 @@ div.list div.items {
     vertical-align: middle;
     margin-left: 5px;
     width: calc(100% - 135px);
+    max-width: calc(100vw / 4 - 135px);
+    white-space: nowrap;
+    overflow-x: hidden;
   }
 
   div.item div.title {
