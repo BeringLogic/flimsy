@@ -10,7 +10,7 @@
 * [ ] favicon
 * [ ] Configurable icon and title in h1
 * [ ] Make items clickable
-* [ ] auth to edit
+* [x] Login to edit
 * [ ] Docker secrets
 * [ ] Find the proper way to deal with /data
 * [ ] SQLite

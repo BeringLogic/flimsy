@@ -176,6 +176,10 @@
             location.href = 'removeItem.php?listId=' + listId + '&itemId=' + itemId;
           });
 
+          <?php if (!empty($_SESSION['message'])) {
+            echo 'alert("' . $_SESSION['message'] . '");';
+            unset($_SESSION['message']);
+          } ?>
         },
         error: (error, status, xhr) => {
           alert("An error occured while loading the data! Make sure /data is writable by the www-data user (UID 33, GID 33).");
