@@ -17,6 +17,7 @@ a.login,
 a.logout {
   float: right;
   color: white;
+  margin-right: 10px;
 }
 
 
@@ -27,6 +28,9 @@ div.weather {
   float:right;
   text-align: center;
 } 
+  div.weather img {
+    margin-top: -30px;
+  }
   div.weather div.temp {
     margin-top: -20px;
   }

@@ -17,15 +17,16 @@
 
 <body>
   <header>
+    <div class="weather">
+      <img>
+      <div class="temp"></div>
+      <div class="description"></div>
+    </div>
     <?php if (empty($_SESSION['loggedIn'])) { ?>
       <a class="login" href="#">Login</a>
     <?php } else { ?>
       <a class="logout" href="logout.php">Logout</a>
     <?php } ?>
-    <div class="weather">
-      <img src="https://openweathermap.org/img/wn/10d@2x.png">
-      <div class="temp">5°C</div>
-    </div>
     <h1>Flimsy Home Page</h1>
   </header>
 
@@ -105,10 +106,34 @@
       }
     }
 
+    function updateWeather() {
+      if (<?php echo empty($_ENV["FLIMSY_WEATHER_API_KEY"]) ? "true" : "false"; ?>) {
+        $('.weather').css('display', 'none');
+        return;
+      }
+      $.ajax({
+        url: 'https://api.openweathermap.org/data/2.5/weather',
+        data: {
+          lon : <?php echo $_ENV["FLIMSY_WEATHER_LONGITUDE"] ?: 0; ?>,
+          lat : <?php echo $_ENV["FLIMSY_WEATHER_LATITUDE"] ?: 0; ?>,
+          units : '<?php echo $_ENV["FLIMSY_WEATHER_UNITS"] ?: "metric"; ?>',
+          lang : '<?php echo $_ENV["FLIMSY_WEATHER_LANGUAGE"] ?: "en"; ?>',
+          appid : '<?php echo $_ENV["FLIMSY_WEATHER_API_KEY"] ?: ""; ?>',
+        },
+        success: (data) => {
+          $('.weather img').attr('src', 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png');
+          $('.weather .description').html(data.weather[0].description);
+          $('.weather .temp').html(data.main.temp + ' °C');
+        }
+      });
+    }
+
     window.onload = () => {
       $.ajax({
         url: 'getAllData.php',
         success: (data) => {
+          updateWeather();
+
           render(data);
 
           $('button.editList').click((e) => {
