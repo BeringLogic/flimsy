@@ -121,13 +121,13 @@
           $('button.editList').click((e) => {
             const id = e.target.id.replace('editList_', '');
             $('#editListDialog form').attr('action', 'editList.php?id=' + id);
-            $('#editListDialog form #listTitle').val(data.find(l => l.id == id).title);
-            $('#editListDialog form #listRows').val(data.find(l => l.id == id).number_of_rows);
+            $('#listTitle').val(data.find(l => l.id == id).title);
+            $('#listRows').val(data.find(l => l.id == id).number_of_rows);
             $('#editListDialog').dialog('open');
           });
           $('#addList').click(() => {
             $('#editListDialog form').attr('action', 'addList.php');
-            $('#editListDialog form #listTitle').val('');
+            $('#listTitle').val('');
             $('#editListDialog').dialog('open');
           });
           $('button.removeList').click((e) => {
@@ -144,9 +144,9 @@
               url: 'getItem.php?id=' + itemId,
               success: (item) => {
                 $('#editItemDialog form').attr('action', 'editItem.php?itemId=' + item.id);
-                $('#editItemDialog form #itemTitle').val(item.title);
-                $('#editItemDialog form #itemHref').val(item.href);
-                $('#editItemDialog form #itemIcon').val(item.icon);
+                $('#itemTitle').val(item.title);
+                $('#itemHref').val(item.href);
+                $('#itemIcon').val(item.icon);
                 $('#editItemDialog').dialog('open');
               }
             });
@@ -154,9 +154,9 @@
           $('div.addItem button').click((e) => {
             const listId = e.target.id.replace('addItem_', '');
             $('#editItemDialog form').attr('action', 'addItem.php?listId=' + listId);
-            $('#editItemDialog form #itemTitle').val('');
-            $('#editItemDialog form #itemHref').val('');
-            $('#editItemDialog form #itemIcon').val('');
+            $('#itemTitle').val('');
+            $('#itemHref').val('');
+            $('#itemIcon').val('');
             $('#editItemDialog').dialog('open');
           });
           $('button.removeItem').click((e) => {
@@ -254,10 +254,10 @@
         $.ajax({
           url: 'getConfig.php',
           success: (config) => {
-            $('#configDialog form #configTitle').val(config.title);
-            $('#configDialog form #configIcon').val(config.icon);
-            $('#configDialog form #configBackroundImage').val(config.backround_image);
-            $('#configDialog form #configRows').val(config.number_of_rows);
+            $('#configTitle').val(config.title);
+            $('#configIcon').val(config.icon);
+            $('#configBackroundImage').val(config.backround_image);
+            $('#configRows').val(config.number_of_rows);
             $('#configDialog').dialog('open');
           }
         })
