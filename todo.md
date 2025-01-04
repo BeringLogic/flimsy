@@ -20,6 +20,7 @@
 * [x] Customizable title in h1
 * [x] Customizable background image
 * [x] Customizable number of columns (customizable per list)
+* [x] Customizable colors 
 * [ ] Customizable login env variables overrides
 * [ ] Customizable weather widget env variables overrides
 * [ ] Docker secrets
@@ -29,8 +30,6 @@
 * [ ] Find the proper way to deal with Dev and Production
 * [ ] Docker integration
 * [ ] Color in errors in Docker logs?
-* [x] Rename b(lock) to l(ist) in index.php
-* [ ] Customizable theme, or at least light and dark modes from catppuccin 
 * [ ] Use that Python app to pick the colors from the background image
 
 Bugs:
