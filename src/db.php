@@ -21,13 +21,13 @@ class DB {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           icon TEXT NULL,
           title TEXT NULL,
-          backround_image TEXT NULL,
-          number_of_rows INTEGER NOT NULL
+          backround_image TEXT NULL
         );",
-        "INSERT INTO config (icon, title, backround_image, number_of_rows) VALUES (NULL, 'Flimsy Home Page', NULL, 4);",
+        "INSERT INTO config (icon, title, backround_image) VALUES (NULL, 'Flimsy Home Page', NULL);",
         "CREATE TABLE list (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          title TEXT NOT NULL
+          title TEXT NOT NULL,
+          number_of_rows INTEGER NOT NULL
         );",
         "CREATE TABLE item ( 
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,6 +49,21 @@ class DB {
     }
 
     return true;
+  }
+
+  public function GetConfig() {
+    $stmt = $this->dbh->prepare('SELECT * FROM config WHERE id = 1');
+    $result = $stmt->execute();
+    $data = $result->fetchArray(SQLITE3_ASSOC);
+    $result->finalize();
+    return $data;
+  }
+  public function SetConfig($icon, $title, $backround_image) {
+    $stmt = $this->dbh->prepare('UPDATE config SET icon = :icon, title = :title, backround_image = :backround_image WHERE id = 1');
+    $stmt->bindValue(':icon', $icon);
+    $stmt->bindValue(':title', $title);
+    $stmt->bindValue(':backround_image', $backround_image);
+    return $stmt->execute() !== false;
   }
 
   public function getAllLists() {
@@ -73,15 +88,17 @@ class DB {
     return $data;
   }
 
-  public function AddList($title) {
-    $stmt = $this->dbh->prepare('INSERT INTO list (title) VALUES (:title)');
+  public function AddList($title, $numberOfRows) {
+    $stmt = $this->dbh->prepare('INSERT INTO list (title, number_of_rows) VALUES (:title, :number_of_rows)');
     $stmt->bindValue(':title', $title);
+    $stmt->bindValue(':number_of_rows', $numberOfRows);
     return $stmt->execute() !== false;
   }
 
-  public function EditList($id, $title) {
-    $stmt = $this->dbh->prepare('UPDATE list SET title = :title WHERE id = :id');
+  public function EditList($id, $title, $numberOfRows) {
+    $stmt = $this->dbh->prepare('UPDATE list SET title = :title, number_of_rows = :number_of_rows WHERE id = :id');
     $stmt->bindValue(':title', $title);
+    $stmt->bindValue(':number_of_rows', $numberOfRows);
     $stmt->bindValue(':id', $id);
     return $stmt->execute() !== false;
   }

@@ -16,15 +16,12 @@
 * [x] Default colors based on Catppucchin-mocha
 * [x] Download icon when saving items and use local copy
 * [x] SQLite
-* [ ] Customizable favicon
-* [ ] Customizable icon in h1
-* [ ] Customizable title in h1
-* [ ] Customizable background image
-* [ ] Customizable number of columns (customizable per list?)
+* [x] Customizable icon in h1
+* [x] Customizable title in h1
+* [x] Customizable background image
+* [x] Customizable number of columns (customizable per list)
 * [ ] Customizable login env variables overrides
 * [ ] Customizable weather widget env variables overrides
-* [ ] Make the whole item clickable (even when logged in)
-* [ ] Login feedback to display AFTER the list has loaded
 * [ ] Docker secrets
 * [ ] Find the proper way to deal with /data
 * [ ] Drag & Drop to reorder list
@@ -34,3 +31,9 @@
 * [ ] Color in errors in Docker logs?
 * [x] Rename b(lock) to l(ist) in index.php
 * [ ] Customizable theme, or at least light and dark modes from catppuccin 
+* [ ] Use that Python app to pick the colors from the background image
+
+Bugs:
+* [ ] Make the whole item clickable (even when logged in)
+* [ ] Login feedback to display AFTER the list has loaded
+

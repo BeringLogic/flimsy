@@ -27,10 +27,28 @@
     <?php } else { ?>
       <a class="logout" href="logout.php">Logout</a>
     <?php } ?>
-    <h1>Flimsy Home Page</h1>
+    <img id="icon">
+    <h1><span id="title"></span><button id="config">⚙️</button></h1>
   </header>
 
   <button id="addList">➕ Add List</button>
+
+  <div id="configDialog" class="dialog">
+    <form action="setConfig.php" method="post">
+      <div class="dialog-field">
+        <label for="configIcon">Icon</label>
+        <input id="configIcon" type="text" name="icon">
+      </div>
+      <div class="dialog-field">
+        <label for="configTitle">Title</label>
+        <input id="configTitle" type="text" name="title">
+      </div>
+      <div class="dialog-field">
+        <label for="configBackroundImage">Backround Image</label>
+        <input id="configBackroundImage" type="text" name="backround_image">
+      </div>
+    </form>
+  </div>
 
   <div id="loginDialog" class="dialog">
     <form action="login.php" method="post">
@@ -50,6 +68,10 @@
       <div class="dialog-field">
         <label for="listTitle">Title</label>
         <input id="listTitle" type="text" name="title" required>
+      </div>
+      <div class="dialog-field">
+        <label for="listRows">Number of Rows</label>
+        <input id="listRows" type="number" min="1" name="number_of_rows" required>
       </div>
     </form>
   </div>
@@ -72,38 +94,23 @@
   </div>
 
   <script type="text/javascript">
-    function render(data) {
-      data.forEach(l => {
-        var list = $('<div class="list"></div>');
-        list.append($('<h2>' + l.title + ' <button id="editList_' + l.id + '" class="editList">✍️</button><button id="removeList_' + l.id + '" class="removeList">❌</button></h2>'));
-        items = $('<div class="items"></div>');
+    function loadConfig() {
+      $.ajax({
+        url: 'getConfig.php',
+        success: (config) => {
+          if (config.icon) {
+            $('#icon').attr('src', 'dashboard-icons/' + config.icon + '.png')
+                      .css('display', 'inline-block');
+          }
+          if (config.title) {
+            $('#title').html(config.title);
+          }
+          if (config.backround_image) {
+            $('body').css('background-image', 'url(backgrounds/' + config.backround_image + ')');
+          }
 
-        l.items.forEach(i => {
-          var item = $('<div class="item"></div>');
-          item.append($('<button id="removeItem_' + i.id + '" class="removeItem">❌</button><button id="editItem_' + i.id + '" class="editItem">✍️</button>'));
-
-          var link = $('<a class="href" href="' + i.href + '" target="_blank"></a>');
-          link.append($('<img class="icon" src="dashboard-icons/' + i.icon + '.png" />'));
-
-          var details = $('<div class="details"></div>');
-          details.append($('<div class="title">' + i.title + '</div>'));
-          details.append($('<div class="href">' + i.href + '</div>'));
-
-          link.append(details);
-          item.append(link);
-
-          items.append(item);
-        });
-
-        items.append($('<div class="addItem"><button id="addItem_' + l.id + '">➕ Add Item</button></div>'));
-
-        list.append(items);
-        list.insertBefore($('#addList'));
-      });
-
-      if (<?php echo !empty($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true ? "true" : "false"; ?>) {
-        $('button').css('display', 'inline-block');
-      }
+        }
+      })
     }
     function loadData() {
       $.ajax({
@@ -115,6 +122,7 @@
             const id = e.target.id.replace('editList_', '');
             $('#editListDialog form').attr('action', 'editList.php?id=' + id);
             $('#editListDialog form #listTitle').val(data.find(l => l.id == id).title);
+            $('#editListDialog form #listRows').val(data.find(l => l.id == id).number_of_rows);
             $('#editListDialog').dialog('open');
           });
           $('#addList').click(() => {
@@ -170,8 +178,43 @@
           console.log(status);
           console.log(xhr);
         }
-
       });
+    }
+
+    function render(data) {
+      data.forEach(l => {
+        var list = $('<div class="list"></div>');
+        list.append($('<h2>' + l.title + ' <button id="editList_' + l.id + '" class="editList">✍️</button><button id="removeList_' + l.id + '" class="removeList">❌</button></h2>'));
+        items = $('<div class="items"></div>');
+        items.css('grid-template-columns', 'repeat(' + l.number_of_rows + ', 1fr)');
+
+        l.items.forEach(i => {
+          var item = $('<div class="item"></div>');
+          item.append($('<button id="removeItem_' + i.id + '" class="removeItem">❌</button><button id="editItem_' + i.id + '" class="editItem">✍️</button>'));
+
+          var link = $('<a class="href" href="' + i.href + '" target="_blank"></a>');
+          link.append($('<img class="icon" src="dashboard-icons/' + i.icon + '.png" />'));
+
+          var details = $('<div class="details"></div>');
+          details.css('max-width', 'calc(100vw / ' + l.number_of_rows + ' - 135px)');
+          details.append($('<div class="title">' + i.title + '</div>'));
+          details.append($('<div class="href">' + i.href + '</div>'));
+
+          link.append(details);
+          item.append(link);
+
+          items.append(item);
+        });
+
+        items.append($('<div class="addItem"><button id="addItem_' + l.id + '">➕ Add Item</button></div>'));
+
+        list.append(items);
+        list.insertBefore($('#addList'));
+      });
+
+      if (<?php echo !empty($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true ? "true" : "false"; ?>) {
+        $('button').css('display', 'inline-block');
+      }
     }
 
     function updateWeather() {
@@ -197,9 +240,45 @@
     }
 
     window.onload = () => {
-      loadData();
+      $.ajax({
+        url: 'initDB.php',
+        success: (data) => {
+          loadConfig();
+          loadData();
+        }
+      });
 
       updateWeather();
+
+      $('#config').click(() => {
+        $.ajax({
+          url: 'getConfig.php',
+          success: (config) => {
+            $('#configDialog form #configTitle').val(config.title);
+            $('#configDialog form #configIcon').val(config.icon);
+            $('#configDialog form #configBackroundImage').val(config.backround_image);
+            $('#configDialog form #configRows').val(config.number_of_rows);
+            $('#configDialog').dialog('open');
+          }
+        })
+      });
+
+      $('#configDialog').dialog({
+        title: 'Config',
+        autoOpen: false,
+        modal: true,
+        buttons: {
+          "Save": () => {
+            if ($('#configDialog :invalid').length > 0) {
+              return;
+            }
+            $('#configDialog form').submit();
+          },
+          "Cancel": () => {
+            $('#configDialog').dialog('close');
+          }
+        }
+      });
 
       $('#loginDialog').dialog({
         title: 'Login',
