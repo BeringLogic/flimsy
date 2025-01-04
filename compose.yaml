@@ -2,6 +2,7 @@ services:
   app:
     build:
       context: .
+    hostname: flimsy
     ports:
       - 8888:80
     environment:
