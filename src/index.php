@@ -47,6 +47,22 @@
         <label for="configBackroundImage">Backround Image</label>
         <input id="configBackroundImage" type="text" name="backround_image">
       </div>
+      <div class="dialog-field">
+        <label for="configColorBackground">Background</label>
+        <input id="configColorBackground" type="color" name="color_background" required>
+      </div>
+      <div class="dialog-field">
+        <label for="configColorForeground">Foreground</label>
+        <input id="configColorForeground" type="color" name="color_foreground" required>
+      </div>
+      <div class="dialog-field">
+        <label for="configColorItems">Items</label>
+        <input id="configColorItems" type="color" name="color_items" required>
+      </div>
+      <div class="dialog-field">
+        <label for="configColorBorders">Borders</label>
+        <input id="configColorBorders" type="color" name="color_borders" required>
+      </div>
     </form>
   </div>
 
@@ -94,24 +110,6 @@
   </div>
 
   <script type="text/javascript">
-    function loadConfig() {
-      $.ajax({
-        url: 'getConfig.php',
-        success: (config) => {
-          if (config.icon) {
-            $('#icon').attr('src', 'dashboard-icons/' + config.icon + '.png')
-                      .css('display', 'inline-block');
-          }
-          if (config.title) {
-            $('#title').html(config.title);
-          }
-          if (config.backround_image) {
-            $('body').css('background-image', 'url(backgrounds/' + config.backround_image + ')');
-          }
-
-        }
-      })
-    }
     function loadData() {
       $.ajax({
         url: 'getAllData.php',
@@ -167,6 +165,8 @@
             location.href = 'removeItem.php?itemId=' + itemId;
           });
 
+          loadConfig();
+
           <?php if (!empty($_SESSION['message'])) {
             echo 'alert("' . $_SESSION['message'] . '");';
             unset($_SESSION['message']);
@@ -217,6 +217,28 @@
       }
     }
 
+    function loadConfig() {
+      $.ajax({
+        url: 'getConfig.php',
+        success: (config) => {
+          if (config.icon) {
+            $('#icon').attr('src', 'dashboard-icons/' + config.icon + '.png')
+                      .css('display', 'inline-block');
+          }
+          if (config.title) {
+            $('#title').html(config.title);
+          }
+          if (config.backround_image) {
+            $('body').css('background-image', 'url(backgrounds/' + config.backround_image + ')');
+          }
+          $('body').css('background-color', config.color_background);
+          $('body').css('color', config.color_foreground);
+          $('.item').css('background-color', config.color_items);
+          $('.item').css('border-color', config.color_borders);
+        }
+      });
+    }
+
     function updateWeather() {
       if (<?php echo empty($_ENV["FLIMSY_WEATHER_API_KEY"]) ? "true" : "false"; ?>) {
         $('.weather').css('display', 'none');
@@ -258,6 +280,10 @@
             $('#configIcon').val(config.icon);
             $('#configBackroundImage').val(config.backround_image);
             $('#configRows').val(config.number_of_rows);
+            $('#configColorBackground').val(config.color_background);
+            $('#configColorForeground').val(config.color_foreground);
+            $('#configColorItems').val(config.color_items);
+            $('#configColorBorders').val(config.color_borders);
             $('#configDialog').dialog('open');
           }
         })
