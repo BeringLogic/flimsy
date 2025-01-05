@@ -260,14 +260,21 @@
         data: {
           lon : <?php echo $_ENV["FLIMSY_WEATHER_LONGITUDE"] ?: 0; ?>,
           lat : <?php echo $_ENV["FLIMSY_WEATHER_LATITUDE"] ?: 0; ?>,
-          units : '<?php echo $_ENV["FLIMSY_WEATHER_UNITS"] ?: "metric"; ?>',
+          units : '<?php echo $_ENV["FLIMSY_WEATHER_UNITS"] ?: "standard"; ?>',
           lang : '<?php echo $_ENV["FLIMSY_WEATHER_LANGUAGE"] ?: "en"; ?>',
           appid : '<?php echo $_ENV["FLIMSY_WEATHER_API_KEY"] ?: ""; ?>',
         },
         success: (data) => {
+          var units;
+          switch ('<?php echo $_ENV["FLIMSY_WEATHER_UNITS"] ?: "standard"; ?>') {
+            default:
+            case 'standard': units = 'K'; break;
+            case 'metric': units = 'C'; break;
+            case 'imperial': units = 'F'; break;
+          };
           $('.weather img').attr('src', 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png');
           $('.weather .description').html(data.weather[0].description);
-          $('.weather .temp').html(data.main.temp + ' °C');
+          $('.weather .temp').html(data.main.temp + ' °' + units);
         }
       });
     }
