@@ -48,6 +48,14 @@
         <input id="configBackroundImage" type="text" name="backround_image">
       </div>
       <div class="dialog-field">
+        <input type="radio" id="autodetect_colors" name="autodetect_colors" style="width:auto;" value="autodetect">
+        <label for="autodetect_colors" style="display:inline-block;">Autodetect Colors</label>
+      </div>
+      <div class="dialog-field">
+        <input type="radio" id="manual_colors" name="autodetect_colors" style="width:auto;" value="manual" checked>
+        <label for="manual_colors" style="display:inline-block;">Manual Colors</label>
+      </div>
+      <div class="dialog-field">
         <label for="configColorBackground">Background</label>
         <input id="configColorBackground" type="color" name="color_background" required>
       </div>
@@ -233,6 +241,8 @@
           }
           $('body').css('background-color', config.color_background);
           $('body').css('color', config.color_foreground);
+          $('#title, .list h2').css('text-shadow', '1px 1px ' + config.color_background);
+          $('.item a').css('color', config.color_foreground);
           $('.item').css('background-color', config.color_items);
           $('.item').css('border-color', config.color_borders);
         }
@@ -280,6 +290,7 @@
             $('#configIcon').val(config.icon);
             $('#configBackroundImage').val(config.backround_image);
             $('#configRows').val(config.number_of_rows);
+            $('#configBackroundImage').trigger('change');
             $('#configColorBackground').val(config.color_background);
             $('#configColorForeground').val(config.color_foreground);
             $('#configColorItems').val(config.color_items);
@@ -303,6 +314,25 @@
           "Cancel": () => {
             $('#configDialog').dialog('close');
           }
+        }
+      });
+      $('#configBackroundImage').change((e) => {
+        if (e.target.value != '') { 
+          $('#autodetect_colors').removeAttr('disabled');
+        }
+        else {
+          $('#autodetect_colors').attr('disabled', 'disabled');
+          $('#manual_colors').prop('checked', true);
+        }
+      });
+      $('#autodetect_colors').change(() => {
+        if ($('#autodetect_colors').is(':checked')) {
+          $('#configDialog input[type=color]').attr('disabled', 'disabled');
+        }
+      });
+      $('#manual_colors').change(() => {
+        if ($('#manual_colors').is(':checked')) {
+          $('#configDialog input[type=color]').removeAttr('disabled');
         }
       });
 

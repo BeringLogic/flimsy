@@ -1,5 +1,4 @@
 # TODO
-
 * [x] Read /data/data.json
 * [x] Render data.json
 * [x] Add list GUI
@@ -21,18 +20,23 @@
 * [x] Customizable background image
 * [x] Customizable number of columns (customizable per list)
 * [x] Customizable colors 
+* [x] Automatically pick the colors from the background image
+* [ ] Catppuccin colors (mocha and latte)
 * [ ] Customizable login env variables overrides
 * [ ] Customizable weather widget env variables overrides
-* [ ] Docker secrets
-* [ ] Find the proper way to deal with /data
+* [ ] Support svg icons
 * [ ] Drag & Drop to reorder list
 * [ ] Drag & Drop to reorder items
+
+# Docker stuff I need to learn
+* [ ] Docker secrets
+* [ ] Find the proper way to deal with /data
 * [ ] Find the proper way to deal with Dev and Production
 * [ ] Docker integration
 * [ ] Color in errors in Docker logs?
-* [ ] Use that Python app to pick the colors from the background image
+* [ ] Update README.md with infos on how to install and how to use the app
 
-Bugs:
+# Bugs
 * [ ] Make the whole item clickable (even when logged in)
 * [ ] Login feedback to display AFTER the list has loaded
-
+* [ ] Icon is not downloaded when saving config
