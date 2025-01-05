@@ -14,6 +14,7 @@
 * [x] Weather widget
 * [x] Default colors based on Catppucchin-mocha
 * [x] Download icon when saving items and use local copy
+* [x] Support both png and svg icons
 * [x] SQLite
 * [x] Customizable icon in h1
 * [x] Customizable title in h1
@@ -24,7 +25,6 @@
 * [ ] Catppuccin colors (mocha and latte)
 * [ ] Customizable login env variables overrides
 * [ ] Customizable weather widget env variables overrides
-* [ ] Support svg icons
 * [ ] Drag & Drop to reorder list
 * [ ] Drag & Drop to reorder items
 

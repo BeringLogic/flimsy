@@ -3,8 +3,9 @@
 class Icons {
   
   public function get($iconName) {
-    $source = "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/{$iconName}.png";
-    $destination = "/data/icons/{$iconName}.png";
+    $extension = pathinfo($iconName, PATHINFO_EXTENSION);
+    $source = "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/{$extension}/{$iconName}";
+    $destination = "/data/icons/{$iconName}";
 
     if (!is_dir("/data/icons")) {
       if (!mkdir("/data/icons", 0777, true)) {
