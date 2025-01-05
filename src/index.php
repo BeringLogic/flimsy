@@ -182,11 +182,7 @@
           });
 
           loadConfig();
-
-          <?php if (!empty($_SESSION['message'])) {
-            echo 'alert("' . $_SESSION['message'] . '");';
-            unset($_SESSION['message']);
-          } ?>
+          updateWeather();
         },
         error: (error, status, xhr) => {
           alert("An error occured while loading the data! Make sure /data is writable by the www-data user (UID 33, GID 33).");
@@ -228,9 +224,6 @@
         list.insertBefore($('#addList'));
       });
 
-      if (<?php echo !empty($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true ? "true" : "false"; ?>) {
-        $('button').css('display', 'inline-block');
-      }
     }
 
     function loadConfig() {
@@ -279,16 +272,23 @@
       });
     }
 
-    window.onload = () => {
+    $('document').ready(() => {
+
       $.ajax({
         url: 'initDB.php',
         success: (data) => {
-          loadConfig();
           loadData();
+
+          if (<?php echo !empty($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true ? "true" : "false"; ?>) {
+            $('button').css('display', 'inline-block');
+          }
+
+          <?php if (!empty($_SESSION['message'])) {
+            echo 'alert("' . $_SESSION['message'] . '");';
+            unset($_SESSION['message']);
+          } ?>
         }
       });
-
-      updateWeather();
 
       $('#config').click(() => {
         $.ajax({
@@ -396,7 +396,7 @@
           }
         }
       });
-    }
+    });
   </script>
 
 </body>
