@@ -289,7 +289,6 @@
             $('#configTitle').val(config.title);
             $('#configIcon').val(config.icon);
             $('#configBackroundImage').val(config.backround_image);
-            $('#configRows').val(config.number_of_rows);
             $('#configBackroundImage').trigger('change');
             $('#configColorBackground').val(config.color_background);
             $('#configColorForeground').val(config.color_foreground);
