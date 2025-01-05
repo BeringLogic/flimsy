@@ -48,11 +48,19 @@
         <input id="configBackroundImage" type="text" name="backround_image">
       </div>
       <div class="dialog-field">
-        <input type="radio" id="autodetect_colors" name="autodetect_colors" style="width:auto;" value="autodetect">
+        <input type="radio" id="autodetect_colors" name="color_type" style="width:auto;" value="autodetect">
         <label for="autodetect_colors" style="display:inline-block;">Autodetect Colors</label>
       </div>
       <div class="dialog-field">
-        <input type="radio" id="manual_colors" name="autodetect_colors" style="width:auto;" value="manual" checked>
+        <input type="radio" id="catppuccin_latte_colors" name="color_type" style="width:auto;" value="catppuccin_latte">
+        <label for="catppuccin_latte_colors" style="display:inline-block;">Catppuccin Latte</label>
+      </div>
+      <div class="dialog-field">
+        <input type="radio" id="catppuccin_mocha_colors" name="color_type" style="width:auto;" value="catppuccin_mocha">
+        <label for="catppuccin_mocha_colors" style="display:inline-block;">Catppuccin Mocha</label>
+      </div>
+      <div class="dialog-field">
+        <input type="radio" id="manual_colors" name="color_type" style="width:auto;" value="manual" checked>
         <label for="manual_colors" style="display:inline-block;">Manual Colors</label>
       </div>
       <div class="dialog-field">
