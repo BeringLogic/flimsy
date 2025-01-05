@@ -33,7 +33,7 @@ class ColorAutodetector {
       return $htmlColors;
     }
     catch (\Exception $e) {
-      error_log($e->getMessage());
+      error_log('ERROR: ' . $e->getMessage());
       return array('black', 'black', 'black'); 
     }
   }
