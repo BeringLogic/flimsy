@@ -1,6 +1,6 @@
 <?php
 require('db.php');
-require('icons.php');
+require('Icons.php');
 
 $db = new DB();
 $listId = $_GET['listId'];
