@@ -27,6 +27,7 @@
 * [ ] Customizable weather widget env variables overrides
 * [ ] Drag & Drop to reorder list
 * [ ] Drag & Drop to reorder items
+* [ ] Server status (CPU, RAM, Disks, Network)
 
 # Docker stuff I need to learn
 * [ ] Docker secrets
