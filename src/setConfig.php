@@ -1,5 +1,6 @@
 <?php
 require('db.php');
+require('icons.php');
 require('ColorAutodetector.php');
 
 $db = new db();
@@ -24,5 +25,12 @@ else {
 }
 
 $db->SetConfig($icon, $title, $backround_image, $color_background, $color_foreground, $color_items, $color_borders);
+
+if (!empty($icon)) {
+  $icons = new Icons();
+  if (!$icons->get($icon)) {
+    error_log("ERROR: Could not download icon!");
+  }
+}
 
 header("Location: /index.php");

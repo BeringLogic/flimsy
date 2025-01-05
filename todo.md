@@ -39,4 +39,3 @@
 # Bugs
 * [ ] Make the whole item clickable (even when logged in)
 * [ ] Login feedback to display AFTER the list has loaded
-* [ ] Icon is not downloaded when saving config
