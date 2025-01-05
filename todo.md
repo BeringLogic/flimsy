@@ -22,7 +22,7 @@
 * [x] Customizable number of columns (customizable per list)
 * [x] Customizable colors 
 * [x] Automatically pick the colors from the background image
-* [ ] Catppuccin colors (mocha and latte)
+* [x] Catppuccin colors (mocha and latte)
 * [ ] Customizable login env variables overrides
 * [ ] Customizable weather widget env variables overrides
 * [ ] Drag & Drop to reorder list
