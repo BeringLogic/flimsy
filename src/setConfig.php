@@ -1,6 +1,6 @@
 <?php
 require('db.php');
-require('ColorExtractor.php');
+require('ColorAutodetector.php');
 
 $db = new db();
 $icon = $_POST['icon'];
