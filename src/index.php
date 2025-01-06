@@ -181,6 +181,10 @@
             location.href = 'removeItem.php?itemId=' + itemId;
           });
 
+          if (<?php echo !empty($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true ? "true" : "false"; ?>) {
+            $('button').css('display', 'inline-block');
+          }
+
           loadConfig();
           updateWeather();
         },
@@ -285,10 +289,6 @@
         url: 'initDB.php',
         success: (data) => {
           loadData();
-
-          if (<?php echo !empty($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true ? "true" : "false"; ?>) {
-            $('button').css('display', 'inline-block');
-          }
 
           <?php if (!empty($_SESSION['message'])) {
             echo 'alert("' . $_SESSION['message'] . '");';
