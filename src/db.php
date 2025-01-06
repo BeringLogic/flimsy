@@ -39,7 +39,8 @@ class DB {
           title TEXT NOT NULL,
           href TEXT NOT NULL,
           icon TEXT NOT NULL,
-          FOREIGN KEY(list_id) REFERENCES lists(id)
+          FOREIGN KEY(list_id) REFERENCES lists(id),
+          position INTEGER NOT NULL
         );"
       );
 
