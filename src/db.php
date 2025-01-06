@@ -155,8 +155,8 @@ class DB {
     $ret = true;
 
     $this->dbh->exec('BEGIN TRANSACTION'); 
+    $stmt = $this->dbh->prepare('UPDATE item SET list_id = :list_id, position = :position WHERE id = :id');
     for ($i = 0; $i < count($itemIds); $i++) {
-      $stmt = $this->dbh->prepare('UPDATE item SET list_id = :list_id, position = :position WHERE id = :id');
       $stmt->bindValue(':list_id', $listId);
       $stmt->bindValue(':position', $i);
       $stmt->bindValue(':id', $itemIds[$i]);
