@@ -7,6 +7,8 @@
 * [x] Edit item
 * [x] Delete list
 * [x] Delete item
+* [x] Drag & Drop to reorder list
+* [x] Drag & Drop to reorder items
 * [x] Make items clickable
 * [x] Login to edit
 * [x] Preserve icons aspect ratio
@@ -25,8 +27,6 @@
 * [x] Catppuccin colors (mocha and latte)
 * [ ] Customizable login env variables overrides
 * [ ] Customizable weather widget env variables overrides
-* [ ] Drag & Drop to reorder list
-* [x] Drag & Drop to reorder items
 * [ ] Server status (CPU, RAM, Disks, Network)
 
 # Docker stuff I need to learn

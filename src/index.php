@@ -31,6 +31,8 @@
     <h1><span id="title"></span><button id="config">⚙️</button></h1>
   </header>
 
+  <div id="lists"></div>
+
   <button id="addList">➕ Add List</button>
 
   <div id="configDialog" class="dialog">
@@ -134,6 +136,18 @@
 
           <?php if (!empty($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true) { ?>
           $(function() {
+            $('#lists').sortable({
+              stop: function(event, ui) {
+                const listIds = $(ui.item).parent().children("div.list").map((l, el) => el.id.replace('list_', '')).toArray();
+                $.ajax({
+                  url: 'reorderLists.php',
+                  method: 'POST',
+                  data: {
+                    listIds: listIds
+                  }
+                });
+              } 
+            })
             $("div.list").sortable({
               items: "div.item",
               connectWith: ".list",
@@ -246,7 +260,8 @@
         items.append($('<div class="addItem"><button id="addItem_' + l.id + '">➕ Add Item</button></div>'));
 
         list.append(items);
-        list.insertBefore($('#addList'));
+
+        $('#lists').append(list);
       });
 
     }

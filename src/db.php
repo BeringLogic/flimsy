@@ -31,7 +31,8 @@ class DB {
         "CREATE TABLE list (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title TEXT NOT NULL,
-          number_of_rows INTEGER NOT NULL
+          number_of_rows INTEGER NOT NULL,
+          position INTEGER NOT NULL
         );",
         "CREATE TABLE item ( 
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -76,7 +77,7 @@ class DB {
   }
 
   public function getAllLists() {
-    $stmt = $this->dbh->prepare('SELECT * FROM list');
+    $stmt = $this->dbh->prepare('SELECT * FROM list ORDER BY position');
     $result = $stmt->execute();
     $data = array();
     while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
@@ -98,7 +99,7 @@ class DB {
   }
 
   public function AddList($title, $numberOfRows) {
-    $stmt = $this->dbh->prepare('INSERT INTO list (title, number_of_rows) VALUES (:title, :number_of_rows)');
+    $stmt = $this->dbh->prepare('INSERT INTO list (title, number_of_rows, position) VALUES (:title, :number_of_rows, (SELECT max(position) + 1 FROM list))');
     $stmt->bindValue(':title', $title);
     $stmt->bindValue(':number_of_rows', $numberOfRows);
     return $stmt->execute() !== false;
@@ -118,6 +119,23 @@ class DB {
     return $stmt->execute() !== false;
   }
 
+  public function reorderLists($listIds) {
+    $ret = true;
+
+    $this->dbh->exec('BEGIN TRANSACTION'); 
+    $stmt = $this->dbh->prepare('UPDATE list SET position = :position WHERE id = :id');
+    for ($i = 0; $i < count($listIds); $i++) {
+      $stmt->bindValue(':position', $i);
+      $stmt->bindValue(':id', $listIds[$i]);
+      if ($stmt->execute() === false) {
+        $ret = false;
+        break;
+      }
+    }
+    $this->dbh->exec('COMMIT');
+
+    return $ret;
+  }
   public function AddItem($listId, $title, $href, $icon) {
     $stmt = $this->dbh->prepare('INSERT INTO item (list_id, title, href, icon, position) VALUES (:list_id, :title, :href, :icon, (select max(position) + 1 from item where list_id = :list_id))');
     $stmt->bindValue(':list_id', $listId);
