@@ -132,6 +132,27 @@
         success: (data) => {
           render(data);
 
+          <?php if (!empty($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true) { ?>
+          $(function() {
+            $("div.list").sortable({
+              items: "div.item",
+              connectWith: ".list",
+              stop: function(event, ui) {
+                const listId = $(ui.item).parent().parent().attr('id').replace('list_', '');
+                const itemIds = $(ui.item).parent().children("div.item").map((i, el) => el.id.replace('item_', '')).toArray();
+                $.ajax({
+                  url: 'reorderItems.php',
+                  method: 'POST',
+                  data: {
+                    listId: listId,
+                    itemIds: itemIds
+                  }
+                });
+              }
+            });
+          });
+          <?php } ?>
+
           $('button.editList').click((e) => {
             const id = e.target.id.replace('editList_', '');
             $('#editListDialog form').attr('action', 'editList.php?id=' + id);
@@ -199,13 +220,13 @@
 
     function render(data) {
       data.forEach(l => {
-        var list = $('<div class="list"></div>');
+        var list = $('<div id="list_' + l.id + '" class="list"></div>');
         list.append($('<h2>' + l.title + ' <button id="editList_' + l.id + '" class="editList">✍️</button><button id="removeList_' + l.id + '" class="removeList">❌</button></h2>'));
         items = $('<div class="items"></div>');
         items.css('grid-template-columns', 'repeat(' + l.number_of_rows + ', 1fr)');
 
         l.items.forEach(i => {
-          var item = $('<div class="item"></div>');
+          var item = $('<div id="item_' + i.id + '" class="item"></div>');
           item.append($('<button id="removeItem_' + i.id + '" class="removeItem">❌</button><button id="editItem_' + i.id + '" class="editItem">✍️</button>'));
 
           var link = $('<a class="href" href="' + i.href + '" target="_blank"></a>');

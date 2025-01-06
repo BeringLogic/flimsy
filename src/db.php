@@ -86,7 +86,7 @@ class DB {
   }
 
   public function getAllItems() {
-    $stmt = $this->dbh->prepare('SELECT * FROM item');
+    $stmt = $this->dbh->prepare('SELECT * FROM item ORDER BY list_id, position');
     $result = $stmt->execute();
     $data = array();
     while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
@@ -118,7 +118,7 @@ class DB {
   }
 
   public function AddItem($listId, $title, $href, $icon) {
-    $stmt = $this->dbh->prepare('INSERT INTO item (list_id, title, href, icon) VALUES (:list_id, :title, :href, :icon)');
+    $stmt = $this->dbh->prepare('INSERT INTO item (list_id, title, href, icon, position) VALUES (:list_id, :title, :href, :icon, (select max(position) + 1 from item where list_id = :list_id))');
     $stmt->bindValue(':list_id', $listId);
     $stmt->bindValue(':title', $title);
     $stmt->bindValue(':href', $href);
@@ -150,5 +150,22 @@ class DB {
     return $stmt->execute() !== false;
   }
 
+  public function reorderItems($listId, $itemIds) {
+    $ret = true;
+
+    $this->dbh->exec('BEGIN TRANSACTION'); 
+    for ($i = 0; $i < count($itemIds); $i++) {
+      $stmt = $this->dbh->prepare('UPDATE item SET list_id = :list_id, position = :position WHERE id = :id');
+      $stmt->bindValue(':list_id', $listId);
+      $stmt->bindValue(':position', $i);
+      $stmt->bindValue(':id', $itemIds[$i]);
+      if ($stmt->execute() === false) {
+        $ret = false;
+        break;
+      }
+    }
+    $this->dbh->exec('COMMIT');
+    return $ret;
+  }
 }
 
