@@ -25,9 +25,13 @@
 * [x] Customizable colors 
 * [x] Automatically pick the colors from the background image
 * [x] Catppuccin colors (mocha and latte)
+* [x] Server status (CPU temp)
+* [x] Server status (RAM)
+* [x] Server status (SWAP)
+* [x] Server status (Disks)
+* [ ] Server status (Network)
 * [ ] Customizable login env variables overrides
 * [ ] Customizable weather widget env variables overrides
-* [ ] Server status (CPU, RAM, Disks, Network)
 
 # Docker stuff I need to learn
 * [ ] Docker secrets

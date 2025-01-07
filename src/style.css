@@ -13,14 +13,15 @@ body {
   margin-right: 20px;
   vertical-align: text-bottom;
 }
-h1 {
+#title {
   display: inline-block;
   margin: 0;
   font-size: 4em;
   text-shadow: 0 0 2px #1e1e2e;
 }
-#config {
-  margin-left: 20px;
+#configButton {
+  float: right;
+  margin: 10px 10px;
   vertical-align: middle;
 }
 
@@ -31,11 +32,36 @@ button {
 a.login,
 a.logout {
   float: right;
-  color: white;
-  margin-right: 10px;
+  color: #cdd6f4;
+  margin: 14px 20px;
 }
 
 
+/*
+* System Info
+*/
+#system-info {
+  float:right;
+  margin-right: 20px;
+}
+  #system-info div {
+    display: inline-block;
+    vertical-align: top;
+    text-align: center; 
+    margin: 10px;
+  }
+  #system-info i {
+    display: block;
+    margin-bottom: 5px;
+    font-size: xx-large;
+  }
+  #system-info div.mount-point,
+  #system-info div.free-disk-space {
+    display: block;
+    margin: 0;
+  }
+
+  
 /*
 * Weather
 */
@@ -141,3 +167,4 @@ div.dialog {
 input:invalid {
   box-shadow: 0 0 5px 1px red;
 }
+

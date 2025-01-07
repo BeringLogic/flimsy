@@ -5,6 +5,7 @@
   <title>Flimsy</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://www.nerdfonts.com/assets/css/webfont.css">
   <script
 			  src="https://code.jquery.com/jquery-3.7.1.min.js"
 			  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
@@ -22,13 +23,19 @@
       <div class="temp"></div>
       <div class="description"></div>
     </div>
+    <div id="system-info">
+      <div><i class="nf nf-oct-cpu"></i><span id="cpu-temp">?</span> °C</div>
+      <div><i class="nf nf-fa-memory"></i><span id="free-memory">?</span> free</div>
+      <div><i class="nf nf-md-swap_horizontal"></i><span id="free-swap">?</span> free</div>
+   </div>
     <?php if (empty($_SESSION['loggedIn'])) { ?>
       <a class="login" href="#">Login</a>
     <?php } else { ?>
       <a class="logout" href="logout.php">Logout</a>
     <?php } ?>
+    <button id="configButton">⚙️</button>
     <img id="icon">
-    <h1><span id="title"></span><button id="config">⚙️</button></h1>
+    <h1 id="title"></h1>
   </header>
 
   <div id="lists"></div>
@@ -80,6 +87,10 @@
       <div class="dialog-field">
         <label for="configColorBorders">Borders</label>
         <input id="configColorBorders" type="color" name="color_borders" required>
+      </div>
+      <div class="dialog-field">
+        <label for="configMountPoints">Mount Points</label>
+        <input id="configMountPoints" name="mount_points">
       </div>
     </form>
   </div>
@@ -222,6 +233,7 @@
 
           loadConfig();
           updateWeather();
+          updateSystemInfo();
         },
         error: (error, status, xhr) => {
           alert("An error occured while loading the data! Make sure /data is writable by the www-data user (UID 33, GID 33).");
@@ -281,7 +293,7 @@
             $('body').css('background-image', 'url(backgrounds/' + config.backround_image + ')');
           }
           $('body').css('background-color', config.color_background);
-          $('body').css('color', config.color_foreground);
+          $('body, a.login, a.logout').css('color', config.color_foreground);
           $('#title, .list h2').css('text-shadow', '1px 1px ' + config.color_background);
           $('.item a').css('color', config.color_foreground);
           $('.item').css('background-color', config.color_items);
@@ -319,6 +331,26 @@
       });
     }
 
+    function updateSystemInfo()
+    {
+      $.ajax({
+        url: 'getSystemInfo.php',
+        success: (data) => {
+          $('#cpu-temp').html(data.cpu_temp);
+          $('#free-memory').html(data.free_memory);
+          $('#free-swap').html(data.free_swap);
+
+          data.disks.forEach((d) => {
+            var div = $('<div></div>');
+            $('<i class="nf nf-md-harddisk"></i>').appendTo(div);
+            $('<div class="free-disk-space">' + d.free_disk_space + ' free</div>').appendTo(div);
+            $('<div class="mount-point">' + d.mount_point + '</div>').appendTo(div);
+            div.appendTo($('#system-info'));
+          })
+        }
+      });
+    }
+
     $('document').ready(() => {
 
       $.ajax({
@@ -333,7 +365,7 @@
         }
       });
 
-      $('#config').click(() => {
+      $('#configButton').click(() => {
         $.ajax({
           url: 'getConfig.php',
           success: (config) => {
@@ -345,6 +377,7 @@
             $('#configColorForeground').val(config.color_foreground);
             $('#configColorItems').val(config.color_items);
             $('#configColorBorders').val(config.color_borders);
+            $('#configMountPoints').val(config.mount_points);
             $('#configDialog').dialog('open');
           }
         })
