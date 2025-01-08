@@ -24,10 +24,10 @@
       <div class="description"></div>
     </div>
     <div id="system-info">
-      <div><i class="nf nf-oct-cpu"></i><span id="cpu-temp">?</span> °C</div>
+      <div><i class="nf nf-oct-cpu"></i><span id="cpu-temp">?</span></div>
       <div><i class="nf nf-fa-memory"></i><span id="free-memory">?</span> free</div>
       <div><i class="nf nf-md-swap_horizontal"></i><span id="free-swap">?</span> free</div>
-   </div>
+    </div>
     <?php if (empty($_SESSION['loggedIn'])) { ?>
       <a class="login" href="#">Login</a>
     <?php } else { ?>
@@ -44,53 +44,72 @@
 
   <div id="configDialog" class="dialog">
     <form action="setConfig.php" method="post">
-      <div class="dialog-field">
-        <label for="configIcon">Icon</label>
-        <input id="configIcon" type="text" name="icon">
+      <div class="dialog-column">
+        <fieldset>
+          <legend>Settings</legend>
+          <div class="dialog-field">
+            <label for="configIcon">Icon</label>
+            <input id="configIcon" type="text" name="icon">
+          </div>
+          <div class="dialog-field">
+            <label for="configTitle">Title</label>
+            <input id="configTitle" type="text" name="title">
+          </div>
+          <div class="dialog-field">
+            <label for="configBackroundImage">Backround Image</label>
+            <input id="configBackroundImage" type="text" name="backround_image">
+          </div>
+        </fieldset>
       </div>
-      <div class="dialog-field">
-        <label for="configTitle">Title</label>
-        <input id="configTitle" type="text" name="title">
+      <div class="dialog-column">
+        <fieldset>
+          <legend>Colors</legend>
+          <div class="dialog-field">
+            <input type="radio" id="autodetect_colors" name="color_type" style="width:auto;" value="autodetect">
+            <label for="autodetect_colors" style="display:inline-block;">Autodetect Colors</label>
+          </div>
+          <div class="dialog-field">
+            <input type="radio" id="catppuccin_latte_colors" name="color_type" style="width:auto;" value="catppuccin_latte">
+            <label for="catppuccin_latte_colors" style="display:inline-block;">Catppuccin Latte</label>
+          </div>
+          <div class="dialog-field">
+            <input type="radio" id="catppuccin_mocha_colors" name="color_type" style="width:auto;" value="catppuccin_mocha">
+            <label for="catppuccin_mocha_colors" style="display:inline-block;">Catppuccin Mocha</label>
+          </div>
+          <div class="dialog-field">
+            <input type="radio" id="manual_colors" name="color_type" style="width:auto;" value="manual" checked>
+            <label for="manual_colors" style="display:inline-block;">Manual Colors</label>
+          </div>
+          <div class="dialog-field">
+            <label for="configColorBackground">Background</label>
+            <input id="configColorBackground" type="color" name="color_background" required>
+          </div>
+          <div class="dialog-field">
+            <label for="configColorForeground">Foreground</label>
+            <input id="configColorForeground" type="color" name="color_foreground" required>
+          </div>
+          <div class="dialog-field">
+            <label for="configColorItems">Items</label>
+            <input id="configColorItems" type="color" name="color_items" required>
+          </div>
+          <div class="dialog-field">
+            <label for="configColorBorders">Borders</label>
+            <input id="configColorBorders" type="color" name="color_borders" required>
+          </div>
+        </fieldset>
       </div>
-      <div class="dialog-field">
-        <label for="configBackroundImage">Backround Image</label>
-        <input id="configBackroundImage" type="text" name="backround_image">
-      </div>
-      <div class="dialog-field">
-        <input type="radio" id="autodetect_colors" name="color_type" style="width:auto;" value="autodetect">
-        <label for="autodetect_colors" style="display:inline-block;">Autodetect Colors</label>
-      </div>
-      <div class="dialog-field">
-        <input type="radio" id="catppuccin_latte_colors" name="color_type" style="width:auto;" value="catppuccin_latte">
-        <label for="catppuccin_latte_colors" style="display:inline-block;">Catppuccin Latte</label>
-      </div>
-      <div class="dialog-field">
-        <input type="radio" id="catppuccin_mocha_colors" name="color_type" style="width:auto;" value="catppuccin_mocha">
-        <label for="catppuccin_mocha_colors" style="display:inline-block;">Catppuccin Mocha</label>
-      </div>
-      <div class="dialog-field">
-        <input type="radio" id="manual_colors" name="color_type" style="width:auto;" value="manual" checked>
-        <label for="manual_colors" style="display:inline-block;">Manual Colors</label>
-      </div>
-      <div class="dialog-field">
-        <label for="configColorBackground">Background</label>
-        <input id="configColorBackground" type="color" name="color_background" required>
-      </div>
-      <div class="dialog-field">
-        <label for="configColorForeground">Foreground</label>
-        <input id="configColorForeground" type="color" name="color_foreground" required>
-      </div>
-      <div class="dialog-field">
-        <label for="configColorItems">Items</label>
-        <input id="configColorItems" type="color" name="color_items" required>
-      </div>
-      <div class="dialog-field">
-        <label for="configColorBorders">Borders</label>
-        <input id="configColorBorders" type="color" name="color_borders" required>
-      </div>
-      <div class="dialog-field">
-        <label for="configMountPoints">Mount Points</label>
-        <input id="configMountPoints" name="mount_points">
+      <div class="dialog-column">
+        <fieldset>
+          <legend>System Info</legend>
+          <div class="dialog-field">
+            <label for="configCpuTempSensor">CPU Temp Sensor</label>
+            <input id="configCpuTempSensor" name="cpu_temp_sensor">
+          </div>
+          <div class="dialog-field">
+            <label for="configMountPoints">Mount Points</label>
+            <input id="configMountPoints" name="mount_points">
+          </div>
+        </fieldset>
       </div>
     </form>
   </div>
@@ -336,7 +355,12 @@
       $.ajax({
         url: 'getSystemInfo.php',
         success: (data) => {
-          $('#cpu-temp').html(data.cpu_temp);
+          if (data.cpu_temp.endsWith('C')) {
+            $('#cpu-temp').html(data.cpu_temp);
+          }
+          else {
+            $('#cpu-temp').html(data.cpu_temp + ' °C');
+          }
           $('#free-memory').html(data.free_memory);
           $('#free-swap').html(data.free_swap);
 
@@ -377,6 +401,7 @@
             $('#configColorForeground').val(config.color_foreground);
             $('#configColorItems').val(config.color_items);
             $('#configColorBorders').val(config.color_borders);
+            $('#configCpuTempSensor').val(config.cpu_temp_sensor);
             $('#configMountPoints').val(config.mount_points);
             $('#configDialog').dialog('open');
           }
@@ -387,6 +412,7 @@
         title: 'Config',
         autoOpen: false,
         modal: true,
+        width: 1010,
         buttons: {
           "Save": () => {
             if ($('#configDialog :invalid').length > 0) {

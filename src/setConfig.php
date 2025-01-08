@@ -8,6 +8,7 @@ $icon = $_POST['icon'];
 $title = $_POST['title'];
 $backround_image = $_POST['backround_image'];
 $color_type = $_POST['color_type'];
+$cpu_temp_sensor = $_POST['cpu_temp_sensor'];
 $mount_points = $_POST['mount_points'];
 
 switch ($color_type) {
@@ -42,7 +43,7 @@ switch ($color_type) {
     break;
 }
 
-$db->SetConfig($icon, $title, $backround_image, $color_background, $color_foreground, $color_items, $color_borders, $mount_points);
+$db->SetConfig($icon, $title, $backround_image, $color_background, $color_foreground, $color_items, $color_borders, $cpu_temp_sensor, $mount_points);
 
 if (!empty($icon)) {
   $icons = new Icons();

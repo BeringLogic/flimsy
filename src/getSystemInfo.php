@@ -5,7 +5,7 @@ $config = $db->getConfig();
 
 $result = array();
 
-$result['cpu_temp'] = exec('cat /sys/class/thermal/thermal_zone0/temp') / 1000;
+$result['cpu_temp'] = exec('sensors | grep "'.$config["cpu_temp_sensor"].'" | cut -d ":" -f 2 | awk \'{ print $1 }\'');
 $result['free_memory'] = exec('free -h | grep Mem | awk \'{ print $4 }\'');
 $result['free_swap'] = exec('free -h | tail -n 1 | awk \'{ print $4 }\'');
 $result['disks'] = array();

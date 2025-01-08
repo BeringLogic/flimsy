@@ -1,7 +1,7 @@
 FROM php:8.2-apache
 
 RUN apt-get update \
-  && apt-get install -y libavif-dev libjpeg62-turbo-dev libpng-dev libxpm-dev libwebp-dev \
+  && apt-get install -y libavif-dev libjpeg62-turbo-dev libpng-dev libxpm-dev libwebp-dev lm-sensors \
   && docker-php-ext-configure gd --with-avif --with-jpeg --with-xpm --with-webp \
   && docker-php-ext-install -j$(nproc) gd
 
