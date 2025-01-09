@@ -28,8 +28,9 @@
 * [x] Server status (CPU temp)
 * [x] Server status (RAM)
 * [x] Server status (SWAP)
-* [x] Server status (Disks)
+* [x] Server status (Storage)
 * [ ] Server status (Network)
+* [ ] Server status (public IP)
 * [ ] Customizable login env variables overrides
 * [ ] Customizable weather widget env variables overrides
 
@@ -39,7 +40,7 @@
 * [ ] Find the proper way to deal with Dev and Production
 * [ ] Docker integration
 * [ ] Color in errors in Docker logs?
-* [ ] Update README.md with infos on how to install and how to use the app
+* [ ] Update README.md with features, infos on how to install and how to use the app
 
 # Bugs
 * [ ] Make the whole item clickable (even when logged in)
