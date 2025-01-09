@@ -41,6 +41,9 @@
 * [ ] Docker integration
 * [ ] Color in errors in Docker logs?
 * [ ] Update README.md with features, infos on how to install and how to use the app
+* [ ] echo to stderr instead of using error_log()
+* [ ] Dockerfile ENTRYPOINT
+* [ ] Put ENV defaults in Dockerfile
 
 # Bugs
 * [ ] Make the whole item clickable (even when logged in)
