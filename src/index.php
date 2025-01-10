@@ -333,15 +333,15 @@
       $.ajax({
         url: 'https://api.openweathermap.org/data/2.5/weather',
         data: {
-          lon : <?php echo $_ENV["FLIMSY_WEATHER_LONGITUDE"] ?: 0; ?>,
-          lat : <?php echo $_ENV["FLIMSY_WEATHER_LATITUDE"] ?: 0; ?>,
-          units : '<?php echo $_ENV["FLIMSY_WEATHER_UNITS"] ?: "standard"; ?>',
-          lang : '<?php echo $_ENV["FLIMSY_WEATHER_LANGUAGE"] ?: "en"; ?>',
-          appid : '<?php echo $_ENV["FLIMSY_WEATHER_API_KEY"] ?: ""; ?>',
+          lon : <?php echo empty($_ENV["FLIMSY_WEATHER_LONGITUDE"]) ? 0 : $_ENV["FLIMSY_WEATHER_LONGITUDE"]; ?>,
+          lat : <?php echo empty($_ENV["FLIMSY_WEATHER_LATITUDE"]) ? 0 : $_ENV["FLIMSY_WEATHER_LATITUDE"]; ?>,
+          units : '<?php echo empty($_ENV["FLIMSY_WEATHER_UNITS"]) ? "standard" : $_ENV["FLIMSY_WEATHER_UNITS"]; ?>',
+          lang : '<?php echo empty($_ENV["FLIMSY_WEATHER_LANGUAGE"]) ? "en" : $_ENV["FLIMSY_WEATHER_LANGUAGE"]; ?>',
+          appid : '<?php echo empty($_ENV["FLIMSY_WEATHER_API_KEY"]) ? "" : $_ENV["FLIMSY_WEATHER_API_KEY"]; ?>',
         },
         success: (data) => {
           var units;
-          switch ('<?php echo $_ENV["FLIMSY_WEATHER_UNITS"] ?: "standard"; ?>') {
+          switch ('<?php echo empty($_ENV["FLIMSY_WEATHER_UNITS"]) ? "standard" : $_ENV["FLIMSY_WEATHER_UNITS"]; ?>') {
             default:
             case 'standard': units = 'K'; break;
             case 'metric': units = 'C'; break;
