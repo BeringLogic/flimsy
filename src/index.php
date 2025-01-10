@@ -317,6 +317,10 @@
           $('.item a').css('color', config.color_foreground);
           $('.item').css('background-color', config.color_items);
           $('.item').css('border-color', config.color_borders);
+
+          if (!config.cpu_temp_sensor) {
+            $('#system-info div:first-child()').css('display', 'none');
+          }
         }
       });
     }
