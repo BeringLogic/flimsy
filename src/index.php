@@ -462,7 +462,13 @@
         }
       });
       $('a.login').click(() => {
-        $('#loginDialog').dialog('open');
+        if (<?php if (empty($_ENV["FLIMSY_USERNAME"]) || empty($_ENV["FLIMSY_PASSWORD"])) { echo 'false'; } else { echo 'true'; } ?>) {
+          $('#loginDialog').dialog('open');
+        }
+        else {
+          window.location = 'login.php';
+          return;
+        }
       });
 
       $('#editListDialog').dialog({
