@@ -21,7 +21,7 @@ class DB {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           icon TEXT NULL,
           title TEXT NULL,
-          backround_image TEXT NULL
+          backround_image TEXT NULL,
           color_background TEXT NOT NULL,
           color_foreground TEXT NOT NULL,
           color_items TEXT NOT NULL,
@@ -29,7 +29,7 @@ class DB {
           cpu_temp_sensor TEXT,
           mount_points TEXT
         );",
-        "INSERT INTO config (icon, title, backround_image, cpu_temp_sensor, mount_points) VALUES (NULL, 'Flimsy Home Page', NULL, 'Package id 0', '/');",
+        "INSERT INTO config (icon, title, color_background, color_foreground, color_items, color_borders, cpu_temp_sensor, mount_points) VALUES (NULL, 'Flimsy Home Page', '#1e1e2e', '#cdd6f4', '#11111b;', '#6c7086;', 'Package id 0', '/');",
         "CREATE TABLE list (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title TEXT NOT NULL,
@@ -42,8 +42,8 @@ class DB {
           title TEXT NOT NULL,
           href TEXT NOT NULL,
           icon TEXT NOT NULL,
-          FOREIGN KEY(list_id) REFERENCES lists(id),
-          position INTEGER NOT NULL
+          position INTEGER NOT NULL,
+          FOREIGN KEY(list_id) REFERENCES lists(id)
         );"
       );
 
