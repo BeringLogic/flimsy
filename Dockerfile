@@ -7,8 +7,9 @@ RUN apt-get update \
   && docker-php-ext-configure gd --with-avif --with-jpeg --with-xpm --with-webp \
   && docker-php-ext-install -j$(nproc) gd \
   && echo 'memory_limit = 512M' >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini \
-  && rm -rf /var/lib/apt/lists/* \
-  && mkdir /data \ 
+  && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir /data \ 
   && mkdir /data/icons \
   && mkdir /data/backgrounds \
   && chown -R www-data:www-data /data \
