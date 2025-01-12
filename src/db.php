@@ -13,6 +13,9 @@ class DB {
    * @return false if there was an error while seeding
    **/
   public function init() {
+    $cpuTempSensor = empty($_ENV['FLIMSY_CPU_TEMP_SENSOR']) ? null : $_ENV['FLIMSY_CPU_TEMP_SENSOR'];
+    $mountPoints = empty($_ENV['FLIMSY_MOUNT_POINTS']) ? null : $_ENV['FLIMSY_MOUNT_POINTS'];
+
     if (@$this->dbh->prepare('SELECT * FROM config WHERE id = 1') === false) {
       error_log("Seeding /data/flimsy.db...");
 
@@ -29,7 +32,7 @@ class DB {
           cpu_temp_sensor TEXT,
           mount_points TEXT
         );",
-        "INSERT INTO config (icon, title, color_background, color_foreground, color_items, color_borders, cpu_temp_sensor, mount_points) VALUES (NULL, 'Flimsy Home Page', '#1e1e2e', '#cdd6f4', '#11111b;', '#6c7086;', 'Package id 0', '/');",
+        "INSERT INTO config (icon, title, color_background, color_foreground, color_items, color_borders, cpu_temp_sensor, mount_points) VALUES (NULL, 'Flimsy Home Page', '#1e1e2e', '#cdd6f4', '#11111b;', '#6c7086;', '$cpuTempSensor', '$mountPoints');",
         "CREATE TABLE list (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title TEXT NOT NULL,

@@ -48,4 +48,4 @@
 * [ ] Make the whole item clickable (even when logged in)
 * [ ] Login feedback to display AFTER the list has loaded
 * [ ] AH00558: apache2: Could not reliably determine the server's fully qualified domain name
-
+* [ ] Mount points must be accessible by www-data for df to work

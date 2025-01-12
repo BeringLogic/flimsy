@@ -5,19 +5,27 @@ services:
     hostname: flimsy
     ports:
       - 8888:80
+    volumes:
+      - ./data:/data
     environment:
+      # Optional: Login credentials. If none are specified, authentication is disabled.
       - FLIMSY_USERNAME=${FLIMSY_USERNAME}
       - FLIMSY_PASSWORD=${FLIMSY_PASSWORD}
+
+      # Optional: OpenWeatherMap.org API settings.
       - FLIMSY_WEATHER_API_KEY=${FLIMSY_WEATHER_API_KEY}
       - FLIMSY_WEATHER_LONGITUDE=${FLIMSY_WEATHER_LONGITUDE}
       - FLIMSY_WEATHER_LATITUDE=${FLIMSY_WEATHER_LATITUDE}
       - FLIMSY_WEATHER_UNITS=${FLIMSY_WEATHER_UNITS}
       - FLIMSY_WEATHER_LANGUAGE=${FLIMSY_WEATHER_LANGUAGE}
-    volumes:
-      - ./data:/data
+
+      # Optional: Name of the CPU Temp sensor in lm-sensors.
+      - FLIMSY_CPU_TEMP_SENSOR=${FLIMSY_CPU_TEMP_SENSOR}
+
+      # Optional: Coma separated list of storage mount points to monitor.
+      - FLIMSY_MOUNT_POINTS=${FLIMSY_MOUNT_POINTS}
     develop:
       watch:
         - action: sync
           path: ./src
           target: /var/www/html
-
