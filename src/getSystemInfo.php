@@ -13,7 +13,7 @@ $result['disks'] = array();
 if (!empty($config['mount_points'])) {
   foreach (explode(',', $config['mount_points']) as $mount_point) {
     if (!is_dir($mount_point)) {
-      error_log("ERROR: Invalid mount point: " . $mount_point . ". It doesn't exists or user www-data doesn't have permission to reach it.");
+      error_log("ERROR: Invalid mount point: " . $mount_point . ". It doesn't exist or user www-data doesn't have permission to reach it.");
       continue;
     }
     $result['disks'][] = array(
