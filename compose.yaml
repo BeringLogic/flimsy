@@ -19,7 +19,7 @@ services:
       - FLIMSY_WEATHER_UNITS=${FLIMSY_WEATHER_UNITS}
       - FLIMSY_WEATHER_LANGUAGE=${FLIMSY_WEATHER_LANGUAGE}
 
-      # Optional: Name of the CPU Temp sensor in lm-sensors.
+      # Optional: Name of the CPU Temp sensor in lm-sensors. Most likely "Tctl" for Ryzen CPUs or "Package id 0" for Xeon CPUs.
       - FLIMSY_CPU_TEMP_SENSOR=${FLIMSY_CPU_TEMP_SENSOR}
 
       # Optional: Coma separated list of storage mount points to monitor.
