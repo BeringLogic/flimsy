@@ -106,7 +106,7 @@ class DB {
   }
 
   public function AddList($title, $numberOfRows) {
-    $stmt = $this->dbh->prepare('INSERT INTO list (title, number_of_rows, position) VALUES (:title, :number_of_rows, (SELECT max(position) + 1 FROM list))');
+    $stmt = $this->dbh->prepare('INSERT INTO list (title, number_of_rows, position) VALUES (:title, :number_of_rows, (SELECT IFNULL(max(position), 0) + 1 FROM list))');
     $stmt->bindValue(':title', $title);
     $stmt->bindValue(':number_of_rows', $numberOfRows);
     return $stmt->execute() !== false;
@@ -144,7 +144,7 @@ class DB {
     return $ret;
   }
   public function AddItem($listId, $title, $href, $icon) {
-    $stmt = $this->dbh->prepare('INSERT INTO item (list_id, title, href, icon, position) VALUES (:list_id, :title, :href, :icon, (select max(position) + 1 from item where list_id = :list_id))');
+    $stmt = $this->dbh->prepare('INSERT INTO item (list_id, title, href, icon, position) VALUES (:list_id, :title, :href, :icon, (select IFNULL(max(position), 0) + 1 from item where list_id = :list_id))');
     $stmt->bindValue(':list_id', $listId);
     $stmt->bindValue(':title', $title);
     $stmt->bindValue(':href', $href);
