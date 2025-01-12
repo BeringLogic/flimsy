@@ -6,7 +6,7 @@ services:
     ports:
       - 8888:80
     volumes:
-      - ./data:/data
+      - ./data:/data # Make sure your local directory exists and is owned by www-data (UID 33)
     environment:
       # Optional: Login credentials. If none are specified, authentication is disabled.
       - FLIMSY_USERNAME=${FLIMSY_USERNAME}

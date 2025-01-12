@@ -49,3 +49,5 @@
 * [ ] Login feedback to display AFTER the list has loaded
 * [ ] AH00558: apache2: Could not reliably determine the server's fully qualified domain name
 * [ ] Mount points must be accessible by www-data for df to work
+* [ ] Data folder is owned by root on the host when starting the container without the folder
+* [ ] Error if icon doesn't exist should be handled gracefully
