@@ -3,10 +3,11 @@ services:
     build:
       context: .
     hostname: flimsy
+    user: 1000:1000
     ports:
       - 8888:80
     volumes:
-      - ./data:/data # Make sure your local directory exists and is owned by www-data (UID 33)
+      - ./data:/data # Make sure your local directory exists
     environment:
       # Optional: Login credentials. If none are specified, authentication is disabled.
       - FLIMSY_USERNAME=${FLIMSY_USERNAME}
