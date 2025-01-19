@@ -1,11 +1,14 @@
 services:
-  app:
+  web:
     build:
       context: .
-    hostname: flimsy
-    user: 1000:1000
+      dockerfile: ./web/Dockerfile
     ports:
       - 8888:80
+  app:
+    build:
+      context: ./app
+    user: 1000:1000
     volumes:
       - ./data:/data # Make sure your local directory exists
     environment:
@@ -28,5 +31,5 @@ services:
     develop:
       watch:
         - action: sync
-          path: ./src
-          target: /var/www/html
+          path: ./app/src
+          target: /var/www
