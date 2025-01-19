@@ -36,9 +36,13 @@
 * [ ] Customizable weather widget env variables overrides
 * [ ] Update README.md with features, infos on how to install and how to use the app
 * [ ] Docker integration
+* [ ] Organise the source code a bit. It's a mess...
+* [ ] Use cities for the weather widget, instead of lat/lon
+* [ ] File upload for backgrounds, now that it's working with a managed volume
 
 # Stuff I need to learn
 * [ ] Docker secrets
+* [ ] How to deal with /data. I want it to work with a managed volume, but I want it to work with a bound volume too. If bound, user must mkdir and chown 1000:1000 (flimsy user in the container). Awkward since 1000 might not be the user's id on the host...
 * [ ] How to run rootless (watch doesn't work: user doesn't exist)
 * [ ] Find the proper way to deal with Dev and Production
 * [ ] Color in errors in Docker logs?
