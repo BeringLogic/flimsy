@@ -33,20 +33,20 @@
 * [ ] Server status (public IP)
 * [ ] Customizable login env variables overrides
 * [ ] Customizable weather widget env variables overrides
-
-# Docker stuff I need to learn
-* [ ] Docker secrets
-* [ ] Find the proper way to deal with /data
-* [ ] Find the proper way to deal with Dev and Production
-* [ ] Docker integration
-* [ ] Color in errors in Docker logs?
 * [ ] Update README.md with features, infos on how to install and how to use the app
-* [ ] echo to stderr instead of using error_log()
-* [ ] Put ENV defaults in Dockerfile
+* [ ] Docker integration
+
+# Stuff I need to learn
+* [ ] Docker secrets
+* [ ] How to run rootless (watch doesn't work: user doesn't exist)
+* [ ] Find the proper way to deal with Dev and Production
+* [ ] Color in errors in Docker logs?
+* [ ] xdebug
 
 # Bugs
 * [ ] Make the whole item clickable (even when logged in)
 * [ ] Login feedback to display AFTER the list has loaded
-* [ ] AH00558: apache2: Could not reliably determine the server's fully qualified domain name
-* [ ] Mount points must be accessible by www-data for df to work
-* [ ] Error if icon doesn't exist should be handled gracefully
+* [ ] Mount points cannot be monitored (except /) as they are not mounted in the container
+* [ ] Error if icon doesn't exist in the dashboard icons project should be handled gracefully
+* [ ] Handle errors while creating flimsy.db
+* [ ] Duplication in logs
