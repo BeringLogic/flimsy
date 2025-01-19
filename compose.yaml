@@ -9,7 +9,7 @@ services:
       - ./data:/var/www/data
     # Optional: Only used for log files...
     environment:
-      - TZ=${TZ}
+      - TZ=${TZ:-UTC}
   app:
     build:
       context: ./app
@@ -18,7 +18,7 @@ services:
       - ./data:/data # Make sure your local directory exists
     environment:
       # Optional: Only used for log files...
-      - TZ=${TZ}
+      - TZ=${TZ:-UTC}
 
       # Optional: Login credentials. If none are specified, authentication is disabled.
       - FLIMSY_USERNAME=${FLIMSY_USERNAME}
