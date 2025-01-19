@@ -333,8 +333,8 @@
       $.ajax({
         url: 'https://api.openweathermap.org/data/2.5/weather',
         data: {
-          lon : <?php echo empty($_SERVER["FLIMSY_WEATHER_LONGITUDE"]) ? 0 : $_SERVER["FLIMSY_WEATHER_LONGITUDE"]; ?>,
           lat : <?php echo empty($_SERVER["FLIMSY_WEATHER_LATITUDE"]) ? 0 : $_SERVER["FLIMSY_WEATHER_LATITUDE"]; ?>,
+          lon : <?php echo empty($_SERVER["FLIMSY_WEATHER_LONGITUDE"]) ? 0 : $_SERVER["FLIMSY_WEATHER_LONGITUDE"]; ?>,
           units : '<?php echo empty($_SERVER["FLIMSY_WEATHER_UNITS"]) ? "standard" : $_SERVER["FLIMSY_WEATHER_UNITS"]; ?>',
           lang : '<?php echo empty($_SERVER["FLIMSY_WEATHER_LANGUAGE"]) ? "en" : $_SERVER["FLIMSY_WEATHER_LANGUAGE"]; ?>',
           appid : '<?php echo empty($_SERVER["FLIMSY_WEATHER_API_KEY"]) ? "" : $_SERVER["FLIMSY_WEATHER_API_KEY"]; ?>',
