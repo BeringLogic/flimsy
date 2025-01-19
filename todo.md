@@ -25,7 +25,7 @@
 * [x] Customizable colors 
 * [x] Automatically pick the colors from the background image
 * [x] Catppuccin colors (mocha and latte)
-* [x] Server status (CPU temp)
+* [x] Server status (CPU temp)
 * [x] Server status (RAM)
 * [x] Server status (SWAP)
 * [x] Server status (Storage)
@@ -38,7 +38,7 @@
 
 # Stuff I need to learn
 * [ ] Docker secrets
-* [ ] How to run rootless (watch doesn't work: user doesn't exist)
+* [ ] How to run rootless (watch doesn't work: user doesn't exist)
 * [ ] Find the proper way to deal with Dev and Production
 * [ ] Color in errors in Docker logs?
 * [ ] xdebug
@@ -47,6 +47,6 @@
 * [ ] Make the whole item clickable (even when logged in)
 * [ ] Login feedback to display AFTER the list has loaded
 * [ ] Mount points cannot be monitored (except /) as they are not mounted in the container
-* [ ] Error if icon doesn't exist in the dashboard icons project should be handled gracefully
+* [ ] Error if icon doesn't exist in the dashboard icons project should be handled gracefully
 * [ ] Handle errors while creating flimsy.db
 * [ ] Duplication in logs
