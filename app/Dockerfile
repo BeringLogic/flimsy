@@ -4,8 +4,11 @@ RUN apk add --no-cache lm-sensors tzdata
 
 RUN apk add --no-cache libpng-dev libjpeg-turbo-dev libwebp-dev libavif-dev libxpm-dev \
   && docker-php-ext-configure gd --with-avif --with-jpeg --with-xpm --with-webp \
-  && docker-php-ext-install -j$(nproc) gd \
-  && echo 'memory_limit = 512M' >> $PHP_INI_DIR/conf.d/docker-php-memlimit.ini \
+  && docker-php-ext-install -j$(nproc) gd
+
+RUN echo 'memory_limit = 512M' >> $PHP_INI_DIR/conf.d/docker-php-memlimit.ini \
+  && echo 'upload_max_filesize = 200M' >> $PHP_INI_DIR/conf.d/docker-php-uploadsize.ini \
+  && echo 'post_max_size = 200M' >> $PHP_INI_DIR/conf.d/docker-php-uploadsize.ini \
   && mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
 #RUN pecl install xdebug \

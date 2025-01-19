@@ -153,6 +153,9 @@ div.addItem {
 div.dialog {
   display: none;
 }
+  div.dialog fieldset {
+    margin-bottom: 22px;
+  }
   div.dialog div.dialog-column {
     display: inline-block;
     vertical-align: top;

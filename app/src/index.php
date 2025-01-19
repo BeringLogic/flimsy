@@ -43,10 +43,10 @@
   <button id="addList">➕ Add List</button>
 
   <div id="configDialog" class="dialog">
-    <form action="setConfig.php" method="post">
+    <form action="setConfig.php" method="post" enctype="multipart/form-data">
       <div class="dialog-column">
         <fieldset>
-          <legend>Settings</legend>
+          <legend>Header</legend>
           <div class="dialog-field">
             <label for="configIcon">Icon</label>
             <input id="configIcon" type="text" name="icon">
@@ -55,9 +55,20 @@
             <label for="configTitle">Title</label>
             <input id="configTitle" type="text" name="title">
           </div>
+        </fieldset>
+        <fieldset>
+          <legend>Background</legend>
           <div class="dialog-field">
-            <label for="configBackroundImage">Backround Image</label>
-            <input id="configBackroundImage" type="text" name="backround_image">
+            <input id="configBackgroundTypeUpload" type="radio" style="width:auto;" name="background_type" value="upload">
+            <input id="configBackgroundUpload" type="file" style="width:85%; display:inline-block;" name="background_image">
+          </div>
+          <div class="dialog-field">
+            <input id="configBackgroundTypeKeep" type="radio" style="width:auto;" name="background_type" value="keep" checked>
+            <input id="configBackgroundImage" type="text" style="width:85%; display:inline-block;" name="background_image">
+          </div>
+          <div class="dialog-field">
+            <input id="configBackgroundTypeNone" type="radio" style="width:auto;" name="background_type" value="none">
+            <label for="configBackgroundTypeNone" style="display:inline-block;">None</label>
           </div>
         </fieldset>
       </div>
@@ -113,6 +124,11 @@
           </div>
         </fieldset>
       </div>
+    </form>
+  </div>
+
+  <div id="uploadDialog" class="dialog">
+    <form action="uploadBackground.php" method="post" enctype="multipart/form-data">
     </form>
   </div>
 
@@ -310,8 +326,8 @@
           if (config.title) {
             $('#title').html(config.title);
           }
-          if (config.backround_image) {
-            $('body').css('background-image', 'url(backgrounds/' + config.backround_image + ')');
+          if (config.background_image) {
+            $('body').css('background-image', 'url(/data/backgrounds/' + config.background_image + ')');
           }
           $('body').css('background-color', config.color_background);
           $('body, a.login, a.logout').css('color', config.color_foreground);
@@ -401,13 +417,13 @@
           success: (config) => {
             $('#configTitle').val(config.title);
             $('#configIcon').val(config.icon);
-            $('#configBackroundImage').val(config.backround_image);
-            $('#configBackroundImage').trigger('change');
+            $('#configBackgroundImage').val(config.background_image);
+            $('#configBackgroundImage').trigger('change');
             $('#configColorBackground').val(config.color_background);
             $('#configColorForeground').val(config.color_foreground);
             $('#configColorItems').val(config.color_items);
             $('#configColorBorders').val(config.color_borders);
-            console.log(config.sensors);
+
             for (const [chip, sensors] of Object.entries(config.sensors)) {
               $('#configCpuTempSensor').append($('<optgroup label="' + chip + '"></optgroup>'));
               for (const [sensorName, values] of Object.entries(sensors)) {
@@ -442,9 +458,14 @@
           }
         }
       });
-      $('#configBackroundImage').change((e) => {
+      $('#configBackgroundUpload').change(() => {
+        $('#autodetect_colors').removeAttr('disabled');
+        $('#configBackgroundTypeUpload').prop('checked', true);
+      });
+      $('#configBackgroundImage').change((e) => {
         if (e.target.value != '') { 
           $('#autodetect_colors').removeAttr('disabled');
+          $('#configBackgroundTypeKeep').prop('checked', true);
         }
         else {
           $('#autodetect_colors').attr('disabled', 'disabled');
@@ -454,6 +475,18 @@
       $('#autodetect_colors').change(() => {
         if ($('#autodetect_colors').is(':checked')) {
           $('#configDialog input[type=color]').attr('disabled', 'disabled');
+        }
+      });
+      $('#catppuccin_latte_colors').change(() => {
+        if ($('#catppuccin_latte_colors').is(':checked')) {
+          $('#configBackgroundImage').val('');
+          $('#configBackgroundTypeNone').prop('checked', true);
+        }
+      });
+      $('#catppuccin_mocha_colors').change(() => {
+        if ($('#catppuccin_mocha_colors').is(':checked')) {
+          $('#configBackgroundImage').val('');
+          $('#configBackgroundTypeNone').prop('checked', true);
         }
       });
       $('#manual_colors').change(() => {
@@ -479,7 +512,7 @@
         }
       });
       $('a.login').click(() => {
-        if (<?php if (empty($_SERVER["FLIMSY_USERNAME"]) || empty($_SERVER["FLIMSY_PASSWORD"])) { echo 'false'; } else { echo 'true'; } ?>) {
+        if (<?php if (empty($_SERVER) || empty($_SERVER["FLIMSY_PASSWORD"])) { echo 'false'; } else { echo 'true'; } ?>) {
           $('#loginDialog').dialog('open');
         }
         else {

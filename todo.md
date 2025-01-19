@@ -23,6 +23,7 @@
 * [x] Customizable background image
 * [x] Customizable number of columns (customizable per list)
 * [x] Customizable colors 
+* [x] File upload for backgrounds
 * [x] Automatically pick the colors from the background image
 * [x] Catppuccin colors (mocha and latte)
 * [x] Output of lm-sensors in a list so users can figure out their CPU sensor's name
@@ -38,7 +39,6 @@
 * [ ] Docker integration
 * [ ] Organise the source code a bit. It's a mess...
 * [ ] Use cities for the weather widget, instead of lat/lon
-* [ ] File upload for backgrounds, now that it's working with a managed volume
 
 # Stuff I need to learn
 * [ ] Docker secrets

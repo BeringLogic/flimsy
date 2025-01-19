@@ -34,7 +34,7 @@ class DB {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           icon TEXT NULL,
           title TEXT NULL,
-          backround_image TEXT NULL,
+          background_image TEXT NULL,
           color_background TEXT NOT NULL,
           color_foreground TEXT NOT NULL,
           color_items TEXT NOT NULL,
@@ -79,11 +79,11 @@ class DB {
     $result->finalize();
     return $data;
   }
-  public function SetConfig($icon, $title, $backround_image, $color_background, $color_foreground, $color_items, $color_borders, $cpu_temp_sensor, $mount_points) {
-    $stmt = $this->dbh->prepare('UPDATE config SET icon = :icon, title = :title, backround_image = :backround_image, color_background = :color_background, color_foreground = :color_foreground, color_items = :color_items, color_borders = :color_borders, cpu_temp_sensor = :cpu_temp_sensor, mount_points = :mount_points WHERE id = 1');
+  public function SetConfig($icon, $title, $background_image, $color_background, $color_foreground, $color_items, $color_borders, $cpu_temp_sensor, $mount_points) {
+    $stmt = $this->dbh->prepare('UPDATE config SET icon = :icon, title = :title, background_image = :background_image, color_background = :color_background, color_foreground = :color_foreground, color_items = :color_items, color_borders = :color_borders, cpu_temp_sensor = :cpu_temp_sensor, mount_points = :mount_points WHERE id = 1');
     $stmt->bindValue(':icon', $icon);
     $stmt->bindValue(':title', $title);
-    $stmt->bindValue(':backround_image', $backround_image);
+    $stmt->bindValue(':background_image', $background_image);
     $stmt->bindValue(':color_background', $color_background);
     $stmt->bindValue(':color_foreground', $color_foreground);
     $stmt->bindValue(':color_items', $color_items);
