@@ -1,3 +1,6 @@
 [submodule "color-extractor"]
 	path = color-extractor
 	url = https://github.com/thephpleague/color-extractor.git
+[submodule "app/color-extractor"]
+	path = app/color-extractor
+	url = https://github.com/thephpleague/color-extractor.git
