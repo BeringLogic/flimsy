@@ -32,7 +32,7 @@ class DB {
           cpu_temp_sensor TEXT,
           mount_points TEXT
         );",
-        "INSERT INTO config (icon, title, color_background, color_foreground, color_items, color_borders, cpu_temp_sensor, mount_points) VALUES (NULL, 'Flimsy Home Page', '#1e1e2e', '#cdd6f4', '#11111b;', '#6c7086;', '$cpuTempSensor', '$mountPoints');",
+        "INSERT INTO config (icon, title, color_background, color_foreground, color_items, color_borders, cpu_temp_sensor, mount_points) VALUES (NULL, 'Flimsy Home Page', '#1e1e2e', '#cdd6f4', '#11111b', '#6c7086', '$cpuTempSensor', '$mountPoints');",
         "CREATE TABLE list (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title TEXT NOT NULL,
