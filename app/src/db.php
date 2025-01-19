@@ -5,7 +5,12 @@ class DB {
   
   public function __construct()
   {
-    $this->dbh = new SQLite3('/data/flimsy.db', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+    try {
+      $this->dbh = new SQLite3('/data/flimsy.db', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+    }
+    catch (Exception $e) {
+      error_log($e->getMessage());
+    }
   }
 
   /**
@@ -15,6 +20,10 @@ class DB {
   public function init() {
     $cpuTempSensor = empty($_SERVER['FLIMSY_CPU_TEMP_SENSOR']) ? null : $_SERVER['FLIMSY_CPU_TEMP_SENSOR'];
     $mountPoints = empty($_SERVER['FLIMSY_MOUNT_POINTS']) ? null : $_SERVER['FLIMSY_MOUNT_POINTS'];
+    
+    if ($this->dbh === null) {
+      return false;
+    }
 
     if (@$this->dbh->prepare('SELECT * FROM config WHERE id = 1') === false) {
       error_log("Seeding /data/flimsy.db...");
