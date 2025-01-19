@@ -7,6 +7,9 @@ services:
       - 8888:80
     volumes:
       - ./data:/var/www/data
+    # Optional: Only used for log files...
+    environment:
+      - TZ=${TZ}
   app:
     build:
       context: ./app
@@ -14,6 +17,9 @@ services:
     volumes:
       - ./data:/data # Make sure your local directory exists
     environment:
+      # Optional: Only used for log files...
+      - TZ=${TZ}
+
       # Optional: Login credentials. If none are specified, authentication is disabled.
       - FLIMSY_USERNAME=${FLIMSY_USERNAME}
       - FLIMSY_PASSWORD=${FLIMSY_PASSWORD}

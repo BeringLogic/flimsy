@@ -2,7 +2,9 @@ FROM php:8.4-fpm-alpine
 
 WORKDIR /var/www/html
 
-RUN apk add --no-cache libpng-dev libjpeg-turbo-dev libwebp-dev libavif-dev libxpm-dev lm-sensors \
+RUN apk add --no-cache lm-sensors tzdata
+
+RUN apk add --no-cache libpng-dev libjpeg-turbo-dev libwebp-dev libavif-dev libxpm-dev \
   && docker-php-ext-configure gd --with-avif --with-jpeg --with-xpm --with-webp \
   && docker-php-ext-install -j$(nproc) gd \
   && echo 'memory_limit = 512M' >> $PHP_INI_DIR/conf.d/docker-php-memlimit.ini \
