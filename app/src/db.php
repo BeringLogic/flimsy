@@ -13,8 +13,8 @@ class DB {
    * @return false if there was an error while seeding
    **/
   public function init() {
-    $cpuTempSensor = empty($_ENV['FLIMSY_CPU_TEMP_SENSOR']) ? null : $_ENV['FLIMSY_CPU_TEMP_SENSOR'];
-    $mountPoints = empty($_ENV['FLIMSY_MOUNT_POINTS']) ? null : $_ENV['FLIMSY_MOUNT_POINTS'];
+    $cpuTempSensor = empty($_SERVER['FLIMSY_CPU_TEMP_SENSOR']) ? null : $_SERVER['FLIMSY_CPU_TEMP_SENSOR'];
+    $mountPoints = empty($_SERVER['FLIMSY_MOUNT_POINTS']) ? null : $_SERVER['FLIMSY_MOUNT_POINTS'];
 
     if (@$this->dbh->prepare('SELECT * FROM config WHERE id = 1') === false) {
       error_log("Seeding /data/flimsy.db...");

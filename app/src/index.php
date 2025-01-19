@@ -326,22 +326,22 @@
     }
 
     function updateWeather() {
-      if (<?php echo empty($_ENV["FLIMSY_WEATHER_API_KEY"]) ? "true" : "false"; ?>) {
+      if (<?php echo empty($_SERVER["FLIMSY_WEATHER_API_KEY"]) ? "true" : "false"; ?>) {
         $('.weather').css('display', 'none');
         return;
       }
       $.ajax({
         url: 'https://api.openweathermap.org/data/2.5/weather',
         data: {
-          lon : <?php echo empty($_ENV["FLIMSY_WEATHER_LONGITUDE"]) ? 0 : $_ENV["FLIMSY_WEATHER_LONGITUDE"]; ?>,
-          lat : <?php echo empty($_ENV["FLIMSY_WEATHER_LATITUDE"]) ? 0 : $_ENV["FLIMSY_WEATHER_LATITUDE"]; ?>,
-          units : '<?php echo empty($_ENV["FLIMSY_WEATHER_UNITS"]) ? "standard" : $_ENV["FLIMSY_WEATHER_UNITS"]; ?>',
-          lang : '<?php echo empty($_ENV["FLIMSY_WEATHER_LANGUAGE"]) ? "en" : $_ENV["FLIMSY_WEATHER_LANGUAGE"]; ?>',
-          appid : '<?php echo empty($_ENV["FLIMSY_WEATHER_API_KEY"]) ? "" : $_ENV["FLIMSY_WEATHER_API_KEY"]; ?>',
+          lon : <?php echo empty($_SERVER["FLIMSY_WEATHER_LONGITUDE"]) ? 0 : $_SERVER["FLIMSY_WEATHER_LONGITUDE"]; ?>,
+          lat : <?php echo empty($_SERVER["FLIMSY_WEATHER_LATITUDE"]) ? 0 : $_SERVER["FLIMSY_WEATHER_LATITUDE"]; ?>,
+          units : '<?php echo empty($_SERVER["FLIMSY_WEATHER_UNITS"]) ? "standard" : $_SERVER["FLIMSY_WEATHER_UNITS"]; ?>',
+          lang : '<?php echo empty($_SERVER["FLIMSY_WEATHER_LANGUAGE"]) ? "en" : $_SERVER["FLIMSY_WEATHER_LANGUAGE"]; ?>',
+          appid : '<?php echo empty($_SERVER["FLIMSY_WEATHER_API_KEY"]) ? "" : $_SERVER["FLIMSY_WEATHER_API_KEY"]; ?>',
         },
         success: (data) => {
           var units;
-          switch ('<?php echo empty($_ENV["FLIMSY_WEATHER_UNITS"]) ? "standard" : $_ENV["FLIMSY_WEATHER_UNITS"]; ?>') {
+          switch ('<?php echo empty($_SERVER["FLIMSY_WEATHER_UNITS"]) ? "standard" : $_SERVER["FLIMSY_WEATHER_UNITS"]; ?>') {
             default:
             case 'standard': units = 'K'; break;
             case 'metric': units = 'C'; break;
@@ -466,7 +466,7 @@
         }
       });
       $('a.login').click(() => {
-        if (<?php if (empty($_ENV["FLIMSY_USERNAME"]) || empty($_ENV["FLIMSY_PASSWORD"])) { echo 'false'; } else { echo 'true'; } ?>) {
+        if (<?php if (empty($_SERVER["FLIMSY_USERNAME"]) || empty($_SERVER["FLIMSY_PASSWORD"])) { echo 'false'; } else { echo 'true'; } ?>) {
           $('#loginDialog').dialog('open');
         }
         else {
