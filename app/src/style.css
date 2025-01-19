@@ -168,6 +168,9 @@ div.dialog {
   div.dialog div.dialog-field input {
     width: 97%;
   }
+  div.dialog div.dialog-field select {
+    width: 100%;
+  }
 
 input:invalid {
   box-shadow: 0 0 5px 1px red;

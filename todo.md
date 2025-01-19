@@ -25,6 +25,7 @@
 * [x] Customizable colors 
 * [x] Automatically pick the colors from the background image
 * [x] Catppuccin colors (mocha and latte)
+* [x] Output of lm-sensors in a list so users can figure out their CPU sensor's name
 * [x] Server status (CPU temp)
 * [x] Server status (RAM)
 * [x] Server status (SWAP)

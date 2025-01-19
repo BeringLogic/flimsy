@@ -103,7 +103,9 @@
           <legend>System Info</legend>
           <div class="dialog-field">
             <label for="configCpuTempSensor">CPU Temp Sensor</label>
-            <input id="configCpuTempSensor" name="cpu_temp_sensor">
+            <select id="configCpuTempSensor" name="cpu_temp_sensor">
+              <option value="">Don't show</option>
+            </select>
           </div>
           <div class="dialog-field">
             <label for="configMountPoints">Mount Points</label>
@@ -405,6 +407,17 @@
             $('#configColorForeground').val(config.color_foreground);
             $('#configColorItems').val(config.color_items);
             $('#configColorBorders').val(config.color_borders);
+            console.log(config.sensors);
+            for (const [chip, sensors] of Object.entries(config.sensors)) {
+              $('#configCpuTempSensor').append($('<optgroup label="' + chip + '"></optgroup>'));
+              for (const [sensorName, values] of Object.entries(sensors)) {
+                for (const [valueName, value] of Object.entries(values)) {
+                  if (valueName.endsWith('_input')) {
+                    $('#configCpuTempSensor').append($('<option value="' + sensorName + '">&nbsp;' + sensorName + ': ' + value + '</option>'));
+                  }
+                }
+              }
+            }
             $('#configCpuTempSensor').val(config.cpu_temp_sensor);
             $('#configMountPoints').val(config.mount_points);
             $('#configDialog').dialog('open');
