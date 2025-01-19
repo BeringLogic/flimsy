@@ -64,7 +64,7 @@
           </div>
           <div class="dialog-field">
             <input id="configBackgroundTypeKeep" type="radio" style="width:auto;" name="background_type" value="keep" checked>
-            <input id="configBackgroundImage" type="text" style="width:85%; display:inline-block;" name="background_image">
+            <select id="configBackgroundImage" style="width:85%; display:inline-block;" name="background_image"></select>
           </div>
           <div class="dialog-field">
             <input id="configBackgroundTypeNone" type="radio" style="width:auto;" name="background_type" value="none">
@@ -417,6 +417,11 @@
           success: (config) => {
             $('#configTitle').val(config.title);
             $('#configIcon').val(config.icon);
+
+            config.backgrounds.forEach((b) => {
+              if (b == '.' || b == '..') return;
+              $('#configBackgroundImage').append($('<option value="' + b + '">' + b + '</option>'));
+            })
             $('#configBackgroundImage').val(config.background_image);
             $('#configBackgroundImage').trigger('change');
             $('#configColorBackground').val(config.color_background);
@@ -475,18 +480,6 @@
       $('#autodetect_colors').change(() => {
         if ($('#autodetect_colors').is(':checked')) {
           $('#configDialog input[type=color]').attr('disabled', 'disabled');
-        }
-      });
-      $('#catppuccin_latte_colors').change(() => {
-        if ($('#catppuccin_latte_colors').is(':checked')) {
-          $('#configBackgroundImage').val('');
-          $('#configBackgroundTypeNone').prop('checked', true);
-        }
-      });
-      $('#catppuccin_mocha_colors').change(() => {
-        if ($('#catppuccin_mocha_colors').is(':checked')) {
-          $('#configBackgroundImage').val('');
-          $('#configBackgroundTypeNone').prop('checked', true);
         }
       });
       $('#manual_colors').change(() => {

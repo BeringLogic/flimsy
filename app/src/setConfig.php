@@ -37,14 +37,12 @@ switch ($color_type) {
     $color_borders = $colors[0];
     break;
   case 'catppuccin_latte':         # Colors from https://github.com/catppuccin/catppuccin/blob/main/docs/style-guide.md
-    $background_image = '';
     $color_background = "#eff1f5"; # Background Pane
     $color_foreground = "#4c4f69"; # Cursor Line
     $color_items = "#dce0e8";      # Secondary Panes, Crust
     $color_borders = "#9ca0b0";    # Inactive Border
 break;
   case 'catppuccin_mocha':         # Colors from https://github.com/catppuccin/catppuccin/blob/main/docs/style-guide.md
-    $background_image = '';
     $color_background = "#1e1e2e"; # Background Pane
     $color_foreground = "#cdd6f4"; # Cursor Line
     $color_items = "#11111b";      # Secondary Panes, Crust

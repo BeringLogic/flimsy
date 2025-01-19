@@ -39,7 +39,6 @@
 * [ ] Docker integration
 * [ ] Organise the source code a bit. It's a mess...
 * [ ] Use cities for the weather widget, instead of lat/lon
-* [ ] Replace the background_image input with a select of available backgrounds
 
 # Stuff I need to learn
 * [ ] Docker secrets
@@ -54,5 +53,5 @@
 * [ ] Login feedback to display AFTER the list has loaded
 * [ ] Mount points cannot be monitored (except /) as they are not mounted in the container
 * [ ] Error if icon doesn't exist in the dashboard icons project should be handled gracefully
-* [ ] Handle errors while creating flimsy.db
+* [ ] Handle errors while creating flimsy.db. Set a session message.
 * [ ] Duplication in logs

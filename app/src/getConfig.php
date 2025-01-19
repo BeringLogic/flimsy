@@ -5,6 +5,8 @@ $db = new db();
 
 $result = $db->GetConfig();
 
+$result['backgrounds'] = scandir('/data/backgrounds');
+
 exec("sensors -jA", $output);
 $result['sensors'] = json_decode(implode('', $output), true);
 
