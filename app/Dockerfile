@@ -1,7 +1,5 @@
 FROM php:8.4-fpm-alpine
 
-WORKDIR /var/www/html
-
 RUN apk add --no-cache lm-sensors tzdata
 
 RUN apk add --no-cache libpng-dev libjpeg-turbo-dev libwebp-dev libavif-dev libxpm-dev \
@@ -12,6 +10,14 @@ RUN apk add --no-cache libpng-dev libjpeg-turbo-dev libwebp-dev libavif-dev libx
 
 #RUN pecl install xdebug \
 #  && docker-php-ext-enable xdebug
+
+RUN adduser -H -D flimsy \
+  && addgroup -S flimsy flimsy \
+  && mkdir -p /data \
+  && chown -R flimsy:flimsy /data
+USER flimsy
+VOLUME /data
+WORKDIR /var/www
 
 COPY ./src /var/www
 COPY ./color-extractor/src /var/www/vendor/League/ColorExtractor

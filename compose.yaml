@@ -13,9 +13,8 @@ services:
   app:
     build:
       context: ./app
-    user: 1000:1000
     volumes:
-      - ./data:/data # Make sure your local directory exists
+      - ./data:/data # Make sure your local directory exists and is owned by the same user as 
     environment:
       # Optional: Only used for log files...
       - TZ=${TZ:-UTC}
