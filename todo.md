@@ -35,7 +35,6 @@
 * [ ] Customizable weather widget env variables overrides
 * [ ] Update README.md with features, infos on how to install and how to use the app
 * [ ] Docker integration
-* [ ] Better message when the DB could not be created. Warn the user that they must bind a volume and that it must be writable by the selected user in compose.yaml.
 
 # Stuff I need to learn
 * [ ] Docker secrets

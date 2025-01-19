@@ -8,8 +8,8 @@ class DB {
     try {
       $this->dbh = new SQLite3('/data/flimsy.db', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
     }
-    catch (Exception $e) {
-      error_log($e->getMessage());
+    catch (Exception) {
+      $this->dbh = null;
     }
   }
 
@@ -22,6 +22,7 @@ class DB {
     $mountPoints = empty($_SERVER['FLIMSY_MOUNT_POINTS']) ? null : $_SERVER['FLIMSY_MOUNT_POINTS'];
     
     if ($this->dbh === null) {
+      error_log("Unable to open database!");
       return false;
     }
 
@@ -62,7 +63,7 @@ class DB {
       foreach ($seed as $query) {
         #error_log($query);
         if ($this->dbh->query($query) === false) {
-          error_log("ERROR: Could not seed /data/flimsy.db! Check permissions. Owner and Group must be www-data (UID 33 and GID 33).");
+          error_log("ERROR: Could not seed /data/flimsy.db!");
           return false;
         }
       }
