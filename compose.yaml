@@ -10,6 +10,11 @@ services:
     # Optional: Only used for log files...
     environment:
       - TZ=${TZ:-UTC}
+    develop:
+      watch:
+        - action: sync
+          path: ./app/src
+          target: /var/www
   app:
     build:
       context: ./app
@@ -40,3 +45,5 @@ services:
         - action: sync
           path: ./app/src
           target: /var/www
+#volumes:
+  #  data:
