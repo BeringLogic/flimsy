@@ -33,11 +33,10 @@
 * [x] Server status (Storage)
 * [ ] Server status (Network)
 * [ ] Server status (public IP)
-* [ ] Customizable login env variables overrides
-* [ ] Customizable weather widget env variables overrides
+* [ ] UI to customize login variables
+* [ ] UI to customize weather widget variables
 * [ ] Update README.md with features, infos on how to install and how to use the app
 * [ ] Docker integration
-* [ ] Organise the source code a bit. It's a mess...
 * [ ] Use cities for the weather widget, instead of lat/lon
 
 # Stuff I need to learn
@@ -55,3 +54,4 @@
 * [ ] Error if icon doesn't exist in the dashboard icons project should be handled gracefully
 * [ ] Handle errors while creating flimsy.db. Set a session message.
 * [ ] Duplication in logs
+* [ ] Item is lost if moving it to an empty list. It drops BELOW the add item button and its listId is "lists" in the reorder.php request.

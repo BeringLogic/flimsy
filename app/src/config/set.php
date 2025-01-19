@@ -1,8 +1,8 @@
 <?php
-require('db.php');
-require('Icons.php');
-require('UploadBackground.php');
-require('ColorAutodetector.php');
+require('../classes/DB.php');
+require('../classes/Icons.php');
+require('../classes/UploadBackground.php');
+require('../classes/ColorAutodetector.php');
 
 $db = new db();
 $icons = new Icons();

@@ -1,7 +1,7 @@
 <?php
-require('vendor/League/ColorExtractor/Palette.php');
-require('vendor/League/ColorExtractor/Color.php');
-require('vendor/League/ColorExtractor/ColorExtractor.php');
+require('../vendor/League/ColorExtractor/Palette.php');
+require('../vendor/League/ColorExtractor/Color.php');
+require('../vendor/League/ColorExtractor/ColorExtractor.php');
 
 use League\ColorExtractor\Palette;
 use League\ColorExtractor\Color;

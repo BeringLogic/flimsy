@@ -1,5 +1,5 @@
 <?php
-require('db.php');
+require('../classes/DB.php');
 
 $db = new DB();
 $id = $_GET['id'];

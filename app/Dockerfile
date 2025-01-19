@@ -22,7 +22,7 @@ USER flimsy
 VOLUME /data
 WORKDIR /var/www
 
-COPY ./src /var/www
+COPY ./src/ /var/www
 COPY ./color-extractor/src /var/www/vendor/League/ColorExtractor
 
 EXPOSE 9000

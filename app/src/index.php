@@ -43,7 +43,7 @@
   <button id="addList">➕ Add List</button>
 
   <div id="configDialog" class="dialog">
-    <form action="setConfig.php" method="post" enctype="multipart/form-data">
+    <form action="config/set.php" method="post" enctype="multipart/form-data">
       <div class="dialog-column">
         <fieldset>
           <legend>Header</legend>
@@ -127,11 +127,6 @@
     </form>
   </div>
 
-  <div id="uploadDialog" class="dialog">
-    <form action="uploadBackground.php" method="post" enctype="multipart/form-data">
-    </form>
-  </div>
-
   <div id="loginDialog" class="dialog">
     <form action="login.php" method="post">
       <div class="dialog-field">
@@ -146,7 +141,7 @@
   </div>
 
   <div id="editListDialog" class="dialog">
-    <form action="editList.php" method="post">
+    <form action="lists/edit.php" method="post">
       <div class="dialog-field">
         <label for="listTitle">Title</label>
         <input id="listTitle" type="text" name="title" required>
@@ -159,7 +154,7 @@
   </div>
 
   <div id="editItemDialog" class="dialog">
-    <form action="addItem.php" method="post">
+    <form action="items/add.php" method="post">
       <div class="dialog-field">
         <label for="itemTitle">Title</label>
         <input id="itemTitle" type="text" name="title" required>
@@ -188,7 +183,7 @@
               stop: function(event, ui) {
                 const listIds = $(ui.item).parent().children("div.list").map((l, el) => el.id.replace('list_', '')).toArray();
                 $.ajax({
-                  url: 'reorderLists.php',
+                  url: 'lists/reorder.php',
                   method: 'POST',
                   data: {
                     listIds: listIds
@@ -203,7 +198,7 @@
                 const listId = $(ui.item).parent().parent().attr('id').replace('list_', '');
                 const itemIds = $(ui.item).parent().children("div.item").map((i, el) => el.id.replace('item_', '')).toArray();
                 $.ajax({
-                  url: 'reorderItems.php',
+                  url: 'items/reorder.php',
                   method: 'POST',
                   data: {
                     listId: listId,
@@ -217,13 +212,13 @@
 
           $('button.editList').click((e) => {
             const id = e.target.id.replace('editList_', '');
-            $('#editListDialog form').attr('action', 'editList.php?id=' + id);
+            $('#editListDialog form').attr('action', 'lists/edit.php?id=' + id);
             $('#listTitle').val(data.find(l => l.id == id).title);
             $('#listRows').val(data.find(l => l.id == id).number_of_rows);
             $('#editListDialog').dialog('open');
           });
           $('#addList').click(() => {
-            $('#editListDialog form').attr('action', 'addList.php');
+            $('#editListDialog form').attr('action', 'lists/add.php');
             $('#listTitle').val('');
             $('#editListDialog').dialog('open');
           });
@@ -232,15 +227,15 @@
             if (!confirm('Are you sure you want to remove this list, and all its items?')) {
               return;
             }
-            location.href = 'removeList.php?id=' + id;
+            location.href = 'lists/remove.php?id=' + id;
           });
 
           $('button.editItem').click((e) => {
             const itemId = e.target.id.replace('editItem_', '');
             $.ajax({
-              url: 'getItem.php?id=' + itemId,
+              url: 'items/get.php?id=' + itemId,
               success: (item) => {
-                $('#editItemDialog form').attr('action', 'editItem.php?itemId=' + item.id);
+                $('#editItemDialog form').attr('action', 'items/edit.php?itemId=' + item.id);
                 $('#itemTitle').val(item.title);
                 $('#itemHref').val(item.href);
                 $('#itemIcon').val(item.icon);
@@ -250,7 +245,7 @@
           });
           $('div.addItem button').click((e) => {
             const listId = e.target.id.replace('addItem_', '');
-            $('#editItemDialog form').attr('action', 'addItem.php?listId=' + listId);
+            $('#editItemDialog form').attr('action', 'items/add.php?listId=' + listId);
             $('#itemTitle').val('');
             $('#itemHref').val('');
             $('#itemIcon').val('');
@@ -261,7 +256,7 @@
             if (!confirm('Are you sure you want to remove this item?')) {
               return;
             }
-            location.href = 'removeItem.php?itemId=' + itemId;
+            location.href = 'items/remove.php?itemId=' + itemId;
           });
 
           if (<?php echo !empty($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true ? "true" : "false"; ?>) {
@@ -317,7 +312,7 @@
 
     function loadConfig() {
       $.ajax({
-        url: 'getConfig.php',
+        url: 'config/get.php',
         success: (config) => {
           if (config.icon) {
             $('#icon').attr('src', '/data/icons/' + config.icon)
@@ -413,7 +408,7 @@
 
       $('#configButton').click(() => {
         $.ajax({
-          url: 'getConfig.php',
+          url: 'config/get.php',
           success: (config) => {
             $('#configTitle').val(config.title);
             $('#configIcon').val(config.icon);
