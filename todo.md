@@ -39,12 +39,13 @@
 * [ ] Docker integration
 * [ ] Organise the source code a bit. It's a mess...
 * [ ] Use cities for the weather widget, instead of lat/lon
+* [ ] Replace the background_image input with a select of available backgrounds
 
 # Stuff I need to learn
 * [ ] Docker secrets
 * [ ] How to deal with /data. I want it to work with a managed volume, but I want it to work with a bound volume too. If bound, user must mkdir and chown 1000:1000 (flimsy user in the container). Awkward since 1000 might not be the user's id on the host...
 * [ ] How to run rootless (watch doesn't work: user doesn't exist)
-* [ ] Find the proper way to deal with Dev and Production
+* [ ] Find the proper way to deal with Dev and Production. (php-production.ini, max_execution_time, grep max_input_time)
 * [ ] Color in errors in Docker logs?
 * [ ] xdebug
 
