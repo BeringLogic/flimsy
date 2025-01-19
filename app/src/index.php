@@ -275,7 +275,7 @@
           item.append($('<button id="removeItem_' + i.id + '" class="removeItem">❌</button><button id="editItem_' + i.id + '" class="editItem">✍️</button>'));
 
           var link = $('<a class="href" href="' + i.href + '" target="_blank"></a>');
-          link.append($('<img class="icon" src="dashboard-icons/' + i.icon + '" />'));
+          link.append($('<img class="icon" src="/data/icons/' + i.icon + '" />'));
 
           var details = $('<div class="details"></div>');
           details.css('max-width', 'calc(100vw / ' + l.number_of_rows + ' - 135px)');
@@ -302,7 +302,7 @@
         url: 'getConfig.php',
         success: (config) => {
           if (config.icon) {
-            $('#icon').attr('src', 'dashboard-icons/' + config.icon)
+            $('#icon').attr('src', '/data/icons/' + config.icon)
                       .css('display', 'inline-block');
           }
           if (config.title) {

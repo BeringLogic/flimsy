@@ -5,6 +5,8 @@ services:
       dockerfile: ./web/Dockerfile
     ports:
       - 8888:80
+    volumes:
+      - ./data:/var/www/data
   app:
     build:
       context: ./app
