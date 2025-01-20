@@ -20,6 +20,7 @@
   <header>
     <div class="weather">
       <img>
+      <div class="location"></div>
       <div class="temp"></div>
       <div class="description"></div>
     </div>
@@ -346,8 +347,7 @@
       $.ajax({
         url: 'https://api.openweathermap.org/data/2.5/weather',
         data: {
-          lat : <?php echo empty($_SERVER["FLIMSY_WEATHER_LATITUDE"]) ? 0 : $_SERVER["FLIMSY_WEATHER_LATITUDE"]; ?>,
-          lon : <?php echo empty($_SERVER["FLIMSY_WEATHER_LONGITUDE"]) ? 0 : $_SERVER["FLIMSY_WEATHER_LONGITUDE"]; ?>,
+          q: '<?php echo empty($_SERVER["FLIMSY_WEATHER_LOCATION"]) ? "new york" : $_SERVER["FLIMSY_WEATHER_LOCATION"]; ?>',
           units : '<?php echo empty($_SERVER["FLIMSY_WEATHER_UNITS"]) ? "standard" : $_SERVER["FLIMSY_WEATHER_UNITS"]; ?>',
           lang : '<?php echo empty($_SERVER["FLIMSY_WEATHER_LANGUAGE"]) ? "en" : $_SERVER["FLIMSY_WEATHER_LANGUAGE"]; ?>',
           appid : '<?php echo empty($_SERVER["FLIMSY_WEATHER_API_KEY"]) ? "" : $_SERVER["FLIMSY_WEATHER_API_KEY"]; ?>',
@@ -361,6 +361,7 @@
             case 'imperial': units = 'F'; break;
           };
           $('.weather img').attr('src', 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png');
+          $('.weather .location').html(data.name + ', ' + data.sys.country);
           $('.weather .description').html(data.weather[0].description);
           $('.weather .temp').html(data.main.temp + ' °' + units);
         }
