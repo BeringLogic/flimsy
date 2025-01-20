@@ -37,7 +37,6 @@
 * [ ] UI to customize weather widget variables
 * [ ] Update README.md with features, infos on how to install and how to use the app
 * [ ] Docker integration
-* [ ] Use cities for the weather widget, instead of lat/lon
 
 # Stuff I need to learn
 * [ ] Docker secrets
