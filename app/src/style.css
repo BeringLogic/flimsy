@@ -56,7 +56,7 @@ a.logout {
     font-size: xx-large;
   }
   #system-info div.mount-point,
-  #system-info div.free-disk-space {
+  #system-info div.free-space {
     display: block;
     margin: 0;
   }

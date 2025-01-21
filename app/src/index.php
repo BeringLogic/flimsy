@@ -385,10 +385,10 @@
           $('#free-memory').html(data.free_memory);
           $('#free-swap').html(data.free_swap);
 
-          data.disks.forEach((d) => {
+          data.storage.forEach((d) => {
             var div = $('<div></div>');
             $('<i class="nf nf-md-harddisk"></i>').appendTo(div);
-            $('<div class="free-disk-space">' + d.free_disk_space + ' free</div>').appendTo(div);
+            $('<div class="free-space">' + d.free_space + ' free</div>').appendTo(div);
             $('<div class="mount-point">' + d.mount_point + '</div>').appendTo(div);
             div.appendTo($('#system-info'));
           })
