@@ -39,12 +39,11 @@
 * [ ] Docker integration
 
 # Stuff I need to learn
+* [ ] xdebug
 * [ ] Docker secrets
 * [ ] How to deal with /data. I want it to work with a managed volume, but I want it to work with a bound volume too. If bound, user must mkdir and chown 1000:1000 (flimsy user in the container). Awkward since 1000 might not be the user's id on the host...
-* [ ] How to run rootless (watch doesn't work: user doesn't exist)
+* [ ] How to run rootless (https://docs.docker.com/engine/security/rootless/)
 * [ ] Find the proper way to deal with Dev and Production. (php-production.ini, max_execution_time, grep max_input_time)
-* [ ] Color in errors in Docker logs?
-* [ ] xdebug
 
 # Bugs
 * [ ] Make the whole item clickable (even when logged in)
@@ -53,4 +52,3 @@
 * [ ] Error if icon doesn't exist in the dashboard icons project should be handled gracefully
 * [ ] Handle errors while creating flimsy.db. Set a session message.
 * [ ] Duplication in logs
-* [ ] Item is lost if moving it to an empty list. It drops BELOW the add item button and its listId is "lists" in the reorder.php request.

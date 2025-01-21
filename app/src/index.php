@@ -198,6 +198,10 @@
               stop: function(event, ui) {
                 const listId = $(ui.item).parent().parent().attr('id').replace('list_', '');
                 const itemIds = $(ui.item).parent().children("div.item").map((i, el) => el.id.replace('item_', '')).toArray();
+
+                // Move the addItem button to the end of the list, in case the item was dropped after it
+                $('#addItem_' + listId).parent().appendTo($('#addItem_' + listId).parent().parent());
+
                 $.ajax({
                   url: 'items/reorder.php',
                   method: 'POST',
@@ -209,6 +213,9 @@
               }
             });
           });
+          $('button').css('display', 'inline-block');
+          <?php } else { ?>
+          $('.addItem').css('display', 'none');
           <?php } ?>
 
           $('button.editList').click((e) => {
@@ -260,10 +267,6 @@
             location.href = 'items/remove.php?itemId=' + itemId;
           });
 
-          if (<?php echo !empty($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true ? "true" : "false"; ?>) {
-            $('button').css('display', 'inline-block');
-          }
-
           loadConfig();
           updateWeather();
           updateSystemInfo();
@@ -302,7 +305,7 @@
           items.append(item);
         });
 
-        items.append($('<div class="addItem"><button id="addItem_' + l.id + '">➕ Add Item</button></div>'));
+        items.append($('<div class="item addItem"><button id="addItem_' + l.id + '">➕ Add Item</button></div>'));
 
         list.append(items);
 
@@ -501,7 +504,7 @@
         }
       });
       $('a.login').click(() => {
-        if (<?php if (empty($_SERVER) || empty($_SERVER["FLIMSY_PASSWORD"])) { echo 'false'; } else { echo 'true'; } ?>) {
+        if (<?php if (empty($_SERVER["FLIMSY_PASSWORD"])) { echo 'false'; } else { echo 'true'; } ?>) {
           $('#loginDialog').dialog('open');
         }
         else {

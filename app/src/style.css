@@ -139,7 +139,9 @@ div.list div.items {
   }
 
 div.addItem {
-  align-content: center;
+  width: 84px;
+  border: none;
+  background-color: transparent !important;
 }
 
 #addList {
