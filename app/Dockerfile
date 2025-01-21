@@ -9,7 +9,7 @@ RUN apk add --no-cache libpng-dev libjpeg-turbo-dev libwebp-dev libavif-dev libx
 RUN echo 'memory_limit = 512M' >> $PHP_INI_DIR/conf.d/docker-php-memlimit.ini \
   && echo 'upload_max_filesize = 200M' >> $PHP_INI_DIR/conf.d/docker-php-uploadsize.ini \
   && echo 'post_max_size = 200M' >> $PHP_INI_DIR/conf.d/docker-php-uploadsize.ini \
-  && mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+  && cp "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
 RUN echo -e "[www]\naccess.log = /dev/null" >> /usr/local/etc/php-fpm.d/flimsy.conf
 
