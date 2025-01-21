@@ -330,9 +330,9 @@
           }
           $('body').css('background-color', config.color_background);
           $('body, a.login, a.logout').css('color', config.color_foreground);
-          $('#title, .list h2').css('text-shadow', '1px 1px ' + config.color_background);
+          $('#title, .list h2, #system-info, div.weather, a.login, a.logout, div.details').css('text-shadow', '2px 2px ' + config.color_background);
           $('.item a').css('color', config.color_foreground);
-          $('.item').css('background-color', config.color_items);
+          $('.item').each((i, el) => { el.style.backgroundColor = 'rgba(from ' + config.color_items + ' r g b / 0.75)'; });
           $('.item').css('border-color', config.color_borders);
 
           if (!config.cpu_temp_sensor) {

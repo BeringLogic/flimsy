@@ -76,13 +76,23 @@ div.weather {
     margin-top: -20px;
   }
 
+div.list h2,
+div.system-info,
+div.weather,
+div.details,
+a.login,
+a.logout {
+  text-shadow: 0 0 2px #1e1e2e;
+}
 
 /*
 * Lists and Items
 */
+div.list {
+  margin-bottom: 52px;
+}
 div.list h2 {
   font-size: xx-large;
-  text-shadow: 0 0 2px #1e1e2e;
 }
   div.list h2 button {
     vertical-align: 5px;
