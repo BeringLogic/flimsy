@@ -51,4 +51,3 @@
 * [ ] Mount points cannot be monitored (except /) as they are not mounted in the container
 * [ ] Error if icon doesn't exist in the dashboard icons project should be handled gracefully
 * [ ] Handle errors while creating flimsy.db. Set a session message.
-* [ ] Duplication in logs

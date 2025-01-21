@@ -11,6 +11,8 @@ RUN echo 'memory_limit = 512M' >> $PHP_INI_DIR/conf.d/docker-php-memlimit.ini \
   && echo 'post_max_size = 200M' >> $PHP_INI_DIR/conf.d/docker-php-uploadsize.ini \
   && mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
+RUN echo -e "[www]\naccess.log = /dev/null" >> /usr/local/etc/php-fpm.d/flimsy.conf
+
 #RUN pecl install xdebug \
 #  && docker-php-ext-enable xdebug
 
