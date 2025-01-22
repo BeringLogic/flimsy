@@ -60,9 +60,7 @@ break;
 $db->SetConfig($icon, $title, $background_image, $color_background, $color_foreground, $color_items, $color_borders, $cpu_temp_sensor, $mount_points);
 
 if (!empty($icon)) {
-  if (!$icons->get($icon)) {
-    error_log("ERROR: Could not download icon!");
-  }
+  $icons->get($icon);
 }
 
 header("Location: /index.php");

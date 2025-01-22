@@ -13,9 +13,7 @@ if ($db->EditItem($itemId, $title, $href, $icon) === false) {
 }
 
 $icons = new Icons();
-if (!$icons->get($icon)) {
-  error_log("ERROR: Could not download icon!");
-}
+$icons->get($icon);
 
 header("Location: /index.php");
 
