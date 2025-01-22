@@ -401,7 +401,12 @@
       $.ajax({
         url: 'initDB.php',
         success: (data) => {
-          loadData();
+          if (data.success) {
+            loadData();
+          }
+          else {
+            alert(data.error);
+          }
 
           <?php if (!empty($_SESSION['message'])) {
             echo 'alert("' . $_SESSION['message'] . '");';

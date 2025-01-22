@@ -51,4 +51,3 @@
 * [ ] Mount points cannot be monitored (except /) as they are not mounted in the container
 * [ ] Mount point error message mentions www-data. Change it to 1000:1000 (flimsy in the container).
 * [ ] Error if icon doesn't exist in the dashboard icons project should be handled gracefully
-* [ ] Handle errors while creating flimsy.db. Set a session message.
