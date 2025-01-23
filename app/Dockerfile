@@ -1,3 +1,8 @@
+FROM composer:lts AS composer
+
+WORKDIR /var/www
+RUN composer require --ignore-platform-req=ext-gd league/color-extractor 0.4.0 
+
 FROM php:8.4-fpm-alpine
 
 RUN apk add --no-cache lm-sensors tzdata
@@ -25,6 +30,6 @@ VOLUME /data
 WORKDIR /var/www
 
 COPY ./src/ /var/www
-COPY ./color-extractor/src /var/www/vendor/League/ColorExtractor
+COPY --from=composer /var/www/vendor /var/www/vendor
 
 EXPOSE 9000
