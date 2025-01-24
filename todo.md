@@ -35,8 +35,20 @@
 * [ ] Server status (public IP)
 * [ ] UI to customize login variables
 * [ ] UI to customize weather widget variables
-* [ ] Update README.md with features, infos on how to install and how to use the app
+* [ ] Update README.md with screenshots, features, infos on how to install and how to use the app
 * [ ] Docker integration
+* [ ] Round the temperature
+* [ ] Make RAM, SWAP and storage optional (just don't mount them, yes, but / is there by default)
+* [ ] Find a better icon for SWAP, this one makes me think networking more than memory
+* [ ] Item ping icon or millisecs
+* [ ] favicons for items (https://dashy.to/docs/icons/)
+
+# Edit mode
+* [ ] Rename login/logout
+* [ ] Add "click to edit, drag&drop to reorder" in the "login successful" popup
+* [ ] Edit when clicking an item
+* [ ] Move the delete button to the edit dialog
+* [ ] Do the same with lists
 
 # Stuff I need to learn
 * [ ] xdebug
@@ -46,5 +58,5 @@
 * [ ] Find the proper way to deal with Dev and Production. (php-production.ini, max_execution_time, grep max_input_time)
 
 # Bugs
-* [ ] Make the whole item clickable (even when logged in)
+* [ ] Make the whole item clickable
 * [ ] Login feedback to display AFTER the list has loaded
