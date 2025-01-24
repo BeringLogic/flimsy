@@ -32,11 +32,11 @@
 * [x] Server status (SWAP)
 * [x] Server status (Storage)
 * [x] Server status (public IP)
+* [x] Make RAM, SWAP, public ip and storage optional (/ is there by default)
 * [ ] UI to customize login variables
 * [ ] UI to customize weather widget variables
 * [ ] Update README.md with screenshots, features, infos on how to install and how to use the app
 * [ ] Docker integration
-* [ ] Make RAM, SWAP and storage optional (just don't mount them, yes, but / is there by default)
 * [ ] Find a better icon for SWAP, this one makes me think networking more than memory
 * [ ] Item ping icon or millisecs
 * [ ] favicons for items (https://dashy.to/docs/icons/)

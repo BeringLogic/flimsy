@@ -25,10 +25,6 @@
       <div class="description"></div>
     </div>
     <div id="system-info">
-      <div><i class="nf nf-oct-cpu"></i><span id="cpu-temp">?</span></div>
-      <div><i class="nf nf-fa-memory"></i><span id="free-memory">?</span> free</div>
-      <div><i class="nf nf-md-swap_horizontal"></i><span id="free-swap">?</span> free</div>
-      <div><i class="nf nf-md-ethernet"></i><span id="public-ip">?</span></div>
     </div>
     <?php if (empty($_SESSION['loggedIn'])) { ?>
       <a class="login" href="#">Login</a>
@@ -119,6 +115,22 @@
             <select id="configCpuTempSensor" name="cpu_temp_sensor">
               <option value="">Don't show</option>
             </select>
+          </div>
+          <div class="dialog-field">
+            <input id="configShowFreeRam" type="checkbox" style="width:auto;" name="show_free_ram">
+            <label for="configShowFreeRam" style="display:inline-block">Show Free RAM</label>
+          </div>
+          <div class="dialog-field">
+            <input id="configShowFreeSwap" type="checkbox" style="width:auto;" name="show_free_swap">
+            <label for="configShowFreeSwap" style="display:inline-block">Show Free Swap</label>
+          </div>
+          <div class="dialog-field">
+            <input id="configShowPublicIp" type="checkbox" style="width:auto;" name="show_public_ip">
+            <label for="configShowPublicIp" style="display:inline-block">Show Public IP</label>
+          </div>
+          <div class="dialog-field">
+            <input id="configShowFreeSpace" type="checkbox" style="width:auto;" name="show_free_space">
+            <label for="configShowFreeSpace" style="display:inline-block">Show Free Space</label>
           </div>
         </fieldset>
       </div>
@@ -331,10 +343,6 @@
           $('.item a').css('color', config.color_foreground);
           $('.item').each((i, el) => { el.style.backgroundColor = 'rgba(from ' + config.color_items + ' r g b / 0.75)'; });
           $('.item').css('border-color', config.color_borders);
-
-          if (!config.cpu_temp_sensor) {
-            $('#system-info div:first-child()').css('display', 'none');
-          }
         }
       });
     }
@@ -373,24 +381,36 @@
       $.ajax({
         url: 'getSystemInfo.php',
         success: (data) => {
-          if (data.cpu_temp.endsWith('C')) {
-            $('#cpu-temp').html(data.cpu_temp);
+          if (data.cpu_temp) {
+            $('#system-info').append($('<div><i class="nf nf-oct-cpu"></i><span id="cpu-temp">?</span></div>'));
+            if (data.cpu_temp.endsWith('C')) {
+              $('#cpu-temp').html(data.cpu_temp);
+            }
+            else {
+              $('#cpu-temp').html(data.cpu_temp + ' °C');
+            }
           }
-          else {
-            $('#cpu-temp').html(data.cpu_temp + ' °C');
+          if (data.free_memory) {
+            $('#system-info').append($('<div><i class="nf nf-fa-memory"></i><span id="free-memory">?</span> free</div>'));
+            $('#free-memory').html(data.free_memory);
           }
-          $('#free-memory').html(data.free_memory);
-          $('#free-swap').html(data.free_swap);
-
-          data.storage.forEach((d) => {
-            var div = $('<div></div>');
-            $('<i class="nf nf-md-harddisk"></i>').appendTo(div);
-            $('<div class="free-space">' + d.free_space + ' free</div>').appendTo(div);
-            $('<div class="mount-point">' + d.mount_point + '</div>').appendTo(div);
-            div.appendTo($('#system-info'));
-          })
-
-          $('#public-ip').html(data.public_ip);
+          if (data.free_swap) {
+            $('#system-info').append($('<div><i class="nf nf-md-swap_horizontal"></i><span id="free-swap">?</span> free</div>'));
+            $('#free-swap').html(data.free_swap);
+          }
+          if (data.public_ip) {
+            $('#system-info').append($('<div><i class="nf nf-md-ethernet"></i><span id="public-ip">?</span></div>'));
+            $('#public-ip').html(data.public_ip);
+          }
+          if (data.storage) {
+            data.storage.forEach((d) => {
+              var div = $('<div></div>');
+              $('<i class="nf nf-md-harddisk"></i>').appendTo(div);
+              $('<div class="free-space">' + d.free_space + ' free</div>').appendTo(div);
+              $('<div class="mount-point">' + d.mount_point + '</div>').appendTo(div);
+              div.appendTo($('#system-info'));
+            })
+          }
         }
       });
     }
@@ -443,6 +463,10 @@
               }
             }
             $('#configCpuTempSensor').val(config.cpu_temp_sensor);
+            $('#configShowFreeRam').prop('checked', config.show_free_ram);
+            $('#configShowFreeSwap').prop('checked', config.show_free_swap);
+            $('#configShowPublicIp').prop('checked', config.show_public_ip);
+            $('#configShowFreeSpace').prop('checked', config.show_free_space);
             $('#configDialog').dialog('open');
           }
         })

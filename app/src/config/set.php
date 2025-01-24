@@ -13,6 +13,10 @@ $title = $_POST['title'];
 $background_type = $_POST['background_type'];
 $color_type = $_POST['color_type'];
 $cpu_temp_sensor = $_POST['cpu_temp_sensor'];
+$show_free_ram = $_POST['show_free_ram'];
+$show_free_swap = $_POST['show_free_swap'];
+$show_public_ip = $_POST['show_public_ip'];
+$show_free_space = $_POST['show_free_space'];
 
 switch($background_type) {
   case 'upload':
@@ -56,7 +60,7 @@ break;
     break;
 }
 
-$db->SetConfig($icon, $title, $background_image, $color_background, $color_foreground, $color_items, $color_borders, $cpu_temp_sensor);
+$db->SetConfig($icon, $title, $background_image, $color_background, $color_foreground, $color_items, $color_borders, $cpu_temp_sensor, $show_free_ram, $show_free_swap, $show_public_ip, $show_free_space);
 
 if (!empty($icon)) {
   $icons->get($icon);

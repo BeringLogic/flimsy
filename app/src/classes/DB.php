@@ -38,9 +38,38 @@ class DB {
           color_foreground TEXT NOT NULL,
           color_items TEXT NOT NULL,
           color_borders TEXT NOT NULL,
-          cpu_temp_sensor TEXT
+          cpu_temp_sensor TEXT,
+          show_free_ram INTEGER,
+          show_free_swap INTEGER,
+          show_public_ip INTEGER,
+          show_free_space INTEGER
         );",
-        "INSERT INTO config (icon, title, color_background, color_foreground, color_items, color_borders, cpu_temp_sensor) VALUES (NULL, 'Flimsy Home Page', '#1e1e2e', '#cdd6f4', '#11111b', '#6c7086', '$cpuTempSensor');",
+        "INSERT INTO config (
+          icon,
+          title,
+          color_background,
+          color_foreground,
+          color_items,
+          color_borders,
+          cpu_temp_sensor,
+          show_free_ram,
+          show_free_swap,
+          show_public_ip,
+          show_free_space
+        )
+        VALUES (
+          NULL,
+          'Flimsy Home Page',
+          '#1e1e2e',
+          '#cdd6f4',
+          '#11111b',
+          '#6c7086',
+          '$cpuTempSensor',
+          true,
+          true,
+          true,
+          true
+        );",
         "CREATE TABLE list (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title TEXT NOT NULL,
@@ -77,8 +106,22 @@ class DB {
     $result->finalize();
     return $data;
   }
-  public function SetConfig($icon, $title, $background_image, $color_background, $color_foreground, $color_items, $color_borders, $cpu_temp_sensor) {
-    $stmt = $this->dbh->prepare('UPDATE config SET icon = :icon, title = :title, background_image = :background_image, color_background = :color_background, color_foreground = :color_foreground, color_items = :color_items, color_borders = :color_borders, cpu_temp_sensor = :cpu_temp_sensor WHERE id = 1');
+  public function SetConfig($icon, $title, $background_image, $color_background, $color_foreground, $color_items, $color_borders, $cpu_temp_sensor, $show_free_ram, $show_free_swap, $show_public_ip, $show_free_space) {
+    $stmt = $this->dbh->prepare('
+      UPDATE config SET
+        icon = :icon,
+        title = :title,
+        background_image = :background_image,
+        color_background = :color_background,
+        color_foreground = :color_foreground,
+        color_items = :color_items,
+        color_borders = :color_borders,
+        cpu_temp_sensor = :cpu_temp_sensor,
+        show_free_ram = :show_free_ram,
+        show_free_swap = :show_free_swap,
+        show_public_ip = :show_public_ip,
+        show_free_space = :show_free_space
+      WHERE id = 1');
     $stmt->bindValue(':icon', $icon);
     $stmt->bindValue(':title', $title);
     $stmt->bindValue(':background_image', $background_image);
@@ -87,7 +130,10 @@ class DB {
     $stmt->bindValue(':color_items', $color_items);
     $stmt->bindValue(':color_borders', $color_borders);
     $stmt->bindValue(':cpu_temp_sensor', $cpu_temp_sensor);
-    $stmt->bindValue(':mount_points', $mount_points);
+    $stmt->bindValue(':show_free_ram', $show_free_ram);
+    $stmt->bindValue(':show_free_swap', $show_free_swap);
+    $stmt->bindValue(':show_public_ip', $show_public_ip);
+    $stmt->bindValue(':show_free_space', $show_free_space);
     return $stmt->execute() !== false;
   }
 
