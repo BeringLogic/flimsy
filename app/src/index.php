@@ -28,6 +28,7 @@
       <div><i class="nf nf-oct-cpu"></i><span id="cpu-temp">?</span></div>
       <div><i class="nf nf-fa-memory"></i><span id="free-memory">?</span> free</div>
       <div><i class="nf nf-md-swap_horizontal"></i><span id="free-swap">?</span> free</div>
+      <div><i class="nf nf-md-ethernet"></i><span id="public-ip">?</span></div>
     </div>
     <?php if (empty($_SESSION['loggedIn'])) { ?>
       <a class="login" href="#">Login</a>
@@ -388,6 +389,8 @@
             $('<div class="mount-point">' + d.mount_point + '</div>').appendTo(div);
             div.appendTo($('#system-info'));
           })
+
+          $('#public-ip').html(data.public_ip);
         }
       });
     }

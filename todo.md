@@ -31,8 +31,7 @@
 * [x] Server status (RAM)
 * [x] Server status (SWAP)
 * [x] Server status (Storage)
-* [ ] Server status (Network)
-* [ ] Server status (public IP)
+* [x] Server status (public IP)
 * [ ] UI to customize login variables
 * [ ] UI to customize weather widget variables
 * [ ] Update README.md with screenshots, features, infos on how to install and how to use the app
