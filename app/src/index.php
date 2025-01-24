@@ -362,7 +362,7 @@
           $('.weather img').attr('src', 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png');
           $('.weather .location').html(data.name + ', ' + data.sys.country);
           $('.weather .description').html(data.weather[0].description);
-          $('.weather .temp').html(data.main.temp + ' °' + units);
+          $('.weather .temp').html(Math.round(data.main.temp) + ' °' + units);
         }
       });
     }
