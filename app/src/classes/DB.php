@@ -19,7 +19,6 @@ class DB {
    **/
   public function init() {
     $cpuTempSensor = empty($_SERVER['FLIMSY_CPU_TEMP_SENSOR']) ? null : $_SERVER['FLIMSY_CPU_TEMP_SENSOR'];
-    $mountPoints = empty($_SERVER['FLIMSY_MOUNT_POINTS']) ? null : $_SERVER['FLIMSY_MOUNT_POINTS'];
     
     if ($this->dbh === null) {
       error_log("Unable to open database!");
@@ -39,10 +38,9 @@ class DB {
           color_foreground TEXT NOT NULL,
           color_items TEXT NOT NULL,
           color_borders TEXT NOT NULL,
-          cpu_temp_sensor TEXT,
-          mount_points TEXT
+          cpu_temp_sensor TEXT
         );",
-        "INSERT INTO config (icon, title, color_background, color_foreground, color_items, color_borders, cpu_temp_sensor, mount_points) VALUES (NULL, 'Flimsy Home Page', '#1e1e2e', '#cdd6f4', '#11111b', '#6c7086', '$cpuTempSensor', '$mountPoints');",
+        "INSERT INTO config (icon, title, color_background, color_foreground, color_items, color_borders, cpu_temp_sensor) VALUES (NULL, 'Flimsy Home Page', '#1e1e2e', '#cdd6f4', '#11111b', '#6c7086', '$cpuTempSensor');",
         "CREATE TABLE list (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title TEXT NOT NULL,
@@ -79,8 +77,8 @@ class DB {
     $result->finalize();
     return $data;
   }
-  public function SetConfig($icon, $title, $background_image, $color_background, $color_foreground, $color_items, $color_borders, $cpu_temp_sensor, $mount_points) {
-    $stmt = $this->dbh->prepare('UPDATE config SET icon = :icon, title = :title, background_image = :background_image, color_background = :color_background, color_foreground = :color_foreground, color_items = :color_items, color_borders = :color_borders, cpu_temp_sensor = :cpu_temp_sensor, mount_points = :mount_points WHERE id = 1');
+  public function SetConfig($icon, $title, $background_image, $color_background, $color_foreground, $color_items, $color_borders, $cpu_temp_sensor) {
+    $stmt = $this->dbh->prepare('UPDATE config SET icon = :icon, title = :title, background_image = :background_image, color_background = :color_background, color_foreground = :color_foreground, color_items = :color_items, color_borders = :color_borders, cpu_temp_sensor = :cpu_temp_sensor WHERE id = 1');
     $stmt->bindValue(':icon', $icon);
     $stmt->bindValue(':title', $title);
     $stmt->bindValue(':background_image', $background_image);

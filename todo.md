@@ -48,5 +48,3 @@
 # Bugs
 * [ ] Make the whole item clickable (even when logged in)
 * [ ] Login feedback to display AFTER the list has loaded
-* [ ] Mount points cannot be monitored (except /) as they are not mounted in the container
-* [ ] Mount point error message mentions www-data. Change it to 1000:1000 (flimsy in the container).

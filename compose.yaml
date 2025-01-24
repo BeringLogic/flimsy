@@ -19,7 +19,9 @@ services:
     build:
       context: ./app
     volumes:
-      - ./data:/data # Make sure your local directory exists and is owned by the same user as 
+      - ./data:/data # Make sure your local directory exists and is owned by the user with UID 1000 
+      - /home/phil/Data:/mnt/Data/:ro
+      - /home/phil/OldData:/mnt/OldData/:ro
     environment:
       # Optional: Only used for log files...
       - TZ=${TZ:-UTC}
@@ -36,9 +38,6 @@ services:
 
       # Optional: Name of the CPU Temp sensor in lm-sensors. Most likely "Tctl" for Ryzen CPUs or "Package id 0" for Xeon CPUs.
       - FLIMSY_CPU_TEMP_SENSOR=${FLIMSY_CPU_TEMP_SENSOR}
-
-      # Optional: Coma separated list of storage mount points to monitor.
-      - FLIMSY_MOUNT_POINTS=${FLIMSY_MOUNT_POINTS}
     develop:
       watch:
         - action: sync

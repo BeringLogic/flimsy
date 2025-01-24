@@ -119,10 +119,6 @@
               <option value="">Don't show</option>
             </select>
           </div>
-          <div class="dialog-field">
-            <label for="configMountPoints">Mount Points</label>
-            <input id="configMountPoints" name="mount_points">
-          </div>
         </fieldset>
       </div>
     </form>
@@ -444,7 +440,6 @@
               }
             }
             $('#configCpuTempSensor').val(config.cpu_temp_sensor);
-            $('#configMountPoints').val(config.mount_points);
             $('#configDialog').dialog('open');
           }
         })
