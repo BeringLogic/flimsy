@@ -35,8 +35,8 @@ switch ($color_type) {
     $colorDetector = new ColorAutodetector();
     $colors = $colorDetector->extractColors($background_image);
     $color_background = "black";
-    $color_foreground = $colors[1];
-    $color_items = $colors[2];
+    $color_foreground = $colors[2];
+    $color_items = $colors[1];
     $color_borders = $colors[0];
     break;
   case 'catppuccin_latte':         # Colors from https://github.com/catppuccin/catppuccin/blob/main/docs/style-guide.md
