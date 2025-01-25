@@ -40,6 +40,7 @@
 * [ ] Find a better icon for SWAP, this one makes me think networking more than memory
 * [ ] Item ping icon or millisecs
 * [ ] favicons for items (https://dashy.to/docs/icons/)
+* [ ] check long title and lots of mount points
 
 # Edit mode
 * [ ] Rename login/logout

@@ -18,25 +18,29 @@
 
 <body>
   <header>
-    <div class="weather">
-      <img>
-      <div class="location"></div>
-      <div class="temp"></div>
-      <div class="description"></div>
+    <div>
+      <button id="configButton">⚙️</button>
+      <?php if (empty($_SESSION['loggedIn'])) { ?>
+        <a class="login" href="#">Login</a>
+      <?php } else { ?>
+        <a class="logout" href="logout.php">Logout</a>
+      <?php } ?>
+      <div id="system-info">
+      </div>
+      <div class="weather">
+        <img>
+        <div class="location"></div>
+        <div class="temp"></div>
+        <div class="description"></div>
+      </div>
     </div>
-    <div id="system-info">
+    <div>
+      <img id="icon">
+      <h1 id="title"></h1>
     </div>
-    <?php if (empty($_SESSION['loggedIn'])) { ?>
-      <a class="login" href="#">Login</a>
-    <?php } else { ?>
-      <a class="logout" href="logout.php">Logout</a>
-    <?php } ?>
-    <button id="configButton">⚙️</button>
-    <img id="icon">
-    <h1 id="title"></h1>
   </header>
 
-  <div id="lists"></div>
+  <div id="lists" style="clear:both;"></div>
 
   <button id="addList">➕ Add List</button>
 

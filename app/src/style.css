@@ -13,27 +13,30 @@ body {
   margin-right: 20px;
   vertical-align: text-bottom;
 }
+
 #title {
   display: inline-block;
   margin: 0;
   font-size: 4em;
   text-shadow: 0 0 2px #1e1e2e;
 }
-#configButton {
+
+header div:first-child {
   float: right;
-  margin: 10px 10px;
-  vertical-align: middle;
 }
 
-button {
-  display: none;
+#configButton {
+  margin: 0 10px;
 }
 
 a.login,
 a.logout {
-  float: right;
   color: #cdd6f4;
-  margin: 14px 20px;
+  margin: 0 20px;
+}
+
+button {
+  display: none;
 }
 
 
@@ -41,7 +44,7 @@ a.logout {
 * System Info
 */
 #system-info {
-  float:right;
+  display: inline-block;
   margin-right: 20px;
 }
   #system-info div {
@@ -66,7 +69,8 @@ a.logout {
 * Weather
 */
 div.weather {
-  float:right;
+  display: inline-block;
+  vertical-align: top;
   text-align: center;
 } 
   div.weather img {
