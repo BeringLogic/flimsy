@@ -395,7 +395,7 @@
             $('#free-memory').html(data.free_memory);
           }
           if (data.free_swap) {
-            $('#system-info').append($('<div><i class="nf nf-md-swap_horizontal"></i><span id="free-swap">?</span> free</div>'));
+            $('#system-info').append($('<div><i class="nf nf-md-file_swap"></i><span id="free-swap">?</span> free</div>'));
             $('#free-swap').html(data.free_swap);
           }
           if (data.public_ip) {
