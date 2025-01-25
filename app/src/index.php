@@ -337,12 +337,14 @@
           if (config.background_image) {
             $('body').css('background-image', 'url(/data/backgrounds/' + config.background_image + ')');
           }
+
+          $('.ui-resizable-n, .ui-resizable-e, .ui-resizable-s, .ui-resizable-w, .ui-widget-content').css('background-color', config.color_items);
           $('body').css('background-color', config.color_background);
-          $('body, a.login, a.logout').css('color', config.color_foreground);
+          $('body, .ui-dialog-title, .ui-dialog-content, .ui-dialog-buttonpane, a.login, a.logout, .item a').css('color', config.color_foreground);
           $('#title, .list h2, #system-info, div.weather, a.login, a.logout, div.details').css('text-shadow', '2px 2px ' + config.color_background);
-          $('.item a').css('color', config.color_foreground);
+          $('.ui-dialog-title, .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane').css('background-color', config.color_borders);
           $('.item').each((i, el) => { el.style.backgroundColor = 'rgba(from ' + config.color_items + ' r g b / 0.75)'; });
-          $('.item').css('border-color', config.color_borders);
+          $('.ui-dialog, .ui-draggable-handle, .ui-dialog-content fieldset, .ui-widget-content, .item').css('border-color', config.color_items);
         }
       });
     }
@@ -573,6 +575,8 @@
           }
         }
       });
+
+
     });
   </script>
 
