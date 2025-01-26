@@ -26,11 +26,13 @@ body {
 }
 
 #configButton {
+  vertical-align: -20px;
   margin: 0 10px;
 }
 
 a.login,
 a.logout {
+  vertical-align: -20px;
   color: #cdd6f4;
   margin: 0 20px;
 }
