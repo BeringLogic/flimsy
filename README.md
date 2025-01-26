@@ -15,7 +15,7 @@ Flimsy home page for your homelab
 ```yaml
 services:
   web:
-    image: beringlogic/flimsy-nginx:latest
+    image: beringlogic/flimsy-web:latest
     ports:
       - 8888:80
     volumes:
