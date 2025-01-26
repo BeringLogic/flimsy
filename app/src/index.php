@@ -532,15 +532,15 @@
         modal: true,
         width: 1010,
         buttons: {
+          "Cancel": () => {
+            $('#configDialog').dialog('close');
+          },
           "Save": () => {
             if ($('#configDialog :invalid').length > 0) {
               return;
             }
             $('#configDialog form').submit();
           },
-          "Cancel": () => {
-            $('#configDialog').dialog('close');
-          }
         }
       });
       $('#configBackgroundUpload').change(() => {
@@ -573,15 +573,15 @@
         autoOpen: false,
         modal: true,
         buttons: {
+          "Cancel": () => {
+            $('#loginDialog').dialog('close');
+          },
           "Login": () => {
             if ($('#loginDialog :invalid').length > 0) {
               return;
             }
             $('#loginDialog form').submit();
           },
-          "Cancel": () => {
-            $('#loginDialog').dialog('close');
-          }
         }
       });
       $('a.login').click(() => {
@@ -598,15 +598,15 @@
         autoOpen: false,
         modal: true,
         buttons: {
+          "Cancel": () => {
+            $('#editListDialog').dialog('close');
+          },
           "Save": () => {
             if ($('#editListDialog :invalid').length > 0) {
               return;
             }
             $('#editListDialog form').submit();
           },
-          "Cancel": () => {
-            $('#editListDialog').dialog('close');
-          }
         }
       });
 
@@ -614,15 +614,15 @@
         autoOpen: false,
         modal: true,
         buttons: {
+          "Cancel": () => {
+            $('#editItemDialog').dialog('close');
+          },
           "Save": () => {
             if ($('#editItemDialog :invalid').length > 0) {
               return;
             }
             $('#editItemDialog form').submit();
           },
-          "Cancel": () => {
-            $('#editItemDialog').dialog('close');
-          }
         }
       });
 
