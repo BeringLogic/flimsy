@@ -21,7 +21,7 @@ body {
   text-shadow: 0 0 2px #1e1e2e;
 }
 
-header div:first-child {
+.right {
   float: right;
 }
 

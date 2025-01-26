@@ -18,7 +18,7 @@
 
 <body>
   <header>
-    <div>
+    <div class="right">
       <button id="configButton">⚙️</button>
       <?php if (empty($_SESSION['loggedIn'])) { ?>
         <a class="login" href="#">Login</a>
