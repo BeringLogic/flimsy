@@ -11,7 +11,7 @@ Flimsy home page for your homelab
 
 ## Installation
 
-###Create a compose.yaml file
+### Create a compose.yaml file
 ```yaml
 services:
   web:
