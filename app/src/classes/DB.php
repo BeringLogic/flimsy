@@ -174,7 +174,7 @@ class DB {
     return $stmt->execute() !== false;
   }
 
-  public function RemoveList($id) {
+  public function deleteList($id) {
     $stmt = $this->dbh->prepare('DELETE FROM list WHERE id = :id');
     $stmt->bindValue(':id', $id);
     return $stmt->execute() !== false;
@@ -224,7 +224,7 @@ class DB {
     return $stmt->execute() !== false;
   }
 
-  public function RemoveItem($id) {
+  public function deleteItem($id) {
     $stmt = $this->dbh->prepare('DELETE FROM item WHERE id = :id');
     $stmt->bindValue(':id', $id);
     return $stmt->execute() !== false;

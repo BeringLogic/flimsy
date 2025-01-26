@@ -155,7 +155,7 @@
   </div>
 
   <div id="editListDialog" class="dialog">
-    <form action="lists/edit.php" method="post">
+    <form method="post">
       <div class="dialog-field">
         <label for="listTitle">Title</label>
         <input id="listTitle" type="text" name="title" required>
@@ -168,7 +168,7 @@
   </div>
 
   <div id="editItemDialog" class="dialog">
-    <form action="items/add.php" method="post">
+    <form method="post">
       <div class="dialog-field">
         <label for="itemTitle">Title</label>
         <input id="itemTitle" type="text" name="title" required>
@@ -185,15 +185,115 @@
   </div>
 
   <script type="text/javascript">
+    function deleteList() {
+      if (!confirm("Are you sure that you want to delete this list and all its items?")) return;
+      
+      const id = $('#editListDialog form').attr('action').replace('lists/edit.php?id=', '');
+      $.ajax({
+        url: 'lists/delete.php?id=' + id,
+        success: () => {
+          $('#list_' + id).remove();
+          $('#editListDialog').dialog('close');
+        }
+      });
+    }
+    function deleteItem() {
+      if (!confirm("Are you sure that you want to delete this item?")) return;
+      
+      const id = $('#editItemDialog form').attr('action').replace('items/edit.php?itemId=', '');
+      $.ajax({
+        url: 'items/delete.php?itemId=' + id,
+        success: () => {
+          $('#item_' + id).remove();
+          $('#editItemDialog').dialog('close');
+        }
+      });
+    }
+
     function loadData() {
       $.ajax({
         url: 'getAllData.php',
         success: (data) => {
           render(data);
 
+          $('div.list h2').click((e) => {
+            <?php if (!empty($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true) { ?>
+              const id = e.currentTarget.parentNode.id.replace('list_', '');
+              $('#listTitle').val(data.find(l => l.id == id).title);
+              $('#listRows').val(data.find(l => l.id == id).number_of_rows);
+
+              var buttons = $('#editListDialog').dialog('option', 'buttons');
+              if (buttons.hasOwnProperty('Delete') == false) {
+                buttons = { 'Delete': deleteList, ...buttons };
+              }
+              $('#editListDialog').dialog('option', 'buttons', buttons);
+              $('#editListDialog').dialog('option', 'title', 'Edit List');
+              $('#editListDialog form').attr('action', 'lists/edit.php?id=' + id);
+              $('#editListDialog').dialog('open');
+            <?php } ?>
+          })
+
+          $('div.item').click((e) => {
+            <?php if (!empty($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true) { ?>
+              if (e.target.id.startsWith('addItem_')) return;
+
+              const itemId = e.currentTarget.id.replace('item_', '');
+              $.ajax({
+                url: 'items/get.php?id=' + itemId,
+                success: (item) => {
+                  $('#itemTitle').val(item.title);
+                  $('#itemHref').val(item.href);
+                  $('#itemIcon').val(item.icon);
+
+                  var buttons = $('#editItemDialog').dialog('option', 'buttons');
+                  if (!buttons.hasOwnProperty('Delete')) {
+                    buttons = { 'Delete': deleteItem, ...buttons };
+                  }
+                  $('#editItemDialog').dialog('option', 'buttons', buttons);
+                  $('#editItemDialog').dialog('option', 'title', 'Edit Item');
+                  $('#editItemDialog form').attr('action', 'items/edit.php?itemId=' + item.id);
+                  $('#editItemDialog').dialog('open');
+                }
+              });
+            <?php } else { ?>
+              const href = $('#' + e.currentTarget.id + ' div.details div.href').text();
+              window.open(href);
+            <?php } ?>
+          });
+
+          $('#addList').click(() => {
+            $('#listTitle').val('');
+
+            var buttons = $('#editListDialog').dialog('option', 'buttons');
+            if (buttons.hasOwnProperty('Delete')) {
+              delete buttons.Delete;
+            }
+            $('#editListDialog').dialog('option', 'buttons', buttons);
+            $('#editListDialog').dialog('option', 'title', 'Add New List');
+            $('#editListDialog form').attr('action', 'lists/add.php');
+            $('#editListDialog').dialog('open');
+          });
+
+          $('div.addItem button').click((e) => {
+            const listId = e.target.id.replace('addItem_', '');
+            $('#itemTitle').val('');
+            $('#itemHref').val('');
+            $('#itemIcon').val('');
+
+            var buttons = $('#editItemDialog').dialog('option', 'buttons');
+            if (buttons.hasOwnProperty('Delete')) {
+              delete buttons.Delete;
+            }
+            $('#editItemDialog').dialog('option', 'buttons', buttons);
+            $('#editItemDialog').dialog('option', 'title', 'Add New Item');
+            $('#editItemDialog form').attr('action', 'items/add.php?listId=' + listId);
+            $('#editItemDialog').dialog('open');
+          });
+
           <?php if (!empty($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true) { ?>
           $(function() {
             $('#lists').sortable({
+              helper : 'clone',
               stop: function(event, ui) {
                 const listIds = $(ui.item).parent().children("div.list").map((l, el) => el.id.replace('list_', '')).toArray();
                 $.ajax({
@@ -206,6 +306,7 @@
               } 
             })
             $("div.list").sortable({
+              helper: 'clone',
               items: "div.item",
               connectWith: ".list",
               stop: function(event, ui) {
@@ -231,55 +332,6 @@
           $('.addItem').css('display', 'none');
           <?php } ?>
 
-          $('button.editList').click((e) => {
-            const id = e.target.id.replace('editList_', '');
-            $('#editListDialog form').attr('action', 'lists/edit.php?id=' + id);
-            $('#listTitle').val(data.find(l => l.id == id).title);
-            $('#listRows').val(data.find(l => l.id == id).number_of_rows);
-            $('#editListDialog').dialog('open');
-          });
-          $('#addList').click(() => {
-            $('#editListDialog form').attr('action', 'lists/add.php');
-            $('#listTitle').val('');
-            $('#editListDialog').dialog('open');
-          });
-          $('button.removeList').click((e) => {
-            const id = e.target.id.replace('removeList_', '');
-            if (!confirm('Are you sure you want to remove this list, and all its items?')) {
-              return;
-            }
-            location.href = 'lists/remove.php?id=' + id;
-          });
-
-          $('button.editItem').click((e) => {
-            const itemId = e.target.id.replace('editItem_', '');
-            $.ajax({
-              url: 'items/get.php?id=' + itemId,
-              success: (item) => {
-                $('#editItemDialog form').attr('action', 'items/edit.php?itemId=' + item.id);
-                $('#itemTitle').val(item.title);
-                $('#itemHref').val(item.href);
-                $('#itemIcon').val(item.icon);
-                $('#editItemDialog').dialog('open');
-              }
-            });
-          });
-          $('div.addItem button').click((e) => {
-            const listId = e.target.id.replace('addItem_', '');
-            $('#editItemDialog form').attr('action', 'items/add.php?listId=' + listId);
-            $('#itemTitle').val('');
-            $('#itemHref').val('');
-            $('#itemIcon').val('');
-            $('#editItemDialog').dialog('open');
-          });
-          $('button.removeItem').click((e) => {
-            const itemId = e.target.id.replace('removeItem_', '');
-            if (!confirm('Are you sure you want to remove this item?')) {
-              return;
-            }
-            location.href = 'items/remove.php?itemId=' + itemId;
-          });
-
           loadConfig();
           updateWeather();
           updateSystemInfo();
@@ -296,25 +348,21 @@
     function render(data) {
       data.forEach(l => {
         var list = $('<div id="list_' + l.id + '" class="list"></div>');
-        list.append($('<h2>' + l.title + ' <button id="editList_' + l.id + '" class="editList">✍️</button><button id="removeList_' + l.id + '" class="removeList">❌</button></h2>'));
+        list.append($('<h2>' + l.title + '</h2>'));
+
         items = $('<div class="items"></div>');
         items.css('grid-template-columns', 'repeat(' + l.number_of_rows + ', 1fr)');
 
         l.items.forEach(i => {
           var item = $('<div id="item_' + i.id + '" class="item"></div>');
-          item.append($('<button id="removeItem_' + i.id + '" class="removeItem">❌</button><button id="editItem_' + i.id + '" class="editItem">✍️</button>'));
 
-          var link = $('<a class="href" href="' + i.href + '" target="_blank"></a>');
-          link.append($('<img class="icon" src="/data/icons/' + i.icon + '" />'));
+          item.append($('<img class="icon" src="/data/icons/' + i.icon + '" />'));
 
           var details = $('<div class="details"></div>');
-          details.css('max-width', 'calc(100vw / ' + l.number_of_rows + ' - 135px)');
           details.append($('<div class="title">' + i.title + '</div>'));
           details.append($('<div class="href">' + i.href + '</div>'));
 
-          link.append(details);
-          item.append(link);
-
+          item.append(details);
           items.append(item);
         });
 
@@ -547,7 +595,6 @@
       });
 
       $('#editListDialog').dialog({
-        title: 'Edit List',
         autoOpen: false,
         modal: true,
         buttons: {
@@ -564,7 +611,6 @@
       });
 
       $('#editItemDialog').dialog({
-        title: 'Edit Item',
         autoOpen: false,
         modal: true,
         buttons: {
@@ -579,7 +625,6 @@
           }
         }
       });
-
 
     });
   </script>

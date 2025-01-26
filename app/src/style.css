@@ -116,10 +116,7 @@ div.list div.items {
     border-radius: 5px;
     padding: 5px;
     background-color: #11111b;
-  }
-  div.item a {
-    color: #cdd6f4;
-    text-decoration: none;
+    cursor: pointer;
   }
 
   div.item button {
@@ -138,8 +135,7 @@ div.list div.items {
     display: inline-block;
     vertical-align: middle;
     margin-left: 5px;
-    width: calc(100% - 135px);
-    max-width: calc(100vw / 4 - 135px);
+    max-width: calc(100% - 78px);
     white-space: nowrap;
     overflow-x: hidden;
   }
