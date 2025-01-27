@@ -100,9 +100,6 @@ div.list {
 div.list h2 {
   font-size: xx-large;
 }
-  div.list h2 button {
-    vertical-align: 5px;
-  }
 
 div.list div.items {
   display: grid;
@@ -130,10 +127,6 @@ div.list div.items {
     i.status.offline {
       color: red;
     }
-
-  div.item button {
-    float: right;
-  }
 
   div.item img.icon {
     display: inline-block;
