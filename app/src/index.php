@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="https://www.nerdfonts.com/assets/css/webfont.css">
+  <link rel="icon" type="image/png" href="/homepage.png">
   <script
 			  src="https://code.jquery.com/jquery-3.7.1.min.js"
 			  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
