@@ -17,6 +17,7 @@
 * [x] Default colors based on Catppucchin-mocha
 * [x] Download icon when saving items and use local copy
 * [x] Support both png and svg icons
+* [x] Support webp icons
 * [x] SQLite
 * [x] Customizable icon in h1
 * [x] Customizable title in h1
@@ -38,13 +39,10 @@
 * [ ] UI to customize weather widget variables
 * [ ] Update README.md with screenshots, features, infos on how to install and how to use the app
 * [ ] Docker integration
-* [ ] Item ping icon or millisecs
 * [ ] favicons for items (https://dashy.to/docs/icons/)
 * [ ] check long title and lots of mount points
 * [ ] Use ENV variables or the DB, not both (looking at you, CPU Temp Sensor)
 * [ ] AJAX for everything?
-* [ ] Refresh system-info every 5 min
-* [ ] Refresh weather every hour
 
 # Stuff I need to learn
 * [ ] xdebug
