@@ -64,6 +64,6 @@ docker compose up -d
 ## References
 - [catppuccin themes](https://github.com/catppuccin/catppuccin/blob/main/docs/style-guide.md)
 - [dashboard-icons](https://github.com/homarr-labs/dashboard-icons)
-- The favicon was made using Gimp and this source image [favicon.ico](https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png)
+- The favicon is [homarr-labs/dashboard-icons homepage.png](https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png)
 - The autodetection of colors from the uploaded background is using this code: [League Color Extractor](https://github.com/thephpleague/color-extractor)
 
