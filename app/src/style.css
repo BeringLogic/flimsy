@@ -120,6 +120,16 @@ div.list div.items {
     background-color: #11111b;
     cursor: pointer;
   }
+  
+  i.status {
+    float:right;
+  }
+    i.status.online {
+      color: green;
+    }
+    i.status.offline {
+      color: red;
+    }
 
   div.item button {
     float: right;
@@ -137,7 +147,7 @@ div.list div.items {
     display: inline-block;
     vertical-align: middle;
     margin-left: 5px;
-    max-width: calc(100% - 78px);
+    width: calc(100% - 80px);
     white-space: nowrap;
     overflow-x: hidden;
   }

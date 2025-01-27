@@ -335,6 +335,7 @@
           loadConfig();
           updateWeather();
           updateSystemInfo();
+          updateStatusIcons(data);
         },
         error: (error, status, xhr) => {
           alert("An error occured while loading the data! Make sure /data is writable by the www-data user (UID 33, GID 33).");
@@ -355,10 +356,10 @@
 
         l.items.forEach(i => {
           var item = $('<div id="item_' + i.id + '" class="item"></div>');
-
           item.append($('<img class="icon" src="/data/icons/' + i.icon + '" />'));
 
           var details = $('<div class="details"></div>');
+          details.append($('<i class="status nf nf-oct-dot_fill"></i>'));
           details.append($('<div class="title">' + i.title + '</div>'));
           details.append($('<div class="href">' + i.href + '</div>'));
 
@@ -466,6 +467,26 @@
             })
           }
         }
+      });
+    }
+
+    function updateStatusIcons(data) {
+      data.forEach((list) => {
+        list.items.forEach((item) => {
+          $.ajax({
+            url: 'getStatus.php?href=' + item.href,
+            success: (status) => {
+              const i = $('#item_' + item.id + ' i.status');
+              i.attr('title', status)
+              if (status == 'No error') {
+                i.addClass('online').removeClass('offline');
+              }
+              else {
+                i.addClass('offline').removeClass('online');
+              }
+            }
+          })
+        })
       });
     }
 
