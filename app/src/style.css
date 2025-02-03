@@ -7,6 +7,14 @@ body {
   padding: 50px;
 }
 
+header {
+  display: flex;
+  justify-content: space-between;
+}
+  header div:last-child {
+    flex-shrink: 0;
+  }
+
 #icon {
   display: none;
   max-width: 64px;
@@ -20,10 +28,6 @@ body {
   margin: 0;
   font-size: 4em;
   text-shadow: 0 0 2px #1e1e2e;
-}
-
-.right {
-  float: right;
 }
 
 #configButton {
