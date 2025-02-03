@@ -19,7 +19,11 @@
 
 <body>
   <header>
-    <div class="right">
+    <div>
+      <img id="icon">
+      <h1 id="title"></h1>
+    </div>
+    <div>
       <button id="configButton">⚙️</button>
       <?php if (empty($_SESSION['loggedIn'])) { ?>
         <a class="login" href="#">Login</a>
@@ -34,10 +38,6 @@
         <div class="temp"></div>
         <div class="description"></div>
       </div>
-    </div>
-    <div>
-      <img id="icon">
-      <h1 id="title"></h1>
     </div>
   </header>
 
