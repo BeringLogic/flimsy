@@ -357,7 +357,9 @@
 
         l.items.forEach(i => {
           var item = $('<div id="item_' + i.id + '" class="item"></div>');
-          item.append($('<img class="icon" src="/data/icons/' + i.icon + '" />'));
+          var iconDiv = $('<div class="iconDiv"></div>');
+            iconDiv.append($('<img class="icon" src="/data/icons/' + i.icon + '" />'));
+          item.append(iconDiv);
 
           var details = $('<div class="details"></div>');
           details.append($('<i class="status nf nf-oct-dot_fill"></i>'));
