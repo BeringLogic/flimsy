@@ -339,7 +339,7 @@
           updateStatusIcons(data);
         },
         error: (error, status, xhr) => {
-          alert("An error occured while loading the data! Make sure /data is writable by the www-data user (UID 33, GID 33).");
+          alert("An error occured while loading the data! Make sure /data is writable by the user UID 1000, GID 1000.");
           console.log(error);
           console.log(status);
           console.log(xhr);
