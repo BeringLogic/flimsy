@@ -128,12 +128,18 @@ div.list div.items {
       color: red;
     }
 
+  div.item div.iconDiv {
+    display: inline-block;
+    width: 64px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px;
+  }
   div.item img.icon {
     display: inline-block;
     vertical-align: middle;
     max-width: 64px;
     max-height: 64px;
-    padding: 5px;
   }
 
   div.item div.details {
