@@ -1,6 +1,7 @@
 
 body {
   background-color: #1e1e2e;
+  background-repeat: no-repeat;
   background-size: cover;
   color: #cdd6f4;
   padding: 50px;
