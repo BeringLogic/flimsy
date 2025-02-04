@@ -1,20 +1,20 @@
 services:
-  web:
-    build:
-      context: .
-      dockerfile: ./web/Dockerfile
-    ports:
-      - 8888:80
-    volumes:
-      - ./data:/var/www/data
-    # Optional: Only used for log files...
-    environment:
-      - TZ=${TZ:-UTC}
-    develop:
-      watch:
-        - action: sync
-          path: ./app/src
-          target: /var/www
+  # web:
+  #   build:
+  #     context: .
+  #     dockerfile: ./web/Dockerfile
+  #   ports:
+  #     - 8888:80
+  #   volumes:
+  #     - ./data:/var/www/data
+  #   # Optional: Only used for log files...
+  #   environment:
+  #     - TZ=${TZ:-UTC}
+  #   develop:
+  #     watch:
+  #       - action: sync
+  #         path: ./app/src
+  #         target: /var/www
   app:
     build:
       context: ./app
@@ -42,6 +42,6 @@ services:
       watch:
         - action: sync
           path: ./app/src
-          target: /var/www
+          target: /usr/src/app
 #volumes:
   #  data:

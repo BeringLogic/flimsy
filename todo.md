@@ -41,10 +41,26 @@
 * [ ] Docker integration
 * [ ] favicons for items (https://dashy.to/docs/icons/)
 * [ ] AJAX for everything?
-* [ ] Switch to golang
 
-# Stuff I need to learn
-* [ ] xdebug
+# Switch to golang
+* [x] golang base image
+* [x] hello world 
+* [ ] watch source or bind src/ ?
+* [ ] compile automatically?
+* [ ] CI pipeline?
+* [ ] golang baseimage example
+* [ ] gin
+* [ ] Do I still need nginx?
+* [ ] serve static files
+* [ ] /
+* [ ] gorilla sessions
+* [ ] sqlite
+* [ ] debugger
+* [ ] [prominentcolor](https://github.com/EdlinOrg/prominentcolor)
+* [ ] Dockerfile app prod (from scratch)
+* [ ] tests?
+
+# Docker stuff I need to learn
 * [ ] Docker secrets
 * [ ] How to deal with /data. I want it to work with a managed volume, but I want it to work with a bound volume too. If bound, user must mkdir and chown 1000:1000 (flimsy user in the container). Awkward since 1000 might not be the user's id on the host...
 * [ ] How to run rootless (https://docs.docker.com/engine/security/rootless/)
