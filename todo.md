@@ -40,8 +40,8 @@
 * [ ] Update README.md with screenshots, features, infos on how to install and how to use the app
 * [ ] Docker integration
 * [ ] favicons for items (https://dashy.to/docs/icons/)
-* [ ] Use ENV variables or the DB, not both (looking at you, CPU Temp Sensor)
 * [ ] AJAX for everything?
+* [ ] Switch to golang
 
 # Stuff I need to learn
 * [ ] xdebug
