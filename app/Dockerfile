@@ -1,16 +1,8 @@
-FROM golang:1.23 
+FROM golang:1.23 AS builder 
 
 # RUN echo 'memory_limit = 512M' >> $PHP_INI_DIR/conf.d/docker-php-memlimit.ini \
 #   && echo 'upload_max_filesize = 200M' >> $PHP_INI_DIR/conf.d/docker-php-uploadsize.ini \
 #   && echo 'post_max_size = 200M' >> $PHP_INI_DIR/conf.d/docker-php-uploadsize.ini \
-
-RUN addgroup flimsy \
-  && adduser --no-create-home --disabled-password --ingroup flimsy flimsy \
-  && mkdir -p /data \
-  && chown -R flimsy:flimsy /data
-VOLUME /data
-
-EXPOSE 8080
 
 RUN mkdir -p /usr/src/flimsy
 WORKDIR /usr/src/flimsy
@@ -21,5 +13,15 @@ RUN go mod download && go mod verify
 COPY ./src .
 RUN go build -v -o /usr/local/bin/flimsy
 
-USER flimsy
+
+
+FROM alpine:3.21 AS runner
+
+COPY --from=builder /usr/local/bin/flimsy /usr/local/bin/flimsy
+
+RUN mkdir /data
+VOLUME /data
+
+EXPOSE 8080
+
 CMD ["flimsy"]
