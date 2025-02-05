@@ -45,11 +45,11 @@
 # Switch to golang
 * [x] golang base image
 * [x] hello world 
-* [ ] watch source or bind src/ ?
+* [x] golang baseimage example
+* [x] watch source or bind src/ ?
 * [ ] compile automatically?
 * [ ] CI pipeline?
-* [ ] golang baseimage example
-* [ ] gin
+* [x] gin
 * [ ] Do I still need nginx?
 * [ ] serve static files
 * [ ] /
