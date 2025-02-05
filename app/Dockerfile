@@ -7,10 +7,12 @@ FROM golang:1.23 AS builder
 RUN mkdir -p /usr/src/flimsy
 WORKDIR /usr/src/flimsy
 
-COPY go.mod go.sum ./
-RUN go mod download && go mod verify
-
+# COPY go.mod go.sum ./
 COPY ./src .
+RUN go mod init BeringLogic/flimsy \
+  && go mod tidy
+
+ENV CGO_ENABLED=0
 RUN go build -v -o /usr/local/bin/flimsy
 
 
