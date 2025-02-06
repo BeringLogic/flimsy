@@ -29,7 +29,7 @@ FROM alpine:3.21 AS runner
 RUN apk add --no-cache lm-sensors tzdata
 
 COPY --from=builder /usr/local/bin/flimsy /usr/local/bin/flimsy
-COPY --from=builder /usr/src/flimsy/public /var/lib/flimsy/public
+COPY --from=builder /usr/src/flimsy/static /var/lib/flimsy/static
 COPY --from=builder /usr/src/flimsy/templates /var/lib/flimsy/templates
 
 RUN mkdir /data
