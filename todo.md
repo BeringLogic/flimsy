@@ -59,6 +59,10 @@
 * [ ] [prominentcolor](https://github.com/EdlinOrg/prominentcolor)
 * [ ] Dockerfile app prod (from scratch)
 * [ ] tests?
+* [ ] GIN_MODE
+* [ ] [Trusting all proxies](https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies)
+* [ ] PORT
+* [ ] Don't log 200
 
 # Docker stuff I need to learn
 * [ ] Docker secrets
