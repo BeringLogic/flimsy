@@ -1,23 +1,7 @@
 services:
-  # web:
-  #   build:
-  #     context: .
-  #     dockerfile: ./web/Dockerfile
-  #   ports:
-  #     - 8888:80
-  #   volumes:
-  #     - ./data:/var/www/data
-  #   # Optional: Only used for log files...
-  #   environment:
-  #     - TZ=${TZ:-UTC}
-  #   develop:
-  #     watch:
-  #       - action: sync
-  #         path: ./app/src
-  #         target: /var/www
   app:
     build:
-      context: ./app
+      context: .
     volumes:
       - ./data:/data # Make sure your local directory exists and is owned by the user with UID 1000 
       - /home/phil/Data:/mnt/Data/:ro
