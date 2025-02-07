@@ -1,0 +1,209 @@
+
+body {
+  background-color: #1e1e2e;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #cdd6f4;
+  padding: 50px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+}
+  header div:last-child {
+    flex-shrink: 0;
+  }
+
+#icon {
+  display: none;
+  max-width: 64px;
+  max-height: 64px;
+  margin-right: 20px;
+  vertical-align: text-bottom;
+}
+
+#title {
+  display: inline-block;
+  margin: 0;
+  font-size: 4em;
+  text-shadow: 0 0 2px #1e1e2e;
+}
+
+#configButton {
+  vertical-align: -20px;
+  margin: 0 10px;
+}
+
+#login,
+#logout {
+  vertical-align: -20px;
+  color: #cdd6f4;
+  margin: 0 20px;
+}
+
+button {
+  display: none;
+}
+
+
+/*
+* System Info
+*/
+#system-info {
+  display: inline-block;
+  margin-right: 20px;
+}
+  #system-info div {
+    display: inline-block;
+    vertical-align: top;
+    text-align: center; 
+    margin: 10px;
+  }
+  #system-info i {
+    display: block;
+    margin-bottom: 5px;
+    font-size: xx-large;
+  }
+  #system-info div.mount-point,
+  #system-info div.free-space {
+    display: block;
+    margin: 0;
+  }
+
+  
+/*
+* Weather
+*/
+div.weather {
+  display: inline-block;
+  vertical-align: top;
+  text-align: center;
+} 
+  div.weather img {
+    margin-top: -30px;
+  }
+  div.weather div.location {
+    margin-top: -20px;
+  }
+
+div.list h2,
+div.system-info,
+div.weather,
+div.details,
+a.login,
+a.logout {
+  text-shadow: 0 0 2px #1e1e2e;
+}
+
+/*
+* Lists and Items
+*/
+div.list {
+  margin-bottom: 52px;
+}
+div.list h2 {
+  font-size: xx-large;
+}
+
+div.list div.items {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-content: space-evenly;
+  gap: 10px;
+}
+
+  div.item {
+    display: inline-block;
+    align-content: center;
+    border: 3px solid #6c7086;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #11111b;
+    cursor: pointer;
+  }
+  
+  i.status {
+    float:right;
+  }
+    i.status.online {
+      color: green;
+    }
+    i.status.offline {
+      color: red;
+    }
+
+  div.item div.iconDiv {
+    display: inline-block;
+    width: 64px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px;
+  }
+  div.item img.icon {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 64px;
+    max-height: 64px;
+  }
+
+  div.item div.details {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 5px;
+    width: calc(100% - 80px);
+    white-space: nowrap;
+    overflow-x: hidden;
+  }
+
+  div.item div.title {
+    font-size: xx-large;
+  }
+
+  div.item div.href {
+    font-size: large;
+  }
+
+div.addItem {
+  width: 84px;
+  border: none;
+  background-color: transparent !important;
+}
+
+#addList {
+  margin-top: 26px;
+}
+
+
+/*
+* Dialogs
+*/
+div.dialog {
+  display: none;
+}
+  div.dialog fieldset {
+    margin-bottom: 22px;
+  }
+  div.dialog div.dialog-column {
+    display: inline-block;
+    vertical-align: top;
+    padding: 10px;
+    width: 300px;
+  }
+  div.dialog div.dialog-field {
+    margin-top: 10px;
+  }
+  div.dialog div.dialog-field label {
+    display: block;
+  }
+  div.dialog div.dialog-field input {
+    width: 97%;
+  }
+  div.dialog div.dialog-field select {
+    width: 100%;
+  }
+
+input:invalid {
+  box-shadow: 0 0 5px 1px red;
+}
+
