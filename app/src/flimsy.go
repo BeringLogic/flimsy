@@ -1,12 +1,29 @@
 package main
 
 import (
+  "os"
   "net/http"
   "github.com/gin-gonic/gin"
 )
 
+func getEnv(key, def string) string {
+    value, exists := os.LookupEnv(key)
+    if !exists {
+        value = def
+    }
+    return value
+}
+
 func GET_root(c *gin.Context) {
-  c.HTML(http.StatusOK, "index.tmpl", nil)
+  c.HTML(http.StatusOK, "index.tmpl", gin.H{
+    "auth_disabled" : true,
+    "loggedIn" : false,
+    "session_message" : "", 
+    "FLIMSY_WEATHER_API_KEY" : getEnv("FLIMSY_WEATHER_API_KEY", ""),
+    "FLIMSY_WEATHER_LOCATION" : getEnv("FLIMSY_WEATHER_LOCATION", "New York"),
+    "FLIMSY_WEATHER_UNITS" : getEnv("FLIMSY_WEATHER_UNITS", "standard"),
+    "FLIMSY_WEATHER_LANGUAGE" : getEnv("FLIMSY_WEATHER_LANGUAGE", "en"),
+  })
 }
 
 func main() {
