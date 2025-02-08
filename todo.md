@@ -41,6 +41,7 @@
 * [ ] Docker integration
 * [ ] favicons for items (https://dashy.to/docs/icons/)
 * [ ] AJAX for everything?
+* [ ] HTMX ?
 
 # Switch to golang
 * [x] golang base image
@@ -50,9 +51,8 @@
 * [ ] compile automatically?
 * [ ] CI pipeline?
 * [x] gin
-* [ ] Do I still need nginx?
-* [ ] serve static files
-* [ ] /
+* [x] serve static files
+* [x] /
 * [ ] gorilla sessions
 * [ ] sqlite
 * [ ] debugger
@@ -63,6 +63,9 @@
 * [ ] [Trusting all proxies](https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies)
 * [ ] PORT
 * [ ] Don't log 200
+* [ ] [Let's Encrypt](https://gin-gonic.com/docs/examples/support-lets-encrypt/)
+* [ ] Serve jQuery from /static instead of cdn?
+* [ ] Figure out how to deal with if ({{ .loggedIn }}), I don't want the user to just flip a bool in js to unlock everything...
 
 # Docker stuff I need to learn
 * [ ] Docker secrets
