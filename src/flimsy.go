@@ -3,6 +3,8 @@ package main
 import (
   "os"
   "net/http"
+  "database/sql"
+  _ "github.com/mattn/go-sqlite3"
   "github.com/gin-gonic/gin"
 )
 
@@ -27,6 +29,12 @@ func GET_root(c *gin.Context) {
 }
 
 func main() {
+  db, err := sql.Open("sqlite3", ":memory:?_busy_timeout=5000&_foreign_keys=ON&_journal_mode=WAL")
+  if err != nil {
+    panic(err)
+  }
+  defer db.Close()
+
   gin.ForceConsoleColor()
 
   r := gin.Default()
