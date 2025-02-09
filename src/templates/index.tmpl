@@ -18,8 +18,8 @@
 <body>
   <header>
     <div>
-      {{ if .config.Icon }}<img id="icon" src="/data/icons/{{ .config.Icon }}">{{ end }}
-      {{ if .config.Title }}<h1 id="title">{{ .config.Title }}</h1>{{ end }}
+      <img id="icon">
+      <h1 id="title"></h1>
     </div>
     <div>
       {{ if .IsLoggedIn }}
@@ -218,32 +218,32 @@
 
     function loadConfig() {
       $.ajax({
-        url: 'config/get.php',
+        url: '/config',
         success: (config) => {
-          if (config.icon) {
-            $('#icon').attr('src', '/data/icons/' + config.icon)
+          if (config.Icon) {
+            $('#icon').attr('src', '/data/icons/' + config.Icon)
                       .css('display', 'inline-block');
           }
           else {
             $('#icon').css('display', 'none');
           }
 
-          $('#title').html(config.title);
+          $('#title').html(config.Title);
 
-          if (config.background_image) {
-            $('body').css('background-image', 'url(/data/backgrounds/' + config.background_image + ')');
+          if (config.Background_image) {
+            $('body').css('background-image', 'url(/data/backgrounds/' + config.Background_image + ')');
           }
           else {
             $('body').css('background-image', 'none');
           }
 
-          $('.ui-resizable-n, .ui-resizable-e, .ui-resizable-s, .ui-resizable-w, .ui-widget-content').css('background-color', config.color_items);
-          $('body').css('background-color', config.color_background);
-          $('body, .ui-dialog-title, .ui-dialog-content, .ui-dialog-buttonpane, #login, #logout, .item a').css('color', config.color_foreground);
-          $('#title, .list h2, #system-info, div.weather, #login, #logout, div.details').css('text-shadow', '2px 2px ' + config.color_background);
-          $('.ui-dialog-title, .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane').css('background-color', config.color_borders);
-          $('.item').each((i, el) => { el.style.backgroundColor = 'rgba(from ' + config.color_items + ' r g b / 0.75)'; });
-          $('.ui-dialog, .ui-draggable-handle, .ui-dialog-content fieldset, .ui-widget-content, .item').css('border-color', config.color_items);
+          $('.ui-resizable-n, .ui-resizable-e, .ui-resizable-s, .ui-resizable-w, .ui-widget-content').css('background-color', config.Color_items);
+          $('body').css('background-color', config.Color_background);
+          $('body, .ui-dialog-title, .ui-dialog-content, .ui-dialog-buttonpane, #login, #logout, .item a').css('color', config.Color_foreground);
+          $('#title, .list h2, #system-info, div.weather, #login, #logout, div.details').css('text-shadow', '2px 2px ' + config.Color_background);
+          $('.ui-dialog-title, .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane').css('background-color', config.Color_borders);
+          $('.item').each((i, el) => { el.style.backgroundColor = 'rgba(from ' + config.Color_items + ' r g b / 0.75)'; });
+          $('.ui-dialog, .ui-draggable-handle, .ui-dialog-content fieldset, .ui-widget-content, .item').css('border-color', config.Color_items);
         }
       });
     }
@@ -319,15 +319,16 @@
       $('div.item').each((i, item) => {
         const href = $(item).find('div.details div.href').text();
         $.ajax({
-          url: 'getStatus.php?href=' + href,
-          success: (status) => {
+          url: '/onlineStatus?href=' + href,
+          success: (data) => {
             const i = $(item).find('div.details i.status');
-            i.attr('title', status)
-            if (status == 'No error') {
+            if (data.online) {
               i.addClass('online').removeClass('offline');
+              i.attr('title', 'Online');
             }
             else {
               i.addClass('offline').removeClass('online');
+              i.attr('title', data.error)
             }
           }
         })
