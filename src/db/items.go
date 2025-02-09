@@ -1,12 +1,12 @@
 package db
 
 type Item struct {
-  ID int
-  list_id int
-  title string
-  href string
-  icon string
-  position int
+  Id int
+  List_id int
+  Title string
+  Href string
+  Icon string
+  Position int
 }
 
 func LoadItems() (*[]Item, error) {
@@ -18,7 +18,7 @@ func LoadItems() (*[]Item, error) {
 
   for rows.Next() {
     var item Item
-    err = rows.Scan(&item.ID, &item.list_id, &item.title, &item.href, &item.icon, &item.position); if err != nil {
+    err = rows.Scan(&item.Id, &item.List_id, &item.Title, &item.Href, &item.Icon, &item.Position); if err != nil {
       return nil, err
     }
     Items = append(Items, item)

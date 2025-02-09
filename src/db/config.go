@@ -1,19 +1,19 @@
 package db
 
 type Config struct {
-  ID int
-  icon string
-  title string
-  background_image string
-  color_background string
-  color_foreground string
-  color_items string
-  color_borders string
-  cpu_temp_sensor string
-  show_free_ram int
-  show_free_swap int
-  show_public_ip int
-  show_free_space int
+  Id int
+  Icon string
+  Title string
+  Background_image string
+  Color_background string
+  Color_foreground string
+  Color_items string
+  Color_borders string
+  Cpu_temp_sensor string
+  Show_free_ram int
+  Show_free_swap int
+  Show_public_ip int
+  Show_free_space int
 }
 
 func LoadConfig() (*Config, error) {
@@ -21,19 +21,19 @@ func LoadConfig() (*Config, error) {
 
   row := sqlDb.QueryRow("SELECT * FROM config WHERE id = 1")
   err := row.Scan(
-      &config.ID,
-      &config.icon,
-      &config.title,
-      &config.background_image,
-      &config.color_background,
-      &config.color_foreground,
-      &config.color_items,
-      &config.color_borders,
-      &config.cpu_temp_sensor,
-      &config.show_free_ram,
-      &config.show_free_swap,
-      &config.show_public_ip,
-      &config.show_free_space); if err != nil {
+      &config.Id,
+      &config.Icon,
+      &config.Title,
+      &config.Background_image,
+      &config.Color_background,
+      &config.Color_foreground,
+      &config.Color_items,
+      &config.Color_borders,
+      &config.Cpu_temp_sensor,
+      &config.Show_free_ram,
+      &config.Show_free_swap,
+      &config.Show_public_ip,
+      &config.Show_free_space); if err != nil {
     return nil, err
   }
 

@@ -1,10 +1,10 @@
 package db
 
 type List struct {
-  ID int
-  title string
-  number_of_rows int
-  position int
+  Id int
+  Title string
+  Number_of_rows int
+  Position int
 }
 
 func LoadLists() (*[]List, error) {
@@ -16,7 +16,7 @@ func LoadLists() (*[]List, error) {
 
   for rows.Next() {
     var list List
-    err = rows.Scan(&list.ID, &list.title, &list.number_of_rows, &list.position); if err != nil {
+    err = rows.Scan(&list.Id, &list.Title, &list.Number_of_rows, &list.Position); if err != nil {
       return nil, err
     }
     Lists = append(Lists, list)
