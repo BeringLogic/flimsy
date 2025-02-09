@@ -1,0 +1,11 @@
+<div class="list" id="list_{{ .List.Id }}">
+  <h2>{{ .List.Title }}</h2>
+  <div class="items" style="grid-template-columns: repeat({{ .List.Number_of_rows }}, 1fr);">
+    {{ range .Items }}
+      {{ template "item.tmpl" . }} 
+    {{ end }}
+    {{/* TODO: if .IsLoggedIn */}}
+      <div class="item addItem"><button id="addItem_{{ .List.Id }}">➕ Add Item</button></div>
+    {{/* end */}}
+  </div>
+</div>

@@ -54,7 +54,7 @@
 * [x] serve static files
 * [x] /
 * [ ] gorilla sessions
-* [ ] sqlite
+* [x] sqlite
 * [ ] debugger
 * [ ] [prominentcolor](https://github.com/EdlinOrg/prominentcolor)
 * [ ] Dockerfile app prod (from scratch)
@@ -65,7 +65,7 @@
 * [ ] Don't log 200
 * [ ] [Let's Encrypt](https://gin-gonic.com/docs/examples/support-lets-encrypt/)
 * [ ] Serve jQuery from /static instead of cdn?
-* [ ] Figure out how to deal with if ({{ .loggedIn }}), I don't want the user to just flip a bool in js to unlock everything...
+* [x] Figure out how to deal with if ({{ .IsLoggedIn }}), I don't want the user to just flip a bool in js to unlock everything...
 
 # Docker stuff I need to learn
 * [ ] Docker secrets

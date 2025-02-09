@@ -30,7 +30,7 @@ func getEnv(key, def string) string {
 func GET_root(c *gin.Context) {
   c.HTML(http.StatusOK, "index.tmpl", gin.H{
     "auth_disabled" : true,
-    "loggedIn" : false,
+    "IsLoggedIn" : false,
     "session_message" : "", 
     "FLIMSY_WEATHER_API_KEY" : getEnv("FLIMSY_WEATHER_API_KEY", ""),
     "FLIMSY_WEATHER_LOCATION" : getEnv("FLIMSY_WEATHER_LOCATION", "New York"),
