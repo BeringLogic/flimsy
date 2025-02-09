@@ -41,6 +41,26 @@ func GET_root(c *gin.Context) {
   })
 }
 
+func GET_config(c *gin.Context) {
+  c.JSON(http.StatusOK, config)
+}
+
+func GET_onlineStatus(c *gin.Context) {
+  url := c.Query("href")
+
+  resp, err := http.Get(url); if err != nil {
+    c.JSON(http.StatusOK, gin.H{
+      "online" : false,
+      "error" : err.Error(),
+    })
+  } else {
+    c.JSON(http.StatusOK, gin.H{
+      "online" : true,
+    })
+  }
+  resp.Body.Close()
+}
+
 func InitDB() error {
   err := db.Open(); if err != nil {
     return fmt.Errorf("Failed to open DB: %s", err)
@@ -88,6 +108,8 @@ func InitServer() {
   r.Static("/data/icons", "/data/icons")
   r.Static("/data/backgrounds", "/data/backgrounds")
   r.GET("/", func(c *gin.Context) { GET_root(c) })
+  r.GET("/config", func(c *gin.Context) { GET_config(c) })
+  r.GET("/onlineStatus", func(c *gin.Context) { GET_onlineStatus(c) })
 
   r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
