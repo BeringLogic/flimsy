@@ -5,66 +5,17 @@ import (
   _ "github.com/mattn/go-sqlite3"
 )
 
-var db *sql.DB
+var sqlDb *sql.DB
 
-type Config struct {
-  ID int
-  icon string
-  title string
-  background_image string
-  color_background string
-  color_foreground string
-  color_items string
-  color_borders string
-  cpu_temp_sensor string
-  show_free_ram int
-  show_free_swap int
-  show_public_ip int
-  show_free_space int
+func Open() (error) {
+  var err error
+  sqlDb, err = sql.Open("sqlite3", "/data/flimsy.db?_busy_timeout=5000&_foreign_keys=ON&_journal_mode=WAL"); if err != nil {
+    return err
+  }
+  return nil
 }
 
-func Open() (*sql.DB, error) {
-  db, err := sql.Open("sqlite3", "/data/flimsy.db?_busy_timeout=5000&_foreign_keys=ON&_journal_mode=WAL"); if err != nil {
-    return nil, err
-  }
-  return db, nil
-}
-
-// Try to get the config and seed the DB if it doesn't exist
-func GetConfig() (*Config, error) {
-  rows, err := db.Query("SELECT * FROM config WHERE id = 1"); if err != nil {
-    // If there is an error it's probably because the table doesn't exist so seed the DB
-    err = seed(); if err != nil {
-      return nil, err
-    }
-    // Try again
-    rows, err = db.Query("SELECT * FROM config WHERE id = 1"); if err != nil {
-      return nil, err
-    }
-  }
-
-  config := Config{}
-  err = rows.Scan(
-      &config.ID,
-      &config.icon,
-      &config.title,
-      &config.background_image,
-      &config.color_background,
-      &config.color_foreground,
-      &config.color_items,
-      &config.color_borders,
-      &config.cpu_temp_sensor,
-      &config.show_free_ram,
-      &config.show_free_swap,
-      &config.show_public_ip,
-      &config.show_free_space); if err != nil {
-    return nil, err
-  }
-
-  return &config, nil
-}
-
-func seed() error {
+func Seed() error {
   queries := []string {
     `CREATE TABLE config (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -125,14 +76,14 @@ func seed() error {
   }
 
   for _, query := range queries {
-    _, err := db.Exec(query); if err != nil {
+    _, err := sqlDb.Exec(query); if err != nil {
       return err
     }
   }
-  
+ 
   return nil 
 }
 
 func Close() {
-  db.Close()
+  sqlDb.Close()
 }

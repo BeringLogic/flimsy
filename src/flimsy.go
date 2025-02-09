@@ -9,6 +9,10 @@ import (
   "github.com/BeringLogic/flimsy/db"
 )
 
+var config *db.Config
+var lists *[]db.List
+var items *[]db.Item
+
 func getEnv(key, def string) string {
     value, exists := os.LookupEnv(key)
     if !exists {
@@ -26,16 +30,38 @@ func GET_root(c *gin.Context) {
     "FLIMSY_WEATHER_LOCATION" : getEnv("FLIMSY_WEATHER_LOCATION", "New York"),
     "FLIMSY_WEATHER_UNITS" : getEnv("FLIMSY_WEATHER_UNITS", "standard"),
     "FLIMSY_WEATHER_LANGUAGE" : getEnv("FLIMSY_WEATHER_LANGUAGE", "en"),
+    "config" : config,
+    "lists" : lists,
+    "items" : items,
   })
 }
 
-func main() {
-  db, err := db.Open(); if err != nil {
-    fmt.Fprintln(os.Stderr, fmt.Sprintf("Failed to open DB: %s", err))
-    return
+func InitDB() error {
+  err := db.Open(); if err != nil {
+    return fmt.Errorf("Failed to open DB: %s", err)
   }
-  defer db.Close()
 
+  config, err = db.LoadConfig(); if err != nil {
+    err = db.Seed(); if err != nil {
+      return fmt.Errorf("Failed to seed DB: %s", err)
+    }
+    config, err = db.LoadConfig(); if err != nil {
+      return fmt.Errorf("Failed to load config: %s", err)
+    }
+  }
+
+  lists, err = db.LoadLists(); if err != nil {
+    return fmt.Errorf("Failed to load lists: %s", err)
+  }
+
+  items, err = db.LoadItems(); if err != nil {
+    return fmt.Errorf("Failed to load items: %s", err)
+  }
+
+  return nil
+}
+
+func InitServer() {
   gin.ForceConsoleColor()
 
   r := gin.Default()
@@ -46,4 +72,14 @@ func main() {
   r.GET("/", func(c *gin.Context) { GET_root(c) })
 
   r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+}
+
+func main() {
+  err := InitDB(); if err != nil {
+    fmt.Fprintln(os.Stderr, fmt.Sprintf("Failed to init DB: %s", err))
+    return 
+  }
+  defer db.Close()
+
+  InitServer()
 }
