@@ -36,7 +36,11 @@
     </div>
   </header>
 
-  <div id="lists" style="clear:both;"></div>
+  <div id="lists" style="clear:both;">
+  {{ range .listsAndItems }}
+    {{ block "listAndItems" . }}{{ end }}
+  {{ end }}
+  </div>
 
   <button id="addList">➕ Add List</button>
 

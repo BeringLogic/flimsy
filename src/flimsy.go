@@ -9,9 +9,15 @@ import (
   "github.com/BeringLogic/flimsy/db"
 )
 
+type listAndItems struct {
+  List *db.List
+  Items []*db.Item
+}
+
 var config *db.Config
 var lists *[]db.List
 var items *[]db.Item
+var listsAndItems []listAndItems
 
 func getEnv(key, def string) string {
     value, exists := os.LookupEnv(key)
@@ -31,8 +37,7 @@ func GET_root(c *gin.Context) {
     "FLIMSY_WEATHER_UNITS" : getEnv("FLIMSY_WEATHER_UNITS", "standard"),
     "FLIMSY_WEATHER_LANGUAGE" : getEnv("FLIMSY_WEATHER_LANGUAGE", "en"),
     "config" : config,
-    "lists" : lists,
-    "items" : items,
+    "listsAndItems" : listsAndItems,
   })
 }
 
@@ -58,6 +63,17 @@ func InitDB() error {
     return fmt.Errorf("Failed to load items: %s", err)
   }
 
+  for _, list := range *lists {
+    var lai listAndItems
+    lai.List = &list
+    for _, item := range *items {
+      if item.List_id == list.Id {
+        lai.Items = append(lai.Items, &item)
+      }
+    }
+    listsAndItems = append(listsAndItems, lai)
+  }
+
   return nil
 }
 
@@ -69,6 +85,8 @@ func InitServer() {
   r.LoadHTMLGlob("/var/lib/flimsy/templates/*.tmpl")
 
   r.Static("/static", "/var/lib/flimsy/static")
+  r.Static("/data/icons", "/data/icons")
+  r.Static("/data/backgrounds", "/data/backgrounds")
   r.GET("/", func(c *gin.Context) { GET_root(c) })
 
   r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
