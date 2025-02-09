@@ -1,0 +1,19 @@
+{{ define "listAndItems" }}
+  <div class="list" id="list_{{ .List.Id }}">
+    <h2>{{ .List.Title }}</h2>
+    <div class="items">
+      {{ range .Items }}
+        <div class="item" id="item_{{ .Id }}">
+          <div class="iconDiv">
+            <img class="icon" src="/data/icons/{{ .Icon }}" />
+          </div>
+          <div class="details">
+            <i class="status nf nf-oct-dot_fill"></i>
+            <div class="title">{{ .Title }}</div>
+            <div class="href"><a href="{{ .Href }}" target="_blank">{{ .Href }}</a></div>
+          </div>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+{{ end }}
