@@ -18,31 +18,37 @@
 <body>
   <header>
     <div>
-      <img id="icon">
-      <h1 id="title"></h1>
+      {{ if .config.Icon }}<img id="icon" src="/data/icons/{{ .config.Icon }}">{{ end }}
+      {{ if .config.Title }}<h1 id="title">{{ .config.Title }}</h1>{{ end }}
     </div>
     <div>
-      <button id="configButton">⚙️</button>
-      <a id="logout" href="logout.php">Logout</a>
-      <a id="login" href="#">Login</a>
-      <div id="system-info">
-      </div>
-      <div class="weather">
-        <img>
-        <div class="location"></div>
-        <div class="temp"></div>
-        <div class="description"></div>
-      </div>
+      {{ if .IsLoggedIn }}
+        <button id="configButton">⚙️</button>
+        <a id="logout" href="logout.php">Logout</a>
+      {{ else }}
+        <a id="login" href="#">Login</a>
+      {{ end }}
+      <div id="system-info">{{ template "systemInfo.tmpl" . }}</div>
+      {{ if .FLIMSY_WEATHER_API_KEY }}
+        <div class="weather">
+          <img>
+          <div class="location"></div>
+          <div class="temp"></div>
+          <div class="description"></div>
+        </div>
+      {{ end }}
     </div>
   </header>
 
   <div id="lists" style="clear:both;">
   {{ range .listsAndItems }}
-    {{ block "listAndItems" . }}{{ end }}
+    {{ template "list.tmpl" . }}
   {{ end }}
   </div>
 
-  <button id="addList">➕ Add List</button>
+  {{ if .IsLoggedIn }}
+    <button id="addList">➕ Add List</button>
+  {{ end }}
 
   <div id="configDialog" class="dialog">
     <form action="config/set.php" method="post" enctype="multipart/form-data">
@@ -210,174 +216,6 @@
       });
     }
 
-    function loadData() {
-      $.ajax({
-        url: 'getAllData.php',
-        success: (data) => {
-          render(data);
-
-          if ({{ .loggedIn }}) {
-            $('div.list h2').click((e) => {
-              const id = e.currentTarget.parentNode.id.replace('list_', '');
-              $('#listTitle').val(data.find(l => l.id == id).title);
-              $('#listRows').val(data.find(l => l.id == id).number_of_rows);
-
-              var buttons = $('#editListDialog').dialog('option', 'buttons');
-              if (buttons.hasOwnProperty('Delete') == false) {
-                buttons = { 'Delete': deleteList, ...buttons };
-              }
-              $('#editListDialog').dialog('option', 'buttons', buttons);
-              $('#editListDialog').dialog('option', 'title', 'Edit List');
-              $('#editListDialog form').attr('action', 'lists/edit.php?id=' + id);
-              $('#editListDialog').dialog('open');
-            })
-          }
-
-          $('div.item').click((e) => {
-            if ({{ .loggedIn }}) {
-              if (e.target.id.startsWith('addItem_')) return;
-
-              const itemId = e.currentTarget.id.replace('item_', '');
-              $.ajax({
-                url: 'items/get.php?id=' + itemId,
-                success: (item) => {
-                  $('#itemTitle').val(item.title);
-                  $('#itemHref').val(item.href);
-                  $('#itemIcon').val(item.icon);
-
-                  var buttons = $('#editItemDialog').dialog('option', 'buttons');
-                  if (!buttons.hasOwnProperty('Delete')) {
-                    buttons = { 'Delete': deleteItem, ...buttons };
-                  }
-                  $('#editItemDialog').dialog('option', 'buttons', buttons);
-                  $('#editItemDialog').dialog('option', 'title', 'Edit Item');
-                  $('#editItemDialog form').attr('action', 'items/edit.php?itemId=' + item.id);
-                  $('#editItemDialog').dialog('open');
-                }
-              });
-            } else {
-              const href = $('#' + e.currentTarget.id + ' div.details div.href').text();
-              window.open(href);
-            }
-          });
-
-          $('#addList').click(() => {
-            $('#listTitle').val('');
-
-            var buttons = $('#editListDialog').dialog('option', 'buttons');
-            if (buttons.hasOwnProperty('Delete')) {
-              delete buttons.Delete;
-            }
-            $('#editListDialog').dialog('option', 'buttons', buttons);
-            $('#editListDialog').dialog('option', 'title', 'Add New List');
-            $('#editListDialog form').attr('action', 'lists/add.php');
-            $('#editListDialog').dialog('open');
-          });
-
-          $('div.addItem button').click((e) => {
-            const listId = e.target.id.replace('addItem_', '');
-            $('#itemTitle').val('');
-            $('#itemHref').val('');
-            $('#itemIcon').val('');
-
-            var buttons = $('#editItemDialog').dialog('option', 'buttons');
-            if (buttons.hasOwnProperty('Delete')) {
-              delete buttons.Delete;
-            }
-            $('#editItemDialog').dialog('option', 'buttons', buttons);
-            $('#editItemDialog').dialog('option', 'title', 'Add New Item');
-            $('#editItemDialog form').attr('action', 'items/add.php?listId=' + listId);
-            $('#editItemDialog').dialog('open');
-          });
-
-          if ({{ .loggedIn }}) {
-            $(function() {
-              $('#lists').sortable({
-                helper : 'clone',
-                stop: function(event, ui) {
-                  const listIds = $(ui.item).parent().children("div.list").map((l, el) => el.id.replace('list_', '')).toArray();
-                  $.ajax({
-                    url: 'lists/reorder.php',
-                    method: 'POST',
-                    data: {
-                      listIds: listIds
-                    }
-                  });
-                } 
-              })
-              $("div.list").sortable({
-                helper: 'clone',
-                items: "div.item",
-                connectWith: ".list",
-                stop: function(event, ui) {
-                  const listId = $(ui.item).parent().parent().attr('id').replace('list_', '');
-                  const itemIds = $(ui.item).parent().children("div.item").map((i, el) => el.id.replace('item_', '')).toArray();
-  
-                  // Move the addItem button to the end of the list, in case the item was dropped after it
-                  $('#addItem_' + listId).parent().appendTo($('#addItem_' + listId).parent().parent());
-  
-                  $.ajax({
-                    url: 'items/reorder.php',
-                    method: 'POST',
-                    data: {
-                      listId: listId,
-                      itemIds: itemIds
-                    }
-                  });
-                }
-              });
-            });
-            $('button').css('display', 'inline-block');
-          } else {
-            $('.addItem').css('display', 'none');
-          }
-
-          loadConfig();
-          updateWeather();
-          updateSystemInfo();
-          updateStatusIcons(data);
-        },
-        error: (error, status, xhr) => {
-          alert("An error occured while loading the data! Make sure /data is writable by the user UID 1000, GID 1000.");
-          console.log(error);
-          console.log(status);
-          console.log(xhr);
-        }
-      });
-    }
-
-    function render(data) {
-      data.forEach(l => {
-        var list = $('<div id="list_' + l.id + '" class="list"></div>');
-        list.append($('<h2>' + l.title + '</h2>'));
-
-        items = $('<div class="items"></div>');
-        items.css('grid-template-columns', 'repeat(' + l.number_of_rows + ', 1fr)');
-
-        l.items.forEach(i => {
-          var item = $('<div id="item_' + i.id + '" class="item"></div>');
-          var iconDiv = $('<div class="iconDiv"></div>');
-          iconDiv.append($('<img class="icon" src="/data/icons/' + i.icon + '" />'));
-          item.append(iconDiv);
-
-          var details = $('<div class="details"></div>');
-          details.append($('<i class="status nf nf-oct-dot_fill"></i>'));
-          details.append($('<div class="title">' + i.title + '</div>'));
-          details.append($('<div class="href">' + i.href + '</div>'));
-
-          item.append(details);
-          items.append(item);
-        });
-
-        items.append($('<div class="item addItem"><button id="addItem_' + l.id + '">➕ Add Item</button></div>'));
-
-        list.append(items);
-
-        $('#lists').append(list);
-      });
-
-    }
-
     function loadConfig() {
       $.ajax({
         url: 'config/get.php',
@@ -386,11 +224,17 @@
             $('#icon').attr('src', '/data/icons/' + config.icon)
                       .css('display', 'inline-block');
           }
-          if (config.title) {
-            $('#title').html(config.title);
+          else {
+            $('#icon').css('display', 'none');
           }
+
+          $('#title').html(config.title);
+
           if (config.background_image) {
             $('body').css('background-image', 'url(/data/backgrounds/' + config.background_image + ')');
+          }
+          else {
+            $('body').css('background-image', 'none');
           }
 
           $('.ui-resizable-n, .ui-resizable-e, .ui-resizable-s, .ui-resizable-w, .ui-widget-content').css('background-color', config.color_items);
@@ -404,11 +248,8 @@
       });
     }
 
+    {{ if .FLIMSY_WEATHER_API_KEY }}
     function updateWeather() {
-      if ('{{ .FLIMSY_WEATHER_API_KEY }}' != '') {
-        $('.weather').css('display', 'none');
-        return;
-      }
       $.ajax({
         url: 'https://api.openweathermap.org/data/2.5/weather',
         data: {
@@ -432,9 +273,11 @@
         }
       });
     }
+    {{ end }}
 
     function updateSystemInfo()
     {
+      // TODO: Use htmx for that
       $.ajax({
         url: 'getSystemInfo.php',
         success: (data) => {
@@ -472,133 +315,31 @@
       });
     }
 
-    function updateStatusIcons(data) {
-      data.forEach((list) => {
-        list.items.forEach((item) => {
-          $.ajax({
-            url: 'getStatus.php?href=' + item.href,
-            success: (status) => {
-              const i = $('#item_' + item.id + ' i.status');
-              i.attr('title', status)
-              if (status == 'No error') {
-                i.addClass('online').removeClass('offline');
-              }
-              else {
-                i.addClass('offline').removeClass('online');
-              }
+    function updateOnlineStatus() {
+      $('div.item').each((i, item) => {
+        const href = $(item).find('div.details div.href').text();
+        $.ajax({
+          url: 'getStatus.php?href=' + href,
+          success: (status) => {
+            const i = $(item).find('div.details i.status');
+            i.attr('title', status)
+            if (status == 'No error') {
+              i.addClass('online').removeClass('offline');
             }
-          })
+            else {
+              i.addClass('offline').removeClass('online');
+            }
+          }
         })
       });
     }
 
     $('document').ready(() => {
 
-      if ({{ .loggedIn }}) {
-        $('#login').remove();
-      }
-      else {
-        $('#logout').remove();
-        $('#configButton').remove();
-        $('#addList').remove();
-      }
-  
-      $.ajax({
-        url: 'initDB.php',
-        success: (data) => {
-          if (data.success) {
-            loadData();
-          }
-          else {
-            alert(data.error);
-          }
-
-          if ("{{ .session_message }}") {
-            alert("{{ .session_message }}");
-            // TODO: unset($_SESSION['message']);
-          }
-        }
-      });
-
-      $('#configButton').click(() => {
-        $.ajax({
-          url: 'config/get.php',
-          success: (config) => {
-            $('#configTitle').val(config.title);
-            $('#configIcon').val(config.icon);
-
-            config.backgrounds.forEach((b) => {
-              if (b == '.' || b == '..') return;
-              $('#configBackgroundImage').append($('<option value="' + b + '">' + b + '</option>'));
-            })
-            $('#configBackgroundImage').val(config.background_image);
-            $('#configBackgroundImage').trigger('change');
-            $('#configColorBackground').val(config.color_background);
-            $('#configColorForeground').val(config.color_foreground);
-            $('#configColorItems').val(config.color_items);
-            $('#configColorBorders').val(config.color_borders);
-
-            for (const [chip, sensors] of Object.entries(config.sensors)) {
-              $('#configCpuTempSensor').append($('<optgroup label="' + chip + '"></optgroup>'));
-              for (const [sensorName, values] of Object.entries(sensors)) {
-                for (const [valueName, value] of Object.entries(values)) {
-                  if (valueName.endsWith('_input')) {
-                    $('#configCpuTempSensor').append($('<option value="' + sensorName + '">&nbsp;' + sensorName + ': ' + value + '</option>'));
-                  }
-                }
-              }
-            }
-            $('#configCpuTempSensor').val(config.cpu_temp_sensor);
-            $('#configShowFreeRam').prop('checked', config.show_free_ram);
-            $('#configShowFreeSwap').prop('checked', config.show_free_swap);
-            $('#configShowPublicIp').prop('checked', config.show_public_ip);
-            $('#configShowFreeSpace').prop('checked', config.show_free_space);
-            $('#configDialog').dialog('open');
-          }
-        })
-      });
-
-      $('#configDialog').dialog({
-        title: 'Config',
-        autoOpen: false,
-        modal: true,
-        width: 1010,
-        buttons: {
-          "Save": () => {
-            if ($('#configDialog :invalid').length > 0) {
-              return;
-            }
-            $('#configDialog form').submit();
-          },
-          "Cancel": () => {
-            $('#configDialog').dialog('close');
-          },
-        }
-      });
-      $('#configBackgroundUpload').change(() => {
-        $('#autodetect_colors').removeAttr('disabled');
-        $('#configBackgroundTypeUpload').prop('checked', true);
-      });
-      $('#configBackgroundImage').change((e) => {
-        if (e.target.value != '') { 
-          $('#autodetect_colors').removeAttr('disabled');
-          $('#configBackgroundTypeKeep').prop('checked', true);
-        }
-        else {
-          $('#autodetect_colors').attr('disabled', 'disabled');
-          $('#manual_colors').prop('checked', true);
-        }
-      });
-      $('#autodetect_colors').change(() => {
-        if ($('#autodetect_colors').is(':checked')) {
-          $('#configDialog input[type=color]').attr('disabled', 'disabled');
-        }
-      });
-      $('#manual_colors').change(() => {
-        if ($('#manual_colors').is(':checked')) {
-          $('#configDialog input[type=color]').removeAttr('disabled');
-        }
-      });
+      {{ if .session_message }}
+        alert("{{ .session_message }}");
+        // TODO: unset($_SESSION['message']);
+      {{ end }}
 
       $('#loginDialog').dialog({
         title: 'Login',
@@ -617,48 +358,246 @@
         }
       });
       $('#login').click(() => {
-        if ("!{{ .auth_disabled }}") {
-          $('#loginDialog').dialog('open');
-        }
-        else {
+        {{ if .auth_disabled }}
           // TODO: GET login instead of POST login. Make sure login checks for auth_disabled too
           window.location = 'login.php';
-          return;
-        }
+        {{ else }}
+          $('#loginDialog').dialog('open');
+        {{ end }}
       });
 
-      $('#editListDialog').dialog({
-        autoOpen: false,
-        modal: true,
-        buttons: {
-          "Save": () => {
-            if ($('#editListDialog :invalid').length > 0) {
-              return;
+      $('div.item').click((e) => {
+
+        // Click on an item to edit it 
+        {{ if .IsLoggedIn }}
+          if (e.target.id.startsWith('addItem_')) return;
+
+          const itemId = e.currentTarget.id.replace('item_', '');
+          $.ajax({
+            url: 'items/get.php?id=' + itemId,
+            success: (item) => {
+              $('#itemTitle').val(item.title);
+              $('#itemHref').val(item.href);
+              $('#itemIcon').val(item.icon);
+
+              var buttons = $('#editItemDialog').dialog('option', 'buttons');
+              if (!buttons.hasOwnProperty('Delete')) {
+                buttons = { 'Delete': deleteItem, ...buttons };
+              }
+              $('#editItemDialog').dialog('option', 'buttons', buttons);
+              $('#editItemDialog').dialog('option', 'title', 'Edit Item');
+              $('#editItemDialog form').attr('action', 'items/edit.php?itemId=' + item.id);
+              $('#editItemDialog').dialog('open');
             }
-            $('#editListDialog form').submit();
-          },
-          "Cancel": () => {
-            $('#editListDialog').dialog('close');
-          },
-        }
+          });
+
+        // Click on an item to visit it's url
+        {{ else }}
+          const href = $('#' + e.currentTarget.id + ' div.details div.href').text();
+          window.open(href);
+        {{ end }}
       });
 
-      $('#editItemDialog').dialog({
-        autoOpen: false,
-        modal: true,
-        buttons: {
-          "Save": () => {
-            if ($('#editItemDialog :invalid').length > 0) {
-              return;
+      {{ if .IsLoggedIn }}
+        $('#configButton').click(() => {
+          $.ajax({
+            url: 'config/get.php',
+            success: (config) => {
+              $('#configTitle').val(config.title);
+              $('#configIcon').val(config.icon);
+
+              config.backgrounds.forEach((b) => {
+                if (b == '.' || b == '..') return;
+                $('#configBackgroundImage').append($('<option value="' + b + '">' + b + '</option>'));
+              })
+              $('#configBackgroundImage').val(config.background_image);
+              $('#configBackgroundImage').trigger('change');
+              $('#configColorBackground').val(config.color_background);
+              $('#configColorForeground').val(config.color_foreground);
+              $('#configColorItems').val(config.color_items);
+              $('#configColorBorders').val(config.color_borders);
+
+              for (const [chip, sensors] of Object.entries(config.sensors)) {
+                $('#configCpuTempSensor').append($('<optgroup label="' + chip + '"></optgroup>'));
+                for (const [sensorName, values] of Object.entries(sensors)) {
+                  for (const [valueName, value] of Object.entries(values)) {
+                    if (valueName.endsWith('_input')) {
+                      $('#configCpuTempSensor').append($('<option value="' + sensorName + '">&nbsp;' + sensorName + ': ' + value + '</option>'));
+                    }
+                  }
+                }
+              }
+              $('#configCpuTempSensor').val(config.cpu_temp_sensor);
+              $('#configShowFreeRam').prop('checked', config.show_free_ram);
+              $('#configShowFreeSwap').prop('checked', config.show_free_swap);
+              $('#configShowPublicIp').prop('checked', config.show_public_ip);
+              $('#configShowFreeSpace').prop('checked', config.show_free_space);
+              $('#configDialog').dialog('open');
             }
-            $('#editItemDialog form').submit();
-          },
-          "Cancel": () => {
-            $('#editItemDialog').dialog('close');
-          },
-        }
-      });
+          })
+        });
 
+        $('#configDialog').dialog({
+          title: 'Config',
+          autoOpen: false,
+          modal: true,
+          width: 1010,
+          buttons: {
+            "Save": () => {
+              if ($('#configDialog :invalid').length > 0) {
+                return;
+              }
+              $('#configDialog form').submit();
+            },
+            "Cancel": () => {
+              $('#configDialog').dialog('close');
+            },
+          }
+        });
+        $('#configBackgroundUpload').change(() => {
+          $('#autodetect_colors').removeAttr('disabled');
+          $('#configBackgroundTypeUpload').prop('checked', true);
+        });
+        $('#configBackgroundImage').change((e) => {
+          if (e.target.value != '') { 
+            $('#autodetect_colors').removeAttr('disabled');
+            $('#configBackgroundTypeKeep').prop('checked', true);
+          }
+          else {
+            $('#autodetect_colors').attr('disabled', 'disabled');
+            $('#manual_colors').prop('checked', true);
+          }
+        });
+        $('#autodetect_colors').change(() => {
+          if ($('#autodetect_colors').is(':checked')) {
+            $('#configDialog input[type=color]').attr('disabled', 'disabled');
+          }
+        });
+        $('#manual_colors').change(() => {
+          if ($('#manual_colors').is(':checked')) {
+            $('#configDialog input[type=color]').removeAttr('disabled');
+          }
+        });
+
+        $('div.list h2').click((e) => {
+          const id = e.currentTarget.parentNode.id.replace('list_', '');
+          $('#listTitle').val(data.find(l => l.id == id).title);
+          $('#listRows').val(data.find(l => l.id == id).number_of_rows);
+
+          var buttons = $('#editListDialog').dialog('option', 'buttons');
+          if (buttons.hasOwnProperty('Delete') == false) {
+            buttons = { 'Delete': deleteList, ...buttons };
+          }
+          $('#editListDialog').dialog('option', 'buttons', buttons);
+          $('#editListDialog').dialog('option', 'title', 'Edit List');
+          $('#editListDialog form').attr('action', 'lists/edit.php?id=' + id);
+          $('#editListDialog').dialog('open');
+        })
+
+        $('div.addItem button').click((e) => {
+          const listId = e.target.id.replace('addItem_', '');
+          $('#itemTitle').val('');
+          $('#itemHref').val('');
+          $('#itemIcon').val('');
+
+          var buttons = $('#editItemDialog').dialog('option', 'buttons');
+          if (buttons.hasOwnProperty('Delete')) {
+            delete buttons.Delete;
+          }
+          $('#editItemDialog').dialog('option', 'buttons', buttons);
+          $('#editItemDialog').dialog('option', 'title', 'Add New Item');
+          $('#editItemDialog form').attr('action', 'items/add.php?listId=' + listId);
+          $('#editItemDialog').dialog('open');
+        });
+
+          $('#lists').sortable({
+            helper : 'clone',
+            stop: function(event, ui) {
+              const listIds = $(ui.item).parent().children("div.list").map((l, el) => el.id.replace('list_', '')).toArray();
+              $.ajax({
+                url: 'lists/reorder.php',
+                method: 'POST',
+                data: {
+                  listIds: listIds
+                }
+              });
+            } 
+          })
+          $("div.list").sortable({
+            helper: 'clone',
+            items: "div.item",
+            connectWith: ".list",
+            stop: function(event, ui) {
+              const listId = $(ui.item).parent().parent().attr('id').replace('list_', '');
+              const itemIds = $(ui.item).parent().children("div.item").map((i, el) => el.id.replace('item_', '')).toArray();
+
+              // Move the addItem button to the end of the list, in case the item was dropped after it
+              $('#addItem_' + listId).parent().appendTo($('#addItem_' + listId).parent().parent());
+
+              $.ajax({
+                url: 'items/reorder.php',
+                method: 'POST',
+                data: {
+                  listId: listId,
+                  itemIds: itemIds
+                }
+              });
+            }
+        });
+        $('button').css('display', 'inline-block');
+
+        $('#addList').click(() => {
+          $('#listTitle').val('');
+
+          var buttons = $('#editListDialog').dialog('option', 'buttons');
+          if (buttons.hasOwnProperty('Delete')) {
+            delete buttons.Delete;
+          }
+          $('#editListDialog').dialog('option', 'buttons', buttons);
+          $('#editListDialog').dialog('option', 'title', 'Add New List');
+          $('#editListDialog form').attr('action', 'lists/add.php');
+          $('#editListDialog').dialog('open');
+        });
+
+        $('#editListDialog').dialog({
+          autoOpen: false,
+          modal: true,
+          buttons: {
+            "Save": () => {
+              if ($('#editListDialog :invalid').length > 0) {
+                return;
+              }
+              $('#editListDialog form').submit();
+            },
+            "Cancel": () => {
+              $('#editListDialog').dialog('close');
+            },
+          }
+        });
+
+        $('#editItemDialog').dialog({
+          autoOpen: false,
+          modal: true,
+          buttons: {
+            "Save": () => {
+              if ($('#editItemDialog :invalid').length > 0) {
+                return;
+              }
+              $('#editItemDialog form').submit();
+            },
+            "Cancel": () => {
+              $('#editItemDialog').dialog('close');
+            },
+          }
+        });
+      {{ end }}
+
+      loadConfig();
+      {{ if .FLIMSY_WEATHER_API_KEY }}
+      updateWeather();
+      {{ end }} 
+      updateSystemInfo();
+      updateOnlineStatus();
     });
   </script>
 

@@ -16,7 +16,7 @@ header {
   }
 
 #icon {
-  display: none;
+  display: inline-block;
   max-width: 64px;
   max-height: 64px;
   margin-right: 20px;
