@@ -2,10 +2,11 @@ package main
 
 import (
   "os"
+  "fmt"
   "net/http"
-  "database/sql"
-  _ "github.com/mattn/go-sqlite3"
   "github.com/gin-gonic/gin"
+
+  "github.com/BeringLogic/flimsy/db"
 )
 
 func getEnv(key, def string) string {
@@ -29,9 +30,9 @@ func GET_root(c *gin.Context) {
 }
 
 func main() {
-  db, err := sql.Open("sqlite3", ":memory:?_busy_timeout=5000&_foreign_keys=ON&_journal_mode=WAL")
-  if err != nil {
-    panic(err)
+  db, err := db.Open(); if err != nil {
+    fmt.Fprintln(os.Stderr, fmt.Sprintf("Failed to open DB: %s", err))
+    return
   }
   defer db.Close()
 
