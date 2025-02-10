@@ -28,7 +28,7 @@
       {{ else }}
         <a id="login" href="#">Login</a>
       {{ end }}
-      <div id="system-info">{{ template "systemInfo.tmpl" . }}</div>
+      <div id="system-info"></div>
       {{ if .FLIMSY_WEATHER_API_KEY }}
         <div class="weather">
           <img>
@@ -279,44 +279,16 @@
     {
       // TODO: Use htmx for that
       $.ajax({
-        url: 'getSystemInfo.php',
+        url: '/systemInfo',
         success: (data) => {
-          if (data.cpu_temp) {
-            $('#system-info').append($('<div><i class="nf nf-oct-cpu"></i><span id="cpu-temp">?</span></div>'));
-            if (data.cpu_temp.endsWith('C')) {
-              $('#cpu-temp').html(data.cpu_temp);
-            }
-            else {
-              $('#cpu-temp').html(data.cpu_temp + ' °C');
-            }
-          }
-          if (data.free_memory) {
-            $('#system-info').append($('<div><i class="nf nf-fa-memory"></i><span id="free-memory">?</span> free</div>'));
-            $('#free-memory').html(data.free_memory);
-          }
-          if (data.free_swap) {
-            $('#system-info').append($('<div><i class="nf nf-md-file_swap"></i><span id="free-swap">?</span> free</div>'));
-            $('#free-swap').html(data.free_swap);
-          }
-          if (data.public_ip) {
-            $('#system-info').append($('<div><i class="nf nf-md-ethernet"></i><span id="public-ip">?</span></div>'));
-            $('#public-ip').html(data.public_ip);
-          }
-          if (data.storage) {
-            data.storage.forEach((d) => {
-              var div = $('<div></div>');
-              $('<i class="nf nf-md-harddisk"></i>').appendTo(div);
-              $('<div class="free-space">' + d.free_space + ' free</div>').appendTo(div);
-              $('<div class="mount-point">' + d.mount_point + '</div>').appendTo(div);
-              div.appendTo($('#system-info'));
-            })
-          }
+          $('#system-info').html(data);
         }
       });
     }
 
     function updateOnlineStatus() {
       $('div.item').each((i, item) => {
+        if ($(item).hasClass('addItem')) return;
         const href = $(item).find('div.details div.href').text();
         $.ajax({
           url: '/onlineStatus?href=' + href,

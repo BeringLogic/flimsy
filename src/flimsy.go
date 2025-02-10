@@ -1,12 +1,14 @@
 package main
 
 import (
+  "io"
   "os"
   "fmt"
   "net/http"
   "github.com/gin-gonic/gin"
 
   "github.com/BeringLogic/flimsy/db"
+  "github.com/BeringLogic/flimsy/systemInfo"
 )
 
 type listAndItems struct {
@@ -47,18 +49,32 @@ func GET_config(c *gin.Context) {
 
 func GET_onlineStatus(c *gin.Context) {
   url := c.Query("href")
+  if (url == "") {
+    c.JSON(http.StatusOK, gin.H{
+      "online" : false,
+      "error" : "No href provided",
+    })
+    return
+  }
 
   resp, err := http.Get(url); if err != nil {
     c.JSON(http.StatusOK, gin.H{
       "online" : false,
       "error" : err.Error(),
     })
-  } else {
-    c.JSON(http.StatusOK, gin.H{
-      "online" : true,
-    })
+    return
   }
+
+  _, _ = io.ReadAll(resp.Body);
   resp.Body.Close()
+
+  c.JSON(http.StatusOK, gin.H{
+    "online" : true,
+  })
+}
+
+func GET_systemInfo(c *gin.Context) {
+  c.HTML(http.StatusOK, "systemInfo.tmpl", systemInfo.GetSystemInfo(config))
 }
 
 func InitDB() error {
@@ -110,6 +126,7 @@ func InitServer() {
   r.GET("/", func(c *gin.Context) { GET_root(c) })
   r.GET("/config", func(c *gin.Context) { GET_config(c) })
   r.GET("/onlineStatus", func(c *gin.Context) { GET_onlineStatus(c) })
+  r.GET("/systemInfo", func(c *gin.Context) { GET_systemInfo(c) })
 
   r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
