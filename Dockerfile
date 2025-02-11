@@ -23,7 +23,7 @@ COPY ./src/ .
 # RUN go mod tidy
 
 
-RUN go build -v -o /usr/local/bin/flimsy
+RUN go build -v -o /usr/local/bin/flimsy ./cmd/flimsy
 
 
 

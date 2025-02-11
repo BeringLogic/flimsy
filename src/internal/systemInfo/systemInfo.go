@@ -7,7 +7,7 @@ import (
   "os/exec"
   "net/http"
   "path/filepath"
-  "github.com/BeringLogic/flimsy/db"
+  "github.com/BeringLogic/flimsy/internal/db"
 )
 
 type SystemInfo struct {

@@ -7,8 +7,8 @@ import (
   "net/http"
   "github.com/gin-gonic/gin"
 
-  "github.com/BeringLogic/flimsy/db"
-  "github.com/BeringLogic/flimsy/systemInfo"
+  "github.com/BeringLogic/flimsy/internal/db"
+  "github.com/BeringLogic/flimsy/internal/systemInfo"
 )
 
 type listAndItems struct {
