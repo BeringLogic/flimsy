@@ -65,6 +65,7 @@
 * [ ] Let's Encrypt?
 * [ ] Serve jQuery from /static instead of cdn?
 * [x] Figure out how to deal with if ({{ .IsLoggedIn }}), I don't want the user to just flip a bool in js to unlock everything...
+* [ ] Use the 404 template
 
 # Docker stuff I need to learn
 * [ ] Docker secrets

@@ -4,6 +4,7 @@ import (
   "io"
   "os"
   "fmt"
+  "bytes"
   "net/http"
   "html/template"
   "encoding/json"
@@ -24,11 +25,24 @@ var listsAndItems []listAndItems
 var templates *template.Template
 
 func getEnv(key, def string) string {
-    value, exists := os.LookupEnv(key)
-    if !exists {
-        value = def
-    }
+  if value, exists := os.LookupEnv(key); exists {
     return value
+  } else {
+    return def
+  }
+}
+
+func ExecuteTemplate(templateName string, w *http.ResponseWriter, data interface{}) error {
+  buffer := &bytes.Buffer{};
+
+  err := templates.ExecuteTemplate(buffer, templateName, data); if err != nil {
+    fmt.Fprintln(os.Stderr, err.Error())
+    templates.ExecuteTemplate(*w, "500.tmpl", nil)
+  } else {
+    buffer.WriteTo(*w)
+  }
+
+  return err
 }
 
 func GET_root(w http.ResponseWriter, r *http.Request) {
@@ -44,23 +58,20 @@ func GET_root(w http.ResponseWriter, r *http.Request) {
     "listsAndItems" : listsAndItems,
   }
 
-  templates.ExecuteTemplate(w, "index.tmpl", data)
+  ExecuteTemplate("index.tmpl", &w, data)
 }
 
 func GET_config(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
-  je := json.NewEncoder(w)
-  je.Encode(config);
+  json.NewEncoder(w).Encode(config);
 }
 
 func GET_onlineStatus(w http.ResponseWriter, r *http.Request) {
   href := r.URL.Query().Get("href")
-  je := json.NewEncoder(w)
-
   w.Header().Set("Content-Type", "application/json")
   
   resp, err := http.Get(href); if err != nil {
-    je.Encode(map[string]interface{}{
+    json.NewEncoder(w).Encode(map[string]interface{}{
       "online" : false,
       "error" : err.Error(),
     })
@@ -70,13 +81,13 @@ func GET_onlineStatus(w http.ResponseWriter, r *http.Request) {
   _, _ = io.ReadAll(resp.Body);
   resp.Body.Close()
 
-  je.Encode(map[string]interface{}{
+  json.NewEncoder(w).Encode(map[string]interface{}{
     "online" : true,
   })
 }
 
 func GET_systemInfo(w http.ResponseWriter, r *http.Request) {
-  templates.ExecuteTemplate(w, "systemInfo.tmpl", systemInfo.GetSystemInfo(config))
+  ExecuteTemplate("systemInfo.tmpl", &w, systemInfo.GetSystemInfo(config))
 }
 
 func InitDB() error {
