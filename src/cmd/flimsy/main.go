@@ -10,7 +10,9 @@ import (
   "encoding/json"
 
   "github.com/BeringLogic/flimsy/internal/db"
+  "github.com/BeringLogic/flimsy/internal/logger"
   "github.com/BeringLogic/flimsy/internal/systemInfo"
+  "github.com/BeringLogic/flimsy/internal/middleware"
 )
 
 type listAndItems struct {
@@ -36,7 +38,7 @@ func ExecuteTemplate(templateName string, w *http.ResponseWriter, data interface
   buffer := &bytes.Buffer{};
 
   err := templates.ExecuteTemplate(buffer, templateName, data); if err != nil {
-    fmt.Fprintln(os.Stderr, err.Error())
+    logger.Print(err.Error())
     templates.ExecuteTemplate(*w, "500.tmpl", nil)
   } else {
     buffer.WriteTo(*w)
@@ -139,19 +141,23 @@ func InitServer() error {
   router.HandleFunc("GET /onlineStatus", GET_onlineStatus)
   router.HandleFunc("GET /systemInfo", GET_systemInfo)
 
-  return http.ListenAndServe(":8080", router)
+  middlewareStack := middleware.CreateStack(
+    middleware.Logging,
+  )
+
+  return http.ListenAndServe(":8080", middlewareStack(router))
 }
 
 func main() {
+  logger.Init()
+
   if err := InitDB(); err != nil {
-    fmt.Fprintln(os.Stderr, fmt.Sprintf("Failed to init DB: %s", err))
-    return 
+    logger.Fatalf("Failed to init DB: %s", err.Error())
   }
   defer db.Close()
 
-  fmt.Println("Starting server on port 0.0.0.0:8080")
+  logger.Print("Starting server on port 0.0.0.0:8080")
   if err := InitServer(); err != nil {
-    fmt.Fprintln(os.Stderr, fmt.Sprintf("Failed to init server: %s", err))
-    return 
+    logger.Fatalf("Failed to init server: %s", err.Error())
   }
 }
