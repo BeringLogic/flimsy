@@ -50,20 +50,19 @@
 * [x] watch source or bind src/ ?
 * [ ] compile automatically?
 * [ ] CI pipeline?
-* [x] gin
+* [x] net/http server
 * [x] serve static files
 * [x] /
-* [ ] gorilla sessions
+* [ ] login
 * [x] sqlite
 * [ ] debugger
 * [ ] [prominentcolor](https://github.com/EdlinOrg/prominentcolor)
 * [ ] Dockerfile app prod (from scratch)
 * [ ] tests?
-* [ ] GIN_MODE
-* [ ] [Trusting all proxies](https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies)
+* [ ] ADDRESS INTERFACE? DOMAIN?
 * [ ] PORT
-* [ ] Don't log 200
-* [ ] [Let's Encrypt](https://gin-gonic.com/docs/examples/support-lets-encrypt/)
+* [ ] Logger
+* [ ] Let's Encrypt?
 * [ ] Serve jQuery from /static instead of cdn?
 * [x] Figure out how to deal with if ({{ .IsLoggedIn }}), I don't want the user to just flip a bool in js to unlock everything...
 
