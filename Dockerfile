@@ -1,43 +1,26 @@
 FROM alpine:3.21 AS builder 
 
 RUN apk add --no-cache git go gcc
-
-# That stuff will probably need [this](https://gin-gonic.com/docs/examples/custom-http-config/)
-# RUN echo 'memory_limit = 512M' >> $PHP_INI_DIR/conf.d/docker-php-memlimit.ini \
-#   && echo 'upload_max_filesize = 200M' >> $PHP_INI_DIR/conf.d/docker-php-uploadsize.ini \
-#   && echo 'post_max_size = 200M' >> $PHP_INI_DIR/conf.d/docker-php-uploadsize.ini \
+RUN apk add --no-cache lm-sensors tzdata
 
 RUN mkdir -p /usr/src/flimsy
 WORKDIR /usr/src/flimsy
 
-# use cached go.mod and go.sum
-COPY ./src/go.mod ./src/go.sum ./
-RUN go mod download && go mod verify
+RUN go install github.com/air-verse/air@latest
 
 COPY ./src/ .
+COPY ./src/static /var/lib/flimsy/static
+COPY ./src/templates /var/lib/flimsy/templates
 
-# use this instead to create go.mod and go.sum
-# RUN go mod init github.com/BeringLogic/flimsy
+RUN go mod init github.com/BeringLogic/flimsy
+RUN go mod tidy 
 
-# use this instead to update go.mod and go.sum
-# RUN go mod tidy
-
-
-RUN go build -v -o /usr/local/bin/flimsy ./cmd/flimsy
-
-
-
-FROM alpine:3.21 AS runner
-
-RUN apk add --no-cache lm-sensors tzdata
-
-COPY --from=builder /usr/local/bin/flimsy /usr/local/bin/flimsy
-COPY --from=builder /usr/src/flimsy/static /var/lib/flimsy/static
-COPY --from=builder /usr/src/flimsy/templates /var/lib/flimsy/templates
+RUN /root/go/bin/air init
 
 RUN mkdir /data
 VOLUME /data
 
 EXPOSE 8080
 
-CMD ["flimsy"]
+# CMD ["/root/go/bin/air", "--build.cmd", "go build -o bin/flimsy cmd/flimsy/main.go", "--build.bin", "./bin/flimsy", "-build.include_dir", "/var/lib/flimsy/static,/var/lib/flimsy/templates", "-build.stop_on_error", "true"]
+CMD ["/root/go/bin/air", "--build.cmd", "go build -o bin/flimsy cmd/flimsy/main.go", "--build.bin", "./bin/flimsy", "-root", "../../..", "-build.include_dir", "usr/src/flimsy,var/lib/flimsy/static,var/lib/flimsy/templates", "-build.stop_on_error", "true"]

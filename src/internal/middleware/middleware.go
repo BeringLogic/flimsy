@@ -2,8 +2,8 @@ package middleware
 
 import (
   "time"
-  "strings"
-  "context"
+  // "strings"
+  // "context"
   "net/http"
 
   "github.com/BeringLogic/flimsy/internal/logger"
