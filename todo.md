@@ -48,7 +48,7 @@
 * [x] hello world 
 * [x] golang baseimage example
 * [x] watch source or bind src/ ?
-* [ ] compile automatically?
+* [x] compile automatically?
 * [ ] CI pipeline?
 * [x] net/http server
 * [x] serve static files
