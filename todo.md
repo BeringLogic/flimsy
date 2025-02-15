@@ -53,6 +53,7 @@
 * [x] net/http server
 * [x] serve static files
 * [x] /
+* [x] repository pattern
 * [ ] login
 * [x] sqlite
 * [ ] debugger

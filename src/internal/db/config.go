@@ -16,10 +16,10 @@ type Config struct {
   Show_free_space int
 }
 
-func LoadConfig() (*Config, error) {
+func (flimsyDB *FlimsyDB) LoadConfig() (*Config, error) {
   config := Config{}
 
-  row := sqlDb.QueryRow("SELECT * FROM config WHERE id = 1")
+  row := flimsyDB.sqlDb.QueryRow("SELECT * FROM config WHERE id = 1")
   err := row.Scan(
       &config.Id,
       &config.Icon,
@@ -39,4 +39,3 @@ func LoadConfig() (*Config, error) {
 
   return &config, nil
 }
-
