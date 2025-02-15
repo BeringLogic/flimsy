@@ -2,8 +2,6 @@ package middleware
 
 import (
   "time"
-  // "strings"
-  // "context"
   "net/http"
 
   "github.com/BeringLogic/flimsy/internal/logger"
@@ -32,8 +30,7 @@ func CreateStack(m ...Middleware) Middleware {
   }
 }
 
-
-func Logging(next http.Handler) http.Handler {
+func Logging(log logger.FlimsyLogger, next http.Handler) http.Handler {
   return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
     start := time.Now()
 
@@ -43,7 +40,7 @@ func Logging(next http.Handler) http.Handler {
     }
 
     next.ServeHTTP(wrapped, r)
-    logger.Printf("| %d | %s | %s | %s", wrapped.statusCode, r.Method, r.URL.Path, time.Since(start))
+    log.Printf("| %d | %s | %s | %s", wrapped.statusCode, r.Method, r.URL.Path, time.Since(start))
   })
 }
 

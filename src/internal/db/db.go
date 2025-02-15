@@ -1,21 +1,32 @@
 package db
 
+
 import (
   "database/sql"
   _ "github.com/mattn/go-sqlite3"
+
+  "github.com/BeringLogic/flimsy/internal/utils"
 )
 
-var sqlDb *sql.DB
 
-func Open() (error) {
+type FlimsyDB struct {
+  sqlDb *sql.DB
+}
+
+
+func CreateNew() *FlimsyDB {
+  return &FlimsyDB {}
+}
+
+func (flimsyDB *FlimsyDB) Open() (error) {
   var err error
-  sqlDb, err = sql.Open("sqlite3", "/data/flimsy.db?_busy_timeout=5000&_foreign_keys=ON&_journal_mode=WAL"); if err != nil {
+  if flimsyDB.sqlDb, err = sql.Open("sqlite3", "/data/flimsy.db?_busy_timeout=5000&_foreign_keys=ON&_journal_mode=WAL"); err != nil {
     return err
   }
   return nil
 }
 
-func Seed() error {
+func (flimsyDB *FlimsyDB) Seed() error {
   queries := []string {
     `CREATE TABLE config (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -52,7 +63,7 @@ func Seed() error {
       '#cdd6f4',
       '#11111b',
       '#6c7086',
-      '$cpuTempSensor',
+      '` + utils.GetEnv("FLIMSY_CPU_TEMP_SENSOR", "") + `',
       true,
       true,
       true,
@@ -76,14 +87,14 @@ func Seed() error {
   }
 
   for _, query := range queries {
-    _, err := sqlDb.Exec(query); if err != nil {
+    if _, err := flimsyDB.sqlDb.Exec(query); err != nil {
       return err
     }
   }
- 
+
   return nil 
 }
 
-func Close() {
-  sqlDb.Close()
+func (flimsyDB *FlimsyDB) Close() {
+  flimsyDB.sqlDb.Close()
 }

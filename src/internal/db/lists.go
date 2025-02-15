@@ -7,16 +7,16 @@ type List struct {
   Position int
 }
 
-func LoadLists() (*[]List, error) {
+func (flimsyDB *FlimsyDB) LoadLists() (*[]List, error) {
   Lists := []List{}
 
-  rows, err := sqlDb.Query("SELECT * FROM list"); if err != nil {
+  rows, err := flimsyDB.sqlDb.Query("SELECT * FROM list"); if err != nil {
     return nil, err
   }
 
   for rows.Next() {
     var list List
-    err = rows.Scan(&list.Id, &list.Title, &list.Number_of_rows, &list.Position); if err != nil {
+    if err = rows.Scan(&list.Id, &list.Title, &list.Number_of_rows, &list.Position); err != nil {
       return nil, err
     }
     Lists = append(Lists, list)
