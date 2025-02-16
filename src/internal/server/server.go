@@ -79,7 +79,7 @@ func (flimsyServer *FlimsyServer) executeTemplate(templateName string, w *http.R
 
 func (flimsyServer *FlimsyServer) GET_root(w http.ResponseWriter, r *http.Request) {
   data := map[string]interface{}{
-    "auth_disabled" : true,
+    "IsAuthDisabled" : utils.GetEnv("FLIMSY_USERNAME", "") == "" && utils.GetEnv("FLIMSY_PASSWORD", "") == "",
     "IsLoggedIn" : r.Context().Value(middleware.IsAuthenticatedContextKey).(bool),
     "session_message" : session_message, 
     "FLIMSY_WEATHER_API_KEY" : utils.GetEnv("FLIMSY_WEATHER_API_KEY", ""),
@@ -155,25 +155,28 @@ func (flimsyServer *FlimsyServer) GET_login(w http.ResponseWriter, r *http.Reque
     session_message = "Authentication is disabled. You can enable it by setting the environment variables FLIMSY_USERNAME and FLIMSY_PASSWORD.\n\n- Click on the gear button to customize the appearance\n- Click on items and lists to edit them\n- Drag & drop to reorder."
     http.Redirect(w, r, "/", http.StatusSeeOther)
   } else {
-    w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode(map[string]interface{}{
-      "success" : false,
-      "error" : "Authentication is enabled. You must POST credentials to authenticate.",
-    })
-    w.WriteHeader(http.StatusForbidden)
+    http.Error(w, "Authentication is enabled. You must POST credentials to authenticate.", http.StatusBadRequest)
   }
 }
 
 func (flimsyServer *FlimsyServer) POST_login(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "application/json")
+
   username := r.FormValue("username")
   password := r.FormValue("password")
   if username != utils.GetEnv("FLIMSY_USERNAME", "") || password != utils.GetEnv("FLIMSY_PASSWORD", "") {
-    http.Error(w, "Forbidden", http.StatusForbidden)
+    json.NewEncoder(w).Encode(map[string]interface{}{
+      "success" : false,
+      "error" : "Invalid username or password.",
+    })
     return
   }
 
   flimsyServer.logUserIn(w)
   session_message = "You are now logged in!\n- Click on the gear button to customize the appearance\n- Click on items and lists to edit them\n- Drag & drop to reorder."
+  json.NewEncoder(w).Encode(map[string]interface{}{
+    "success" : true,
+  })
 }
 
 func (flimsyServer *FlimsyServer) GET_logout(w http.ResponseWriter, r *http.Request) {
