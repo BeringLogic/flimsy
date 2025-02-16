@@ -13,7 +13,7 @@ type FlimsyStorage struct {
   Config *db.Config
   Lists *[]db.List
   Items *[]db.Item
-  ListsAndItems []listAndItems
+  ListsAndItems *[]listAndItems
 }
 
 type listAndItems struct {
@@ -59,6 +59,7 @@ func (storage *FlimsyStorage) Init() error {
       return errors.Join(LoadItemsError, err);
   }
 
+  AllListsAndItems := make([]listAndItems, 0)
   for _, list := range *storage.Lists {
     var lai listAndItems
     lai.List = &list
@@ -67,8 +68,9 @@ func (storage *FlimsyStorage) Init() error {
         lai.Items = append(lai.Items, &item)
       }
     }
-    storage.ListsAndItems = append(storage.ListsAndItems, lai)
+    AllListsAndItems = append(AllListsAndItems, lai)
   }
+  storage.ListsAndItems = &AllListsAndItems
 
   return nil
 }
