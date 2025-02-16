@@ -27,17 +27,19 @@ func CreateNew() *FlimsyLogger {
 }
 
 func (log *FlimsyLogger) Print(v ...interface{}) {
-  log.logger.Print(v...)
+  prepended := append([]interface{}{"| "}, v...)
+  log.logger.Print(prepended...)
 }
 
 func (log *FlimsyLogger) Printf(format string, v ...interface{}) {
-  log.logger.Printf(format, v...)
+  log.logger.Printf("| " + format, v...)
 }
 
 func (log *FlimsyLogger) Fatal(v ...interface{}) {
-  log.logger.Fatal(v...)
+  prepended := append([]interface{}{"| "}, v...)
+  log.logger.Fatal(prepended...)
 }
 
 func (log *FlimsyLogger) Fatalf(format string, v ...interface{}) {
-  log.logger.Fatalf(format, v...)
+  log.logger.Fatalf("| " + format, v...)
 }
