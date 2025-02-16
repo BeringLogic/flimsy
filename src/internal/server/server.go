@@ -42,19 +42,13 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
   flimsyServer.router.HandleFunc("GET /onlineStatus", flimsyServer.GET_onlineStatus)
   flimsyServer.router.HandleFunc("GET /systemInfo", flimsyServer.GET_systemInfo)
 
-  wrappedLogger := wrappedLoggerMiddleware(*flimsyServer.log)
+  wrappedLogger := middleware.Logging(flimsyServer.log)
 
   flimsyServer.middlewareStack = middleware.CreateStack(
     wrappedLogger,
   )
 
   return flimsyServer
-}
-
-func wrappedLoggerMiddleware(log logger.FlimsyLogger) func(http.Handler) http.Handler {
-  return func(next http.Handler) http.Handler {
-    return middleware.Logging(log, next)
-  }
 }
 
 func (flimsyServer *FlimsyServer) Start() error {
