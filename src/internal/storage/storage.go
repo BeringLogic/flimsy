@@ -2,7 +2,8 @@ package storage
 
 
 import (
-  "fmt"
+  "errors"
+
   "github.com/BeringLogic/flimsy/internal/db"
 )
 
@@ -21,6 +22,13 @@ type listAndItems struct {
 }
 
 
+var OpenError error = errors.New("Failed to open DB")
+var SeedError error = errors.New("Failed to seed DB")
+var LoadConfigError error = errors.New("Failed to load config")
+var LoadListsError error = errors.New("Failed to load lists")
+var LoadItemsError error = errors.New("Failed to load items")
+
+
 func CreateNew() *FlimsyStorage {
   return &FlimsyStorage {
     db: db.CreateNew(),
@@ -31,24 +39,24 @@ func (storage *FlimsyStorage) Init() error {
   var err error
 
   if err = storage.db.Open(); err != nil {
-    return fmt.Errorf("Failed to open DB: %s", err)
+    return errors.Join(OpenError, err)
   }
 
   storage.Config, err = storage.db.LoadConfig(); if err != nil {
-    if err = storage.db.Seed(); err != nil {
-      return fmt.Errorf("Failed to seed DB: %s", err)
+  if err = storage.db.Seed(); err != nil {
+      return errors.Join(SeedError, err);
     }
     if storage.Config, err = storage.db.LoadConfig(); err != nil {
-      return fmt.Errorf("Failed to load config: %s", err)
+      return errors.Join(LoadConfigError, err);
     }
   }
 
   if storage.Lists, err = storage.db.LoadLists(); err != nil {
-    return fmt.Errorf("Failed to load lists: %s", err)
+      return errors.Join(LoadListsError, err);
   }
 
   if storage.Items, err = storage.db.LoadItems(); err != nil {
-    return fmt.Errorf("Failed to load items: %s", err)
+      return errors.Join(LoadItemsError, err);
   }
 
   for _, list := range *storage.Lists {
