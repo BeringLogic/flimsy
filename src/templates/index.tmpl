@@ -148,7 +148,7 @@
   </div>
 
   <div id="loginDialog" class="dialog">
-    <form action="login.php" method="post">
+    <form action="login" method="post">
       <div class="dialog-field">
         <label for="username">Username</label>
         <input id="username" type="text" name="username" required>
@@ -322,7 +322,18 @@
             if ($('#loginDialog :invalid').length > 0) {
               return;
             }
-            $('#loginDialog form').submit();
+            $.ajax({
+              url: 'login',
+              method: 'post',
+              data: $('#loginDialog form').serialize(),
+              success: (data) => {
+                if (data.error) {
+                  alert(data.error);
+                  return;
+                }
+                location.reload();
+              }
+            });
           },
           "Cancel": () => {
             $('#loginDialog').dialog('close');
@@ -330,7 +341,7 @@
         }
       });
       $('#login').click(() => {
-        {{ if .auth_disabled }}
+        {{ if .IsAuthDisabled }}
           window.location = 'login';
         {{ else }}
           $('#loginDialog').dialog('open');
