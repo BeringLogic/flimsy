@@ -10,6 +10,7 @@ import (
   "encoding/json"
 
   "github.com/BeringLogic/flimsy/internal/auth"
+  "github.com/BeringLogic/flimsy/internal/icons"
   "github.com/BeringLogic/flimsy/internal/utils"
   "github.com/BeringLogic/flimsy/internal/logger"
   "github.com/BeringLogic/flimsy/internal/storage"
@@ -276,14 +277,27 @@ func (flimsyServer *FlimsyServer) POST_config(w http.ResponseWriter, r *http.Req
     flimsyServer.storage.Config.Show_free_space = 1
   }
 
-  flimsyServer.storage.SaveConfig()
-
-  // TODO: download icon
-  // if (!empty($icon)) {
-  //   $icons->get($icon);
-  // }
-
   w.Header().Set("Content-Type", "application/json")
+
+  if err := flimsyServer.storage.SaveConfig(); err != nil {
+    flimsyServer.log.Print(err.Error())
+    json.NewEncoder(w).Encode(map[string]interface{}{
+      "success" : false,
+      "error" : err.Error(),
+    })
+  }
+
+  if flimsyServer.storage.Config.Icon != "" {
+    err := icons.DownloadIcon(flimsyServer.storage.Config.Icon); if err != nil {
+      flimsyServer.log.Print(err.Error())
+      json.NewEncoder(w).Encode(map[string]interface{}{
+        "success" : false,
+        "error" : err.Error(),
+      })
+      return
+    }
+  }
+
   json.NewEncoder(w).Encode(map[string]interface{}{
     "success" : true,
     "config" : flimsyServer.storage.Config,
