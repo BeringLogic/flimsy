@@ -97,7 +97,17 @@ func (flimsyServer *FlimsyServer) GET_root(w http.ResponseWriter, r *http.Reques
 
 func (flimsyServer *FlimsyServer) GET_config(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
-  json.NewEncoder(w).Encode(flimsyServer.storage.Config);
+
+  configResponse := make(map[string]interface{})
+  configResponse["config"] = flimsyServer.storage.Config
+  configResponse["backgrounds"] = utils.GetBackgrounds()
+
+  var err error
+  if configResponse["sensors"], err = systemInfo.GetSensors(); err != nil {
+    flimsyServer.log.Print(err.Error())
+  }
+
+  json.NewEncoder(w).Encode(configResponse)
 }
 
 func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *http.Request) {

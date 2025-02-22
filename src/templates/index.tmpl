@@ -219,31 +219,31 @@
     function loadConfig() {
       $.ajax({
         url: '/config',
-        success: (config) => {
-          if (config.Icon) {
-            $('#icon').attr('src', '/data/icons/' + config.Icon)
+        success: (data) => {
+          if (data.config.Icon) {
+            $('#icon').attr('src', '/data/icons/' + data.config.Icon)
                       .css('display', 'inline-block');
           }
           else {
             $('#icon').css('display', 'none');
           }
 
-          $('#title').html(config.Title);
+          $('#title').html(data.config.Title);
 
-          if (config.Background_image) {
-            $('body').css('background-image', 'url(/data/backgrounds/' + config.Background_image + ')');
+          if (data.config.Background_image) {
+            $('body').css('background-image', 'url(/data/backgrounds/' + data.config.Background_image + ')');
           }
           else {
             $('body').css('background-image', 'none');
           }
 
-          $('.ui-resizable-n, .ui-resizable-e, .ui-resizable-s, .ui-resizable-w, .ui-widget-content').css('background-color', config.Color_items);
-          $('body').css('background-color', config.Color_background);
-          $('body, .ui-dialog-title, .ui-dialog-content, .ui-dialog-buttonpane, #login, #logout, .item a').css('color', config.Color_foreground);
-          $('#title, .list h2, #system-info, div.weather, #login, #logout, div.details').css('text-shadow', '2px 2px ' + config.Color_background);
-          $('.ui-dialog-title, .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane').css('background-color', config.Color_borders);
-          $('.item').each((i, el) => { el.style.backgroundColor = 'rgba(from ' + config.Color_items + ' r g b / 0.75)'; });
-          $('.ui-dialog, .ui-draggable-handle, .ui-dialog-content fieldset, .ui-widget-content, .item').css('border-color', config.Color_items);
+          $('.ui-resizable-n, .ui-resizable-e, .ui-resizable-s, .ui-resizable-w, .ui-widget-content').css('background-color', data.config.Color_items);
+          $('body').css('background-color', data.config.Color_background);
+          $('body, .ui-dialog-title, .ui-dialog-content, .ui-dialog-buttonpane, #login, #logout, .item a').css('color', data.config.Color_foreground);
+          $('#title, .list h2, #system-info, div.weather, #login, #logout, div.details').css('text-shadow', '2px 2px ' + data.config.Color_background);
+          $('.ui-dialog-title, .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane').css('background-color', data.config.Color_borders);
+          $('.item').each((i, el) => { el.style.backgroundColor = 'rgba(from ' + data.config.Color_items + ' r g b / 0.75)'; });
+          $('.ui-dialog, .ui-draggable-handle, .ui-dialog-content fieldset, .ui-widget-content, .item').css('border-color', data.config.Color_items);
         }
       });
     }
@@ -383,23 +383,25 @@
       {{ if .IsLoggedIn }}
         $('#configButton').click(() => {
           $.ajax({
-            url: 'config/get.php',
-            success: (config) => {
-              $('#configTitle').val(config.title);
-              $('#configIcon').val(config.icon);
+            url: 'config',
+            success: (data) => {
+              $('#configTitle').val(data.config.title);
+              $('#configIcon').val(data.config.icon);
 
-              config.backgrounds.forEach((b) => {
+              $('#configBackgroundImage').empty();
+              data.backgrounds.forEach((b) => {
                 if (b == '.' || b == '..') return;
                 $('#configBackgroundImage').append($('<option value="' + b + '">' + b + '</option>'));
               })
-              $('#configBackgroundImage').val(config.background_image);
+              $('#configBackgroundImage').val(data.config.background_image);
               $('#configBackgroundImage').trigger('change');
-              $('#configColorBackground').val(config.color_background);
-              $('#configColorForeground').val(config.color_foreground);
-              $('#configColorItems').val(config.color_items);
-              $('#configColorBorders').val(config.color_borders);
+              $('#configColorBackground').val(data.config.color_background);
+              $('#configColorForeground').val(data.config.color_foreground);
+              $('#configColorItems').val(data.config.color_items);
+              $('#configColorBorders').val(data.config.color_borders);
 
-              for (const [chip, sensors] of Object.entries(config.sensors)) {
+              $('#configCpuTempSensor').empty();
+              for (const [chip, sensors] of Object.entries(data.sensors)) {
                 $('#configCpuTempSensor').append($('<optgroup label="' + chip + '"></optgroup>'));
                 for (const [sensorName, values] of Object.entries(sensors)) {
                   for (const [valueName, value] of Object.entries(values)) {
@@ -409,11 +411,11 @@
                   }
                 }
               }
-              $('#configCpuTempSensor').val(config.cpu_temp_sensor);
-              $('#configShowFreeRam').prop('checked', config.show_free_ram);
-              $('#configShowFreeSwap').prop('checked', config.show_free_swap);
-              $('#configShowPublicIp').prop('checked', config.show_public_ip);
-              $('#configShowFreeSpace').prop('checked', config.show_free_space);
+              $('#configCpuTempSensor').val(data.config.cpu_temp_sensor);
+              $('#configShowFreeRam').prop('checked', data.config.show_free_ram);
+              $('#configShowFreeSwap').prop('checked', data.config.show_free_swap);
+              $('#configShowPublicIp').prop('checked', data.config.show_public_ip);
+              $('#configShowFreeSpace').prop('checked', data.config.show_free_space);
               $('#configDialog').dialog('open');
             }
           })
