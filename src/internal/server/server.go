@@ -50,6 +50,9 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
   flimsyServer.router.HandleFunc("POST /login", flimsyServer.POST_login)
   flimsyServer.router.HandleFunc("GET /logout", flimsyServer.GET_logout)
 
+  // TODO: use MustBeAuthenticated middleware
+  flimsyServer.router.HandleFunc("POST /config", flimsyServer.POST_config)
+
   wrappedLogger := middleware.Logging(flimsyServer.log)
 
   flimsyServer.middlewareStack = middleware.CreateStack(
@@ -207,4 +210,82 @@ func (flimsyServer *FlimsyServer) GET_logout(w http.ResponseWriter, r *http.Requ
   http.Redirect(w, r, "/", http.StatusSeeOther)
 
   flimsyServer.log.Print("User logged out")
+}
+
+func (flimsyServer *FlimsyServer) POST_config(w http.ResponseWriter, r *http.Request) {
+  flimsyServer.storage.Config.Icon = r.FormValue("icon")
+  flimsyServer.storage.Config.Title = r.FormValue("title")
+  flimsyServer.storage.Config.Color_background = r.FormValue("color_background")
+  flimsyServer.storage.Config.Color_foreground = r.FormValue("color_foreground")
+  flimsyServer.storage.Config.Color_items = r.FormValue("color_items")
+  flimsyServer.storage.Config.Color_borders = r.FormValue("color_borders")
+  flimsyServer.storage.Config.Cpu_temp_sensor = r.FormValue("cpu_temp_sensor")
+  Show_free_ram := r.FormValue("show_free_ram")
+  Show_free_swap := r.FormValue("show_free_swap")
+  Show_public_ip := r.FormValue("show_public_ip")
+  Show_free_space := r.FormValue("show_free_space")
+
+  switch Background_type := r.FormValue("background_type"); Background_type {
+  case "upload":
+    // $background_image = $upBg->upload(); 
+    flimsyServer.log.Print("TODO: Background image upload")
+  case "keep":
+    flimsyServer.storage.Config.Background_image = r.FormValue("background_image")
+  case "none":
+    flimsyServer.storage.Config.Background_image = "";
+  }
+
+  switch Color_type := r.FormValue("color_type"); Color_type {
+  case "autodetect":
+    flimsyServer.log.Print("TODO: autodetect background colors")
+  case "catppuccin_latte":
+    flimsyServer.storage.Config.Color_background = "#eff1f5"
+    flimsyServer.storage.Config.Color_foreground = "#4c4f69"
+    flimsyServer.storage.Config.Color_items = "#dce0e8"
+    flimsyServer.storage.Config.Color_borders = "#9ca0b0"
+  case "catppuccin_mocha":
+    flimsyServer.storage.Config.Color_background = "#1e1e2e"
+    flimsyServer.storage.Config.Color_foreground = "#cdd6f4"
+    flimsyServer.storage.Config.Color_items = "#11111b"
+    flimsyServer.storage.Config.Color_borders = "#6c7086"
+  case "manual":
+    flimsyServer.storage.Config.Color_background = r.FormValue("color_background")
+    flimsyServer.storage.Config.Color_foreground = r.FormValue("color_foreground")
+    flimsyServer.storage.Config.Color_items = r.FormValue("color_items")
+    flimsyServer.storage.Config.Color_borders = r.FormValue("color_borders")
+  }
+
+  if Show_free_ram == "" {
+    flimsyServer.storage.Config.Show_free_ram = 0
+  } else {
+    flimsyServer.storage.Config.Show_free_ram = 1
+  }
+  if Show_free_swap == "" {
+    flimsyServer.storage.Config.Show_free_swap = 0
+  } else {
+    flimsyServer.storage.Config.Show_free_swap = 1
+  }
+  if Show_public_ip == "" {
+    flimsyServer.storage.Config.Show_public_ip = 0
+  } else {
+    flimsyServer.storage.Config.Show_public_ip = 1
+  }
+  if Show_free_space == "" {
+    flimsyServer.storage.Config.Show_free_space = 0
+  } else {
+    flimsyServer.storage.Config.Show_free_space = 1
+  }
+
+  flimsyServer.storage.SaveConfig()
+
+  // TODO: download icon
+  // if (!empty($icon)) {
+  //   $icons->get($icon);
+  // }
+
+  w.Header().Set("Content-Type", "application/json")
+  json.NewEncoder(w).Encode(map[string]interface{}{
+    "success" : true,
+    "config" : flimsyServer.storage.Config,
+  })
 }

@@ -78,3 +78,7 @@ func (storage *FlimsyStorage) Init() error {
 func (flimsyStorage *FlimsyStorage) Close() {
   flimsyStorage.db.Close()
 }
+
+func (flimsyStorage *FlimsyStorage) SaveConfig() error {
+  return flimsyStorage.db.SaveConfig(flimsyStorage.Config)
+}
