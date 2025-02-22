@@ -385,37 +385,36 @@
           $.ajax({
             url: 'config',
             success: (data) => {
-              $('#configTitle').val(data.config.title);
-              $('#configIcon').val(data.config.icon);
+              $('#configTitle').val(data.config.Title);
+              $('#configIcon').val(data.config.Icon);
 
               $('#configBackgroundImage').empty();
               data.backgrounds.forEach((b) => {
-                if (b == '.' || b == '..') return;
                 $('#configBackgroundImage').append($('<option value="' + b + '">' + b + '</option>'));
               })
-              $('#configBackgroundImage').val(data.config.background_image);
+              $('#configBackgroundImage').val(data.config.Background_image);
               $('#configBackgroundImage').trigger('change');
-              $('#configColorBackground').val(data.config.color_background);
-              $('#configColorForeground').val(data.config.color_foreground);
-              $('#configColorItems').val(data.config.color_items);
-              $('#configColorBorders').val(data.config.color_borders);
+              $('#configColorBackground').val(data.config.Color_background);
+              $('#configColorForeground').val(data.config.Color_foreground);
+              $('#configColorItems').val(data.config.Color_items);
+              $('#configColorBorders').val(data.config.Color_borders);
 
               $('#configCpuTempSensor').empty();
-              for (const [chip, sensors] of Object.entries(data.sensors)) {
-                $('#configCpuTempSensor').append($('<optgroup label="' + chip + '"></optgroup>'));
-                for (const [sensorName, values] of Object.entries(sensors)) {
-                  for (const [valueName, value] of Object.entries(values)) {
-                    if (valueName.endsWith('_input')) {
-                      $('#configCpuTempSensor').append($('<option value="' + sensorName + '">&nbsp;' + sensorName + ': ' + value + '</option>'));
+              for (const chip of data.sensors) {
+                $('#configCpuTempSensor').append($('<optgroup label="' + chip.Name + '"></optgroup>'));
+                for (const sensor of chip.Sensors) {
+                  for (const reading of sensor.Readings) {
+                    if (reading.Name.endsWith('_input')) {
+                      $('#configCpuTempSensor').append($('<option value="' + sensor.Name + '">&nbsp;' + sensor.Name + ' (' + reading.Name + '): ' + reading.Value + '</option>'));
                     }
                   }
                 }
               }
-              $('#configCpuTempSensor').val(data.config.cpu_temp_sensor);
-              $('#configShowFreeRam').prop('checked', data.config.show_free_ram);
-              $('#configShowFreeSwap').prop('checked', data.config.show_free_swap);
-              $('#configShowPublicIp').prop('checked', data.config.show_public_ip);
-              $('#configShowFreeSpace').prop('checked', data.config.show_free_space);
+              $('#configCpuTempSensor').val(data.config.Cpu_temp_sensor);
+              $('#configShowFreeRam').prop('checked', data.config.Show_free_ram);
+              $('#configShowFreeSwap').prop('checked', data.config.Show_free_swap);
+              $('#configShowPublicIp').prop('checked', data.config.Show_public_ip);
+              $('#configShowFreeSpace').prop('checked', data.config.Show_free_space);
               $('#configDialog').dialog('open');
             }
           })
