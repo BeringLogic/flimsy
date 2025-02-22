@@ -7,6 +7,7 @@ import (
   "os/exec"
   "net/http"
   "path/filepath"
+
   "github.com/BeringLogic/flimsy/internal/db"
 )
 
@@ -71,7 +72,7 @@ func GetSystemInfo(config *db.Config) SystemInfo {
 
       storage.Mount_point = filepath.Base(mountPoint)
 
-      cmd := fmt.Sprintf("df -h %s | tail -n 1 | awk '{ print $4 }'", mountPoint)  
+      cmd := fmt.Sprintf("df -h | grep %s$ | awk '{ print $4 }'", mountPoint)  
       bytes, err = exec.Command("sh", "-c", cmd).Output(); if err == nil {
         storage.Free_space = strings.TrimSpace(string(bytes))
         systemInfo.Storage = append(systemInfo.Storage, storage)
