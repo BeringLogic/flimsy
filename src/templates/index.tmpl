@@ -51,7 +51,7 @@
   {{ end }}
 
   <div id="configDialog" class="dialog">
-    <form action="config/set.php" method="post" enctype="multipart/form-data">
+    <form action="config" method="post" enctype="multipart/form-data">
       <div class="dialog-column">
         <fieldset>
           <legend>Header</legend>
@@ -68,7 +68,7 @@
           <legend>Background</legend>
           <div class="dialog-field">
             <input id="configBackgroundTypeUpload" type="radio" style="width:auto;" name="background_type" value="upload">
-            <input id="configBackgroundUpload" type="file" style="width:85%; display:inline-block;" name="background_image">
+            <input id="configBackgroundUpload" type="file" style="width:85%; display:inline-block;" name="background_file">
           </div>
           <div class="dialog-field">
             <input id="configBackgroundTypeKeep" type="radio" style="width:auto;" name="background_type" value="keep" checked>
@@ -216,36 +216,40 @@
       });
     }
 
-    function loadConfig() {
+    function loadConfig(data) {
       $.ajax({
         url: '/config',
         success: (data) => {
-          if (data.config.Icon) {
-            $('#icon').attr('src', '/data/icons/' + data.config.Icon)
-                      .css('display', 'inline-block');
-          }
-          else {
-            $('#icon').css('display', 'none');
-          }
-
-          $('#title').html(data.config.Title);
-
-          if (data.config.Background_image) {
-            $('body').css('background-image', 'url(/data/backgrounds/' + data.config.Background_image + ')');
-          }
-          else {
-            $('body').css('background-image', 'none');
-          }
-
-          $('.ui-resizable-n, .ui-resizable-e, .ui-resizable-s, .ui-resizable-w, .ui-widget-content').css('background-color', data.config.Color_items);
-          $('body').css('background-color', data.config.Color_background);
-          $('body, .ui-dialog-title, .ui-dialog-content, .ui-dialog-buttonpane, #login, #logout, .item a').css('color', data.config.Color_foreground);
-          $('#title, .list h2, #system-info, div.weather, #login, #logout, div.details').css('text-shadow', '2px 2px ' + data.config.Color_background);
-          $('.ui-dialog-title, .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane').css('background-color', data.config.Color_borders);
-          $('.item').each((i, el) => { el.style.backgroundColor = 'rgba(from ' + data.config.Color_items + ' r g b / 0.75)'; });
-          $('.ui-dialog, .ui-draggable-handle, .ui-dialog-content fieldset, .ui-widget-content, .item').css('border-color', data.config.Color_items);
+          applyConfig(data.config);
         }
       });
+    }
+
+    function applyConfig(config) {
+      if (config.Icon) {
+        $('#icon').attr('src', '/data/icons/' + config.Icon)
+                  .css('display', 'inline-block');
+      }
+      else {
+        $('#icon').css('display', 'none');
+      }
+
+      $('#title').html(config.Title);
+
+      if (config.Background_image) {
+        $('body').css('background-image', 'url(/data/backgrounds/' + config.Background_image + ')');
+      }
+      else {
+        $('body').css('background-image', 'none');
+      }
+
+      $('.ui-resizable-n, .ui-resizable-e, .ui-resizable-s, .ui-resizable-w, .ui-widget-content').css('background-color', config.Color_items);
+      $('body').css('background-color', config.Color_background);
+      $('body, .ui-dialog-title, .ui-dialog-content, .ui-dialog-buttonpane, #login, #logout, .item a').css('color', config.Color_foreground);
+      $('#title, .list h2, #system-info, div.weather, #login, #logout, div.details').css('text-shadow', '2px 2px ' + config.Color_background);
+      $('.ui-dialog-title, .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane').css('background-color', config.Color_borders);
+      $('.item').each((i, el) => { el.style.backgroundColor = 'rgba(from ' + config.Color_items + ' r g b / 0.75)'; });
+      $('.ui-dialog, .ui-draggable-handle, .ui-dialog-content fieldset, .ui-widget-content, .item').css('border-color', config.Color_items);
     }
 
     {{ if .FLIMSY_WEATHER_API_KEY }}
@@ -430,7 +434,23 @@
               if ($('#configDialog :invalid').length > 0) {
                 return;
               }
-              $('#configDialog form').submit();
+              $.ajax({
+                url: 'config',
+                method: 'post',
+                data: $('#configDialog form').serialize(),
+                success: (data) => {
+                  if (data.success) {
+                    applyConfig(data.config);
+                    $('#configDialog').dialog('close');
+                  }
+                  else {
+                    alert(data.error);
+                  }
+                },
+                error: (xhr, status, error) => {
+                  alert(error);
+                }
+              });
             },
             "Cancel": () => {
               $('#configDialog').dialog('close');
