@@ -21,10 +21,9 @@ func GetEnv(key, def string) string {
   }
 }
 
-func GetBackgrounds() []string {
-  files, err := os.ReadDir("/data/backgrounds")
-  if err != nil {
-    return []string{}
+func GetBackgrounds() ([]string, error) {
+  files, err := os.ReadDir("/data/backgrounds"); if err != nil {
+    return []string{}, err
   }
 
   filenames := []string{}
@@ -32,5 +31,5 @@ func GetBackgrounds() []string {
     filenames = append(filenames, file.Name())
   }
 
-  return filenames
+  return filenames, nil
 }

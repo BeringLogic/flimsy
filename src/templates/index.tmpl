@@ -17,6 +17,7 @@
 			  integrity="sha256-AlTido85uXPlSyyaZNsjJXeCs07eSv3r43kyCVc8ChI="
 			  crossorigin="anonymous"></script>
   <script src="/static/htmx.min.js"></script>
+  <script src="/static/hyperscript.min.js"></script>
 </head>
 
 <body>
@@ -27,7 +28,7 @@
     </div>
     <div>
       {{ if .IsLoggedIn }}
-        <button id="configButton">⚙️</button>
+        <button id="configButton" hx-get="/config" hx-target="body" hx-swap="beforeend">⚙️</button>
         <a id="logout" href="logout">Logout</a>
       {{ else }}
         <a id="login" href="#">Login</a>
@@ -53,162 +54,6 @@
   {{ if .IsLoggedIn }}
     <button id="addList">➕ Add List</button>
   {{ end }}
-
-  <div id="configDialog" class="dialog">
-    <form action="config" method="post" enctype="multipart/form-data">
-      <div class="dialog-column">
-        <fieldset>
-          <legend>Header</legend>
-          <div class="dialog-field">
-            <label for="configIcon">Icon</label>
-            <input id="configIcon" type="text" name="icon" value="{{ .config.Icon }}">
-          </div>
-          <div class="dialog-field">
-            <label for="configTitle">Title</label>
-            <input id="configTitle" type="text" name="title" value="{{ .config.Title }}">
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend>Background</legend>
-          <div class="dialog-field">
-            <input id="configBackgroundTypeUpload" type="radio" style="width:auto;" name="background_type" value="upload">
-            <input id="configBackgroundUpload" type="file" style="width:85%; display:inline-block;" name="background_file">
-          </div>
-          <div class="dialog-field">
-            <input id="configBackgroundTypeKeep" type="radio" style="width:auto;" name="background_type" value="keep" checked>
-            <select id="configBackgroundImage" style="width:85%; display:inline-block;" name="background_image">
-            {{ $Background_image := .config.Background_image }}
-            {{ range .backgrounds }}
-              <option value="{{ . }}"{{ if eq . $Background_image }} selected="selected"{{ end }}>{{ . }}</option>
-            {{ end }}
-            </select>
-          </div>
-          <div class="dialog-field">
-            <input id="configBackgroundTypeNone" type="radio" style="width:auto;" name="background_type" value="none">
-            <label for="configBackgroundTypeNone" style="display:inline-block;">None</label>
-          </div>
-        </fieldset>
-      </div>
-      <div class="dialog-column">
-        <fieldset>
-          <legend>Colors</legend>
-          <div class="dialog-field">
-            <input type="radio" id="autodetect_colors" name="color_type" style="width:auto;" value="autodetect">
-            <label for="autodetect_colors" style="display:inline-block;">Autodetect Colors</label>
-          </div>
-          <div class="dialog-field">
-            <input type="radio" id="catppuccin_latte_colors" name="color_type" style="width:auto;" value="catppuccin_latte">
-            <label for="catppuccin_latte_colors" style="display:inline-block;">Catppuccin Latte</label>
-          </div>
-          <div class="dialog-field">
-            <input type="radio" id="catppuccin_mocha_colors" name="color_type" style="width:auto;" value="catppuccin_mocha">
-            <label for="catppuccin_mocha_colors" style="display:inline-block;">Catppuccin Mocha</label>
-          </div>
-          <div class="dialog-field">
-            <input type="radio" id="manual_colors" name="color_type" style="width:auto;" value="manual" checked>
-            <label for="manual_colors" style="display:inline-block;">Manual Colors</label>
-          </div>
-          <div class="dialog-field">
-            <label for="configColorBackground">Background</label>
-            <input id="configColorBackground" type="color" name="color_background" value="{{ .config.Color_background }}" required>
-          </div>
-          <div class="dialog-field">
-            <label for="configColorForeground">Foreground</label>
-            <input id="configColorForeground" type="color" name="color_foreground" value="{{ .config.Color_foreground }}" required>
-          </div>
-          <div class="dialog-field">
-            <label for="configColorItems">Items</label>
-            <input id="configColorItems" type="color" name="color_items" value="{{ .config.Color_items }}" required>
-          </div>
-          <div class="dialog-field">
-            <label for="configColorBorders">Borders</label>
-            <input id="configColorBorders" type="color" name="color_borders" value="{{ .config.Color_borders }}" required>
-          </div>
-        </fieldset>
-      </div>
-      <div class="dialog-column">
-        <fieldset>
-          <legend>System Info</legend>
-          <div class="dialog-field">
-            <label for="configCpuTempSensor">CPU Temp Sensor</label>
-            <select id="configCpuTempSensor" name="cpu_temp_sensor">
-              <option value="">Don't show</option>
-              {{ $Cpu_temp_sensor := .config.Cpu_temp_sensor }}
-              {{ range .sensors }}
-              <optgroup label="{{ .Name }}">
-                {{ range .Sensors }}
-                  {{ $SensorName := .Name }}
-                  {{ range .Readings }}
-                  <option value="{{ $SensorName }}"{{ if eq $SensorName $Cpu_temp_sensor }} selected="selected"{{ end }}>{{ $SensorName }} ({{ .Name }}): {{ .Value }}</option>
-                  {{ end }}
-                {{ end }}
-              </optgroup>
-              {{ end }}
-            </select>
-          </div>
-          <div class="dialog-field">
-            <input id="configShowFreeRam" type="checkbox" style="width:auto;" name="show_free_ram" value="1" {{ if .config.Show_free_ram }}checked{{ end }}>
-            <label for="configShowFreeRam" style="display:inline-block">Show Free RAM</label>
-          </div>
-          <div class="dialog-field">
-            <input id="configShowFreeSwap" type="checkbox" style="width:auto;" name="show_free_swap" value="1" {{ if .config.Show_free_swap }}checked{{ end }}>
-            <label for="configShowFreeSwap" style="display:inline-block">Show Free Swap</label>
-          </div>
-          <div class="dialog-field">
-            <input id="configShowPublicIp" type="checkbox" style="width:auto;" name="show_public_ip" value="1" {{ if .config.Show_public_ip }}checked{{ end }}>
-            <label for="configShowPublicIp" style="display:inline-block">Show Public IP</label>
-          </div>
-          <div class="dialog-field">
-            <input id="configShowFreeSpace" type="checkbox" style="width:auto;" name="show_free_space" value="1" {{ if .config.Show_free_space }}checked{{ end }}>
-            <label for="configShowFreeSpace" style="display:inline-block">Show Free Space</label>
-          </div>
-        </fieldset>
-      </div>
-    </form>
-  </div>
-
-  <div id="loginDialog" class="dialog">
-    <form action="login" method="post">
-      <div class="dialog-field">
-        <label for="username">Username</label>
-        <input id="username" type="text" name="username" required>
-      </div>
-      <div class="dialog-field">
-        <label for="password">Password</label>
-        <input id="password" type="password" name="password" required>
-      </div>
-    </form>
-  </div>
-
-  <div id="editListDialog" class="dialog">
-    <form method="post">
-      <div class="dialog-field">
-        <label for="listTitle">Title</label>
-        <input id="listTitle" type="text" name="title" required>
-      </div>
-      <div class="dialog-field">
-        <label for="listRows">Number of Rows</label>
-        <input id="listRows" type="number" min="1" name="number_of_rows" required>
-      </div>
-    </form>
-  </div>
-
-  <div id="editItemDialog" class="dialog">
-    <form method="post">
-      <div class="dialog-field">
-        <label for="itemTitle">Title</label>
-        <input id="itemTitle" type="text" name="title" required>
-      </div>
-      <div class="dialog-field">
-        <label for="itemUrl">URL</label>
-        <input id="itemUrl" type="text" name="url" required>
-      </div>
-      <div class="dialog-field">
-        <label for="itemIcon">Icon</label>
-        <input id="itemIcon" type="text" name="icon" required>
-      </div>
-    </form>
-  </div>
 
   <script type="text/javascript">
     function deleteList() {
@@ -336,42 +181,6 @@
       });
 
       {{ if .IsLoggedIn }}
-        $('#configButton').click(() => {
-          $('#configDialog').dialog('open');
-        });
-
-        $('#configDialog').dialog({
-          title: 'Config',
-          autoOpen: false,
-          modal: true,
-          width: 1010,
-          buttons: {
-            "Save": () => {
-              if ($('#configDialog :invalid').length > 0) {
-                return;
-              }
-              $.ajax({
-                url: 'config',
-                method: 'post',
-                data: $('#configDialog form').serialize(),
-                success: (data) => {
-                  if (data.success) {
-                    location.reload();
-                  }
-                  else {
-                    alert(data.error);
-                  }
-                },
-                error: (xhr, status, error) => {
-                  alert(error);
-                }
-              });
-            },
-            "Cancel": () => {
-              $('#configDialog').dialog('close');
-            },
-          }
-        });
         $('#configBackgroundUpload').change(() => {
           $('#autodetect_colors').removeAttr('disabled');
           $('#configBackgroundTypeUpload').prop('checked', true);
