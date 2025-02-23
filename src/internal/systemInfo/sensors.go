@@ -22,6 +22,7 @@ type Reading struct {
   Value string
 }
 
+
 func GetSensors() ([]*Chip, error) {
   output, err := exec.Command("sensors", "-uA").Output(); if err != nil {
     return nil, err

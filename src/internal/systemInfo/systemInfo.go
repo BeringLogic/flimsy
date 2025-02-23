@@ -1,5 +1,6 @@
 package systemInfo
 
+
 import (
   "io"
   "fmt"
@@ -10,6 +11,7 @@ import (
 
   "github.com/BeringLogic/flimsy/internal/db"
 )
+
 
 type SystemInfo struct {
   Cpu_temp string
@@ -24,6 +26,7 @@ type Storage struct {
   Mount_point string
   Free_space string
 }
+
 
 func GetSystemInfo(config *db.Config) SystemInfo {
   systemInfo := SystemInfo{}

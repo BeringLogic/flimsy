@@ -1,5 +1,6 @@
 package db
 
+
 type Config struct {
   Id int
   Icon string
@@ -15,6 +16,7 @@ type Config struct {
   Show_public_ip int
   Show_free_space int
 }
+
 
 func (flimsyDB *FlimsyDB) LoadConfig() (*Config, error) {
   config := Config{}
