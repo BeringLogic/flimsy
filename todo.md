@@ -1,18 +1,16 @@
 # TODO
-* [x] Read /data/data.json
-* [x] Render data.json
-* [x] Add list GUI
-* [x] Add item GUI
-* [x] Edit list
-* [x] Edit item
-* [x] Delete list
-* [x] Delete item
-* [x] Drag & Drop to reorder list
-* [x] Drag & Drop to reorder items
+* [ ] Add list GUI
+* [ ] Add item GUI
+* [ ] Edit list
+* [ ] Edit item
+* [ ] Delete list
+* [ ] Delete item
+* [ ] Drag & Drop to reorder list
+* [ ] Drag & Drop to reorder items
 * [x] Make items clickable
 * [x] Login to edit
 * [x] Preserve icons aspect ratio
-* [x] Deal with really long items
+* [ ] Deal with really long items
 * [x] Weather widget
 * [x] Default colors based on Catppucchin-mocha
 * [x] Download icon when saving items and use local copy
@@ -24,8 +22,8 @@
 * [x] Customizable background image
 * [x] Customizable number of columns (customizable per list)
 * [x] Customizable colors 
-* [x] File upload for backgrounds
-* [x] Automatically pick the colors from the background image
+* [ ] File upload for backgrounds
+* [ ] Automatically pick the colors from the background image
 * [x] Catppuccin colors (mocha and latte)
 * [x] Output of lm-sensors in a list so users can figure out their CPU sensor's name
 * [x] Server status (CPU temp)
@@ -34,7 +32,7 @@
 * [x] Server status (Storage)
 * [x] Server status (public IP)
 * [x] Make RAM, SWAP, public ip and storage optional (/ is there by default)
-* [x] curl items' href and display online status
+* [x] Display online status
 * [ ] UI to customize login variables
 * [ ] UI to customize weather widget variables
 * [ ] Update README.md with screenshots, features, infos on how to install and how to use the app
@@ -42,6 +40,7 @@
 * [ ] favicons for items (https://dashy.to/docs/icons/)
 * [ ] AJAX for everything?
 * [ ] HTMX ?
+* [ ] Update system info and weather every X minutes
 
 # Switch to golang
 * [x] golang base image
@@ -54,15 +53,15 @@
 * [x] serve static files
 * [x] /
 * [x] repository pattern
-* [ ] login
+* [x] login
 * [x] sqlite
-* [ ] debugger
+* [x] debugger
 * [ ] [prominentcolor](https://github.com/EdlinOrg/prominentcolor)
 * [ ] Dockerfile app prod (from scratch)
 * [ ] tests?
-* [ ] ADDRESS INTERFACE? DOMAIN?
+* [ ] ADDRESS, INTERFACE? or DOMAIN?
 * [ ] PORT
-* [ ] Logger
+* [x] Logger
 * [ ] Let's Encrypt?
 * [ ] Serve jQuery from /static instead of cdn?
 * [x] Figure out how to deal with if ({{ .IsLoggedIn }}), I don't want the user to just flip a bool in js to unlock everything...
@@ -75,4 +74,7 @@
 * [ ] Find the proper way to deal with Dev and Production. (php-production.ini, max_execution_time, grep max_input_time)
 
 # Bugs
-* [ ] Login feedback to display AFTER the list has loaded
+- Login feedback should display AFTER the config is applied
+- http: superfluous response.WriteHeader call from github.com/BeringLogic/flimsy/internal/middleware.(*wrappedWriter).WriteHeader (logging.go:19)
+  That call isn't superfluous, it's to set the error code in GET_login
+- Border above buttons in the config dialog is too thick
