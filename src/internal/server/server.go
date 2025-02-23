@@ -51,8 +51,9 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
   flimsyServer.router.HandleFunc("POST /login", flimsyServer.POST_login)
   flimsyServer.router.HandleFunc("GET /logout", flimsyServer.GET_logout)
 
-  // TODO: use MustBeAuthenticated middleware
-  flimsyServer.router.HandleFunc("POST /config", flimsyServer.POST_config)
+  adminRouter := http.NewServeMux()
+  adminRouter.HandleFunc("POST /config", flimsyServer.POST_config)
+  flimsyServer.router.Handle("/", middleware.MustBeAuthenticated(adminRouter))
 
   wrappedLogger := middleware.Logging(flimsyServer.log)
 
