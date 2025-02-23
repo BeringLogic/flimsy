@@ -200,8 +200,8 @@
         <input id="itemTitle" type="text" name="title" required>
       </div>
       <div class="dialog-field">
-        <label for="itemHref">URL</label>
-        <input id="itemHref" type="text" name="href" required>
+        <label for="itemUrl">URL</label>
+        <input id="itemUrl" type="text" name="url" required>
       </div>
       <div class="dialog-field">
         <label for="itemIcon">Icon</label>
@@ -314,7 +314,7 @@
             url: 'items/get.php?id=' + itemId,
             success: (item) => {
               $('#itemTitle').val(item.title);
-              $('#itemHref').val(item.href);
+              $('#itemUrl').val(item.url);
               $('#itemIcon').val(item.icon);
 
               var buttons = $('#editItemDialog').dialog('option', 'buttons');
@@ -330,8 +330,8 @@
 
         // Click on an item to visit it's url
         {{ else }}
-          const href = $('#' + e.currentTarget.id + ' div.details div.href').text();
-          window.open(href);
+          const url = $('#' + e.currentTarget.id + ' div.details div.url').text();
+          window.open(url);
         {{ end }}
       });
 
@@ -415,7 +415,7 @@
         $('div.addItem button').click((e) => {
           const listId = e.target.id.replace('addItem_', '');
           $('#itemTitle').val('');
-          $('#itemHref').val('');
+          $('#itemUrl').val('');
           $('#itemIcon').val('');
 
           var buttons = $('#editItemDialog').dialog('option', 'buttons');

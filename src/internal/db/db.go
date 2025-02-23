@@ -79,7 +79,7 @@ func (flimsyDB *FlimsyDB) Seed() error {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       list_id INTEGER NOT NULL,
       title TEXT NOT NULL,
-      href TEXT NOT NULL,
+      url TEXT NOT NULL,
       icon TEXT NOT NULL,
       position INTEGER NOT  NULL,
       FOREIGN KEY(list_id) REFERENCES lists(id)
