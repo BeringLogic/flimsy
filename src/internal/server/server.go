@@ -217,6 +217,8 @@ func (flimsyServer *FlimsyServer) GET_logout(w http.ResponseWriter, r *http.Requ
 func (flimsyServer *FlimsyServer) POST_config(w http.ResponseWriter, r *http.Request) {
   flimsyServer.storage.Config.Icon = r.FormValue("icon")
   flimsyServer.storage.Config.Title = r.FormValue("title")
+  Background_type := r.FormValue("background_type")
+  Color_type := r.FormValue("color_type")
   flimsyServer.storage.Config.Color_background = r.FormValue("color_background")
   flimsyServer.storage.Config.Color_foreground = r.FormValue("color_foreground")
   flimsyServer.storage.Config.Color_items = r.FormValue("color_items")
@@ -227,9 +229,9 @@ func (flimsyServer *FlimsyServer) POST_config(w http.ResponseWriter, r *http.Req
   Show_public_ip := r.FormValue("show_public_ip")
   Show_free_space := r.FormValue("show_free_space")
 
-  switch Background_type := r.FormValue("background_type"); Background_type {
+  switch Background_type {
   case "upload":
-    // $background_image = $upBg->upload(); 
+    // flimsyServer.storage.Config.Background_image = $upBg->upload(); 
     flimsyServer.log.Print("TODO: Background image upload")
   case "keep":
     flimsyServer.storage.Config.Background_image = r.FormValue("background_image")
@@ -237,7 +239,7 @@ func (flimsyServer *FlimsyServer) POST_config(w http.ResponseWriter, r *http.Req
     flimsyServer.storage.Config.Background_image = "";
   }
 
-  switch Color_type := r.FormValue("color_type"); Color_type {
+  switch Color_type {
   case "autodetect":
     flimsyServer.log.Print("TODO: autodetect background colors")
   case "catppuccin_latte":
