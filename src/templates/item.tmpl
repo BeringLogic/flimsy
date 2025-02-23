@@ -3,7 +3,7 @@
     <img class="icon" src="/data/icons/{{ .Icon }}" />
   </div>
   <div class="details">
-    <i class="status nf nf-oct-dot_fill"></i>
+    <i class="status nf nf-oct-dot_fill" hx-get="/onlineStatus?href={{ .Href }}" hx-swap="outerHTML" hx-trigger="load"></i>
     <div class="title">{{ .Title }}</div>
     <div class="href">{{ .Href }}</div>
   </div>

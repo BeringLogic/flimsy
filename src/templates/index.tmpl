@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Flimsy</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <title>{{ or .config.Title "Flimsy" }}</title>
+  <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="https://www.nerdfonts.com/assets/css/webfont.css">
   <link rel="icon" type="image/png" href="/static/homepage.png">
@@ -16,13 +16,14 @@
 			  src="https://code.jquery.com/ui/1.14.1/jquery-ui.min.js"
 			  integrity="sha256-AlTido85uXPlSyyaZNsjJXeCs07eSv3r43kyCVc8ChI="
 			  crossorigin="anonymous"></script>
+  <script src="/static/htmx.min.js"></script>
 </head>
 
 <body>
   <header>
     <div>
-      <img id="icon">
-      <h1 id="title"></h1>
+      {{ if .config.Icon }}<img id="icon" src="/data/icons/{{ .config.Icon }}">{{ end }}
+      {{ if .config.Title }}<h1 id="title">{{ .config.Title }}</h1>{{ end }}
     </div>
     <div>
       {{ if .IsLoggedIn }}
@@ -31,7 +32,7 @@
       {{ else }}
         <a id="login" href="#">Login</a>
       {{ end }}
-      <div id="system-info"></div>
+      <div id="system-info" hx-get="/systemInfo" hx-trigger="load"></div>
       {{ if .FLIMSY_WEATHER_API_KEY }}
         <div class="weather">
           <img>
@@ -60,11 +61,11 @@
           <legend>Header</legend>
           <div class="dialog-field">
             <label for="configIcon">Icon</label>
-            <input id="configIcon" type="text" name="icon">
+            <input id="configIcon" type="text" name="icon" value="{{ .config.Icon }}">
           </div>
           <div class="dialog-field">
             <label for="configTitle">Title</label>
-            <input id="configTitle" type="text" name="title">
+            <input id="configTitle" type="text" name="title" value="{{ .config.Title }}">
           </div>
         </fieldset>
         <fieldset>
@@ -75,7 +76,12 @@
           </div>
           <div class="dialog-field">
             <input id="configBackgroundTypeKeep" type="radio" style="width:auto;" name="background_type" value="keep" checked>
-            <select id="configBackgroundImage" style="width:85%; display:inline-block;" name="background_image"></select>
+            <select id="configBackgroundImage" style="width:85%; display:inline-block;" name="background_image">
+            {{ $Background_image := .config.Background_image }}
+            {{ range .backgrounds }}
+              <option value="{{ . }}"{{ if eq . $Background_image }} selected="selected"{{ end }}>{{ . }}</option>
+            {{ end }}
+            </select>
           </div>
           <div class="dialog-field">
             <input id="configBackgroundTypeNone" type="radio" style="width:auto;" name="background_type" value="none">
@@ -104,19 +110,19 @@
           </div>
           <div class="dialog-field">
             <label for="configColorBackground">Background</label>
-            <input id="configColorBackground" type="color" name="color_background" required>
+            <input id="configColorBackground" type="color" name="color_background" value="{{ .config.Color_background }}" required>
           </div>
           <div class="dialog-field">
             <label for="configColorForeground">Foreground</label>
-            <input id="configColorForeground" type="color" name="color_foreground" required>
+            <input id="configColorForeground" type="color" name="color_foreground" value="{{ .config.Color_foreground }}" required>
           </div>
           <div class="dialog-field">
             <label for="configColorItems">Items</label>
-            <input id="configColorItems" type="color" name="color_items" required>
+            <input id="configColorItems" type="color" name="color_items" value="{{ .config.Color_items }}" required>
           </div>
           <div class="dialog-field">
             <label for="configColorBorders">Borders</label>
-            <input id="configColorBorders" type="color" name="color_borders" required>
+            <input id="configColorBorders" type="color" name="color_borders" value="{{ .config.Color_borders }}" required>
           </div>
         </fieldset>
       </div>
@@ -127,22 +133,33 @@
             <label for="configCpuTempSensor">CPU Temp Sensor</label>
             <select id="configCpuTempSensor" name="cpu_temp_sensor">
               <option value="">Don't show</option>
+              {{ $Cpu_temp_sensor := .config.Cpu_temp_sensor }}
+              {{ range .sensors }}
+              <optgroup label="{{ .Name }}">
+                {{ range .Sensors }}
+                  {{ $SensorName := .Name }}
+                  {{ range .Readings }}
+                  <option value="{{ $SensorName }}"{{ if eq $SensorName $Cpu_temp_sensor }} selected="selected"{{ end }}>{{ $SensorName }} ({{ .Name }}): {{ .Value }}</option>
+                  {{ end }}
+                {{ end }}
+              </optgroup>
+              {{ end }}
             </select>
           </div>
           <div class="dialog-field">
-            <input id="configShowFreeRam" type="checkbox" style="width:auto;" name="show_free_ram">
+            <input id="configShowFreeRam" type="checkbox" style="width:auto;" name="show_free_ram" value="1" {{ if .config.Show_free_ram }}checked{{ end }}>
             <label for="configShowFreeRam" style="display:inline-block">Show Free RAM</label>
           </div>
           <div class="dialog-field">
-            <input id="configShowFreeSwap" type="checkbox" style="width:auto;" name="show_free_swap">
+            <input id="configShowFreeSwap" type="checkbox" style="width:auto;" name="show_free_swap" value="1" {{ if .config.Show_free_swap }}checked{{ end }}>
             <label for="configShowFreeSwap" style="display:inline-block">Show Free Swap</label>
           </div>
           <div class="dialog-field">
-            <input id="configShowPublicIp" type="checkbox" style="width:auto;" name="show_public_ip">
+            <input id="configShowPublicIp" type="checkbox" style="width:auto;" name="show_public_ip" value="1" {{ if .config.Show_public_ip }}checked{{ end }}>
             <label for="configShowPublicIp" style="display:inline-block">Show Public IP</label>
           </div>
           <div class="dialog-field">
-            <input id="configShowFreeSpace" type="checkbox" style="width:auto;" name="show_free_space">
+            <input id="configShowFreeSpace" type="checkbox" style="width:auto;" name="show_free_space" value="1" {{ if .config.Show_free_space }}checked{{ end }}>
             <label for="configShowFreeSpace" style="display:inline-block">Show Free Space</label>
           </div>
         </fieldset>
@@ -219,42 +236,6 @@
       });
     }
 
-    function loadConfig(data) {
-      $.ajax({
-        url: '/config',
-        success: (data) => {
-          applyConfig(data.config);
-        }
-      });
-    }
-
-    function applyConfig(config) {
-      if (config.Icon) {
-        $('#icon').attr('src', '/data/icons/' + config.Icon)
-                  .css('display', 'inline-block');
-      }
-      else {
-        $('#icon').css('display', 'none');
-      }
-
-      $('#title').html(config.Title);
-
-      if (config.Background_image) {
-        $('body').css('background-image', 'url(/data/backgrounds/' + config.Background_image + ')');
-      }
-      else {
-        $('body').css('background-image', 'none');
-      }
-
-      $('.ui-resizable-n, .ui-resizable-e, .ui-resizable-s, .ui-resizable-w, .ui-widget-content').css('background-color', config.Color_items);
-      $('body').css('background-color', config.Color_background);
-      $('body, .ui-dialog-title, .ui-dialog-content, .ui-dialog-buttonpane, #login, #logout, .item a').css('color', config.Color_foreground);
-      $('#title, .list h2, #system-info, div.weather, #login, #logout, div.details').css('text-shadow', '2px 2px ' + config.Color_background);
-      $('.ui-dialog-title, .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane').css('background-color', config.Color_borders);
-      $('.item').each((i, el) => { el.style.backgroundColor = 'rgba(from ' + config.Color_items + ' r g b / 0.75)'; });
-      $('.ui-dialog, .ui-draggable-handle, .ui-dialog-content fieldset, .ui-widget-content, .item').css('border-color', config.Color_items);
-    }
-
     {{ if .FLIMSY_WEATHER_API_KEY }}
     function updateWeather() {
       $.ajax({
@@ -282,40 +263,7 @@
     }
     {{ end }}
 
-    function updateSystemInfo()
-    {
-      // TODO: Use htmx for that
-      $.ajax({
-        url: '/systemInfo',
-        success: (data) => {
-          $('#system-info').html(data);
-        }
-      });
-    }
-
-    function updateOnlineStatus() {
-      $('div.item').each((i, item) => {
-        if ($(item).hasClass('addItem')) return;
-        const href = $(item).find('div.details div.href').text();
-        $.ajax({
-          url: '/onlineStatus?href=' + href,
-          success: (data) => {
-            const i = $(item).find('div.details i.status');
-            if (data.online) {
-              i.addClass('online').removeClass('offline');
-              i.attr('title', 'Online');
-            }
-            else {
-              i.addClass('offline').removeClass('online');
-              i.attr('title', data.error)
-            }
-          }
-        })
-      });
-    }
-
     $('document').ready(() => {
-
       {{ if .session_message }}
         alert("{{ .session_message }}");
       {{ end }}
@@ -343,7 +291,7 @@
             });
           },
           "Cancel": () => {
-            $('#loginDialog').dialog('close');
+             $('#loginDialog').dialog('close');
           },
         }
       });
@@ -389,42 +337,7 @@
 
       {{ if .IsLoggedIn }}
         $('#configButton').click(() => {
-          $.ajax({
-            url: 'config',
-            success: (data) => {
-              $('#configTitle').val(data.config.Title);
-              $('#configIcon').val(data.config.Icon);
-
-              $('#configBackgroundImage').empty();
-              data.backgrounds.forEach((b) => {
-                $('#configBackgroundImage').append($('<option value="' + b + '">' + b + '</option>'));
-              })
-              $('#configBackgroundImage').val(data.config.Background_image);
-              $('#configBackgroundImage').trigger('change');
-              $('#configColorBackground').val(data.config.Color_background);
-              $('#configColorForeground').val(data.config.Color_foreground);
-              $('#configColorItems').val(data.config.Color_items);
-              $('#configColorBorders').val(data.config.Color_borders);
-
-              $('#configCpuTempSensor').empty();
-              for (const chip of data.sensors) {
-                $('#configCpuTempSensor').append($('<optgroup label="' + chip.Name + '"></optgroup>'));
-                for (const sensor of chip.Sensors) {
-                  for (const reading of sensor.Readings) {
-                    if (reading.Name.endsWith('_input')) {
-                      $('#configCpuTempSensor').append($('<option value="' + sensor.Name + '">&nbsp;' + sensor.Name + ' (' + reading.Name + '): ' + reading.Value + '</option>'));
-                    }
-                  }
-                }
-              }
-              $('#configCpuTempSensor').val(data.config.Cpu_temp_sensor);
-              $('#configShowFreeRam').prop('checked', data.config.Show_free_ram);
-              $('#configShowFreeSwap').prop('checked', data.config.Show_free_swap);
-              $('#configShowPublicIp').prop('checked', data.config.Show_public_ip);
-              $('#configShowFreeSpace').prop('checked', data.config.Show_free_space);
-              $('#configDialog').dialog('open');
-            }
-          })
+          $('#configDialog').dialog('open');
         });
 
         $('#configDialog').dialog({
@@ -443,8 +356,7 @@
                 data: $('#configDialog form').serialize(),
                 success: (data) => {
                   if (data.success) {
-                    applyConfig(data.config);
-                    $('#configDialog').dialog('close');
+                    location.reload();
                   }
                   else {
                     alert(data.error);
@@ -598,12 +510,7 @@
         });
       {{ end }}
 
-      loadConfig();
-      {{ if .FLIMSY_WEATHER_API_KEY }}
-      updateWeather();
-      {{ end }} 
-      updateSystemInfo();
-      updateOnlineStatus();
+      {{ if .FLIMSY_WEATHER_API_KEY }}updateWeather();{{ end }} 
     });
   </script>
 

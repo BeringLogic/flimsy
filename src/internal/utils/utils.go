@@ -6,6 +6,13 @@ import (
 )
 
 
+type SelectOption struct {
+  Value string
+  Label string
+  Selected bool
+}
+
+
 func GetEnv(key, def string) string {
   if value, exists := os.LookupEnv(key); !exists {
     return def
