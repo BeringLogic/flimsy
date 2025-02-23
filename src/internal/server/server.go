@@ -50,6 +50,7 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
   flimsyServer.router.HandleFunc("GET /login", flimsyServer.GET_login)
   flimsyServer.router.HandleFunc("POST /login", flimsyServer.POST_login)
   flimsyServer.router.HandleFunc("GET /logout", flimsyServer.GET_logout)
+  flimsyServer.router.HandleFunc("GET /config", flimsyServer.GET_config)
 
   adminRouter := http.NewServeMux()
   adminRouter.HandleFunc("POST /config", flimsyServer.POST_config)
@@ -83,10 +84,6 @@ func (flimsyServer *FlimsyServer) executeTemplate(templateName string, w *http.R
 }
 
 func (flimsyServer *FlimsyServer) GET_root(w http.ResponseWriter, r *http.Request) {
-  sensors, err := systemInfo.GetSensors(); if err != nil {
-    flimsyServer.log.Print(err.Error())
-  }
-
   data := map[string]interface{}{
     "IsAuthDisabled" : utils.GetEnv("FLIMSY_USERNAME", "") == "" && utils.GetEnv("FLIMSY_PASSWORD", "") == "",
     "IsLoggedIn" : r.Context().Value(middleware.IsAuthenticatedContextKey).(bool),
@@ -97,8 +94,6 @@ func (flimsyServer *FlimsyServer) GET_root(w http.ResponseWriter, r *http.Reques
     "FLIMSY_WEATHER_LANGUAGE" : utils.GetEnv("FLIMSY_WEATHER_LANGUAGE", "en"),
     "config" : flimsyServer.storage.Config,
     "listsAndItems" : flimsyServer.storage.ListsAndItems,
-    "backgrounds" : utils.GetBackgrounds(),
-    "sensors" : sensors,
   }
 
   session_message = ""
@@ -221,6 +216,21 @@ func (flimsyServer *FlimsyServer) GET_logout(w http.ResponseWriter, r *http.Requ
   flimsyServer.log.Print("User logged out")
 }
 
+func (flimsyServer *FlimsyServer) GET_config(w http.ResponseWriter, r *http.Request) {
+  backgrounds, err := utils.GetBackgrounds(); if err != nil {
+    flimsyServer.log.Print(err.Error())
+  }
+  sensors, err := systemInfo.GetSensors(); if err != nil {
+    flimsyServer.log.Print(err.Error())
+  }
+
+  flimsyServer.executeTemplate("configDialog.tmpl", &w, map[string]interface{}{
+    "config" : flimsyServer.storage.Config,
+    "backgrounds" : backgrounds,
+    "sensors" : sensors,
+  })
+}
+
 func (flimsyServer *FlimsyServer) POST_config(w http.ResponseWriter, r *http.Request) {
   flimsyServer.storage.Config.Icon = r.FormValue("icon")
   flimsyServer.storage.Config.Title = r.FormValue("title")
@@ -291,25 +301,16 @@ func (flimsyServer *FlimsyServer) POST_config(w http.ResponseWriter, r *http.Req
 
   if err := flimsyServer.storage.SaveConfig(); err != nil {
     flimsyServer.log.Print(err.Error())
-    json.NewEncoder(w).Encode(map[string]interface{}{
-      "success" : false,
-      "error" : err.Error(),
-    })
+    flimsyServer.executeTemplate("500.tmpl", &w, nil)
+    w.WriteHeader(http.StatusInternalServerError)
+    return
   }
 
   if flimsyServer.storage.Config.Icon != "" {
     err := icons.DownloadIcon(flimsyServer.storage.Config.Icon); if err != nil {
       flimsyServer.log.Print(err.Error())
-      json.NewEncoder(w).Encode(map[string]interface{}{
-        "success" : false,
-        "error" : err.Error(),
-      })
-      return
     }
   }
 
-  json.NewEncoder(w).Encode(map[string]interface{}{
-    "success" : true,
-    "config" : flimsyServer.storage.Config,
-  })
+  http.Redirect(w, r, "/", http.StatusSeeOther)
 }
