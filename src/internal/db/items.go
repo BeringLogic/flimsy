@@ -1,5 +1,6 @@
 package db
 
+
 type Item struct {
   Id int
   List_id int
@@ -8,6 +9,7 @@ type Item struct {
   Icon string
   Position int
 }
+
 
 func (flimsyDB *FlimsyDB) LoadItems() (*[]Item, error) {
   Items := []Item{}

@@ -1,11 +1,13 @@
 package db
 
+
 type List struct {
   Id int
   Title string
   Number_of_rows int
   Position int
 }
+
 
 func (flimsyDB *FlimsyDB) LoadLists() (*[]List, error) {
   Lists := []List{}
