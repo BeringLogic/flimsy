@@ -41,6 +41,8 @@
 * [ ] AJAX for everything?
 * [ ] HTMX ?
 * [ ] Update system info and weather every X minutes
+* [ ] CSRF
+* [ ] rename href => url all over the place
 
 # Switch to golang
 * [x] golang base image
@@ -74,7 +76,7 @@
 * [ ] Find the proper way to deal with Dev and Production. (php-production.ini, max_execution_time, grep max_input_time)
 
 # Bugs
-- Login feedback should display AFTER the config is applied
 - http: superfluous response.WriteHeader call from github.com/BeringLogic/flimsy/internal/middleware.(*wrappedWriter).WriteHeader (logging.go:19)
   That call isn't superfluous, it's to set the error code in GET_login
 - Border above buttons in the config dialog is too thick
+- Error in console when clicking a list when logged in

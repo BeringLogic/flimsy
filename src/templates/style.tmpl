@@ -1,9 +1,10 @@
 
 body {
-  background-color: #1e1e2e;
+  background-color: {{ .Color_background }};
+  background-image: url(/data/backgrounds/{{ .Background_image }});
   background-repeat: no-repeat;
   background-size: cover;
-  color: #cdd6f4;
+  color: {{ .Color_foreground }};
   padding: 50px;
 }
 
@@ -27,7 +28,7 @@ header {
   display: inline-block;
   margin: 0;
   font-size: 4em;
-  text-shadow: 0 0 2px #1e1e2e;
+  text-shadow: 0 0 2px {{ .Color_background }};
 }
 
 #configButton {
@@ -38,7 +39,7 @@ header {
 #login,
 #logout {
   vertical-align: -20px;
-  color: #cdd6f4;
+  color: {{ .Color_foreground }};
   margin: 0 20px;
 }
 
@@ -93,7 +94,7 @@ div.weather,
 div.details,
 a.login,
 a.logout {
-  text-shadow: 0 0 2px #1e1e2e;
+  text-shadow: 0 0 2px {{ .Color_background }};
 }
 
 /*
@@ -116,10 +117,10 @@ div.list div.items {
   div.item {
     display: inline-block;
     align-content: center;
-    border: 3px solid #6c7086;
+    border: 3px solid {{ .Color_borders }};
     border-radius: 5px;
     padding: 5px;
-    background-color: #11111b;
+    background-color: {{ .Color_items }};
     cursor: pointer;
   }
   

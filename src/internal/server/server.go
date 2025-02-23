@@ -1,21 +1,20 @@
 package server
 
-
 import (
-  "io"
-  "time"
-  "bytes"
-  "net/http"
-  "html/template"
-  "encoding/json"
+	"io"
+	"time"
+	"bytes"
+	"net/http"
+	"html/template"
+	"encoding/json"
 
-  "github.com/BeringLogic/flimsy/internal/auth"
-  "github.com/BeringLogic/flimsy/internal/icons"
-  "github.com/BeringLogic/flimsy/internal/utils"
-  "github.com/BeringLogic/flimsy/internal/logger"
-  "github.com/BeringLogic/flimsy/internal/storage"
-  "github.com/BeringLogic/flimsy/internal/systemInfo"
-  "github.com/BeringLogic/flimsy/internal/middleware"
+	"github.com/BeringLogic/flimsy/internal/auth"
+	"github.com/BeringLogic/flimsy/internal/icons"
+	"github.com/BeringLogic/flimsy/internal/logger"
+	"github.com/BeringLogic/flimsy/internal/middleware"
+	"github.com/BeringLogic/flimsy/internal/storage"
+	"github.com/BeringLogic/flimsy/internal/systemInfo"
+	"github.com/BeringLogic/flimsy/internal/utils"
 )
 
 
@@ -44,7 +43,7 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
   flimsyServer.router.Handle("GET /data/icons/", http.StripPrefix("/data/icons", http.FileServer(http.Dir("/data/icons"))))
   flimsyServer.router.Handle("GET /data/backgrounds/", http.StripPrefix("/data/backgrounds", http.FileServer(http.Dir("/data/backgrounds"))))
   flimsyServer.router.HandleFunc("GET /{$}", flimsyServer.GET_root)
-  flimsyServer.router.HandleFunc("GET /config", flimsyServer.GET_config)
+  flimsyServer.router.HandleFunc("GET /style.css", flimsyServer.GET_style)
   flimsyServer.router.HandleFunc("GET /onlineStatus", flimsyServer.GET_onlineStatus)
   flimsyServer.router.HandleFunc("GET /systemInfo", flimsyServer.GET_systemInfo)
   flimsyServer.router.HandleFunc("GET /login", flimsyServer.GET_login)
@@ -83,6 +82,10 @@ func (flimsyServer *FlimsyServer) executeTemplate(templateName string, w *http.R
 }
 
 func (flimsyServer *FlimsyServer) GET_root(w http.ResponseWriter, r *http.Request) {
+  sensors, err := systemInfo.GetSensors(); if err != nil {
+    flimsyServer.log.Print(err.Error())
+  }
+
   data := map[string]interface{}{
     "IsAuthDisabled" : utils.GetEnv("FLIMSY_USERNAME", "") == "" && utils.GetEnv("FLIMSY_PASSWORD", "") == "",
     "IsLoggedIn" : r.Context().Value(middleware.IsAuthenticatedContextKey).(bool),
@@ -93,6 +96,8 @@ func (flimsyServer *FlimsyServer) GET_root(w http.ResponseWriter, r *http.Reques
     "FLIMSY_WEATHER_LANGUAGE" : utils.GetEnv("FLIMSY_WEATHER_LANGUAGE", "en"),
     "config" : flimsyServer.storage.Config,
     "listsAndItems" : flimsyServer.storage.ListsAndItems,
+    "backgrounds" : utils.GetBackgrounds(),
+    "sensors" : sensors,
   }
 
   session_message = ""
@@ -100,29 +105,28 @@ func (flimsyServer *FlimsyServer) GET_root(w http.ResponseWriter, r *http.Reques
   flimsyServer.executeTemplate("index.tmpl", &w, data)
 }
 
-func (flimsyServer *FlimsyServer) GET_config(w http.ResponseWriter, r *http.Request) {
-  w.Header().Set("Content-Type", "application/json")
-
-  configResponse := make(map[string]interface{})
-  configResponse["config"] = flimsyServer.storage.Config
-  configResponse["backgrounds"] = utils.GetBackgrounds()
-
-  var err error
-  if configResponse["sensors"], err = systemInfo.GetSensors(); err != nil {
-    flimsyServer.log.Print(err.Error())
-  }
-
-  json.NewEncoder(w).Encode(configResponse)
+func (flimsyServer *FlimsyServer) GET_style(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "text/css")
+  flimsyServer.executeTemplate("style.tmpl", &w, flimsyServer.storage.Config)
 }
 
 func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *http.Request) {
   href := r.URL.Query().Get("href")
-  w.Header().Set("Content-Type", "application/json")
   
   resp, err := http.Get(href); if err != nil {
-    json.NewEncoder(w).Encode(map[string]interface{}{
-      "online" : false,
-      "error" : err.Error(),
+    flimsyServer.executeTemplate("onlineStatus.tmpl", &w, map[string]string{
+      "class" : "offline",
+      "color" : "red",
+      "title" : err.Error(),
+    })
+    return
+  }
+
+  if resp.StatusCode != 200 {
+    flimsyServer.executeTemplate("onlineStatus.tmpl", &w, map[string]string{
+      "class" : "offline",
+      "color" : "red",
+      "title" : err.Error(),
     })
     return
   }
@@ -130,8 +134,10 @@ func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *htt
   _, _ = io.ReadAll(resp.Body);
   resp.Body.Close()
 
-  json.NewEncoder(w).Encode(map[string]interface{}{
-    "online" : true,
+  flimsyServer.executeTemplate("onlineStatus.tmpl", &w, map[string]string{
+    "class" : "online",
+    "color" : "green",
+    "title" : "Online",
   })
 }
 
