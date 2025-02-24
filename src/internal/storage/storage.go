@@ -11,14 +11,14 @@ import (
 type FlimsyStorage struct {
   db *db.FlimsyDB
   Config *db.Config
-  Lists *[]db.List
-  Items *[]db.Item
-  ListsAndItems *[]listAndItems
+  Lists map[int]*db.List
+  Items map[int]*db.Item
+  ListsAndItems map[int]*listAndItems
 }
 
 type listAndItems struct {
   List *db.List
-  Items []*db.Item
+  Items map[int]*db.Item
 }
 
 
@@ -59,20 +59,29 @@ func (storage *FlimsyStorage) Init() error {
       return errors.Join(LoadItemsError, err);
   }
 
-  AllListsAndItems := make([]listAndItems, 0)
-  for _, list := range *storage.Lists {
-    var lai listAndItems
-    lai.List = &list
-    for _, item := range *storage.Items {
-      if item.List_id == list.Id {
-        lai.Items = append(lai.Items, &item)
-      }
-    }
-    AllListsAndItems = append(AllListsAndItems, lai)
-  }
-  storage.ListsAndItems = &AllListsAndItems
+  storage.ListsAndItems = storage.getAllListsAndItems()
 
   return nil
+}
+
+func (flimsyStorage *FlimsyStorage) getAllListsAndItems() map[int]*listAndItems {
+  AllListsAndItems := make(map[int]*listAndItems, 0)
+  for _, list := range flimsyStorage.Lists {
+    lai := listAndItems {
+      List: list,
+      Items: make(map[int]*db.Item),
+    }
+
+    for _, item := range flimsyStorage.Items {
+      if item.List_id == list.Id {
+        lai.Items[item.Id] = item
+      }
+    }
+
+    AllListsAndItems[list.Id] = &lai
+  }
+  
+  return AllListsAndItems
 }
 
 func (flimsyStorage *FlimsyStorage) Close() {
@@ -81,4 +90,12 @@ func (flimsyStorage *FlimsyStorage) Close() {
 
 func (flimsyStorage *FlimsyStorage) SaveConfig() error {
   return flimsyStorage.db.SaveConfig(flimsyStorage.Config)
+}
+
+func (flimsyStorage *FlimsyStorage) SaveList(list *db.List) (*listAndItems, error) {
+  if err := flimsyStorage.db.SaveList(list); err != nil {
+    return nil, err
+  }
+
+  return flimsyStorage.ListsAndItems[list.Id], nil
 }

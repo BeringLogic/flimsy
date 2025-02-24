@@ -30,6 +30,8 @@
       {{ if .IsLoggedIn }}
         <button id="configButton" hx-get="/config" hx-target="body" hx-swap="beforeend">⚙️</button>
         <a id="logout" href="logout">Logout</a>
+      {{ else if .IsAuthDisabled }}
+        <a id="login" href="login">Login</a>
       {{ else }}
         <a id="login" href="#" hx-get="/login" hx-target="body" hx-swap="beforeend">Login</a>
       {{ end }}
@@ -46,8 +48,14 @@
   </header>
 
   <div id="lists" style="clear:both;">
-  {{ range .listsAndItems }}
-    {{ template "list.tmpl" . }}
+  {{ if .IsLoggedIn }}
+    {{ range .listsAndItems }}
+      {{ template "list.loggedin.tmpl" . }}
+    {{ end }}
+  {{ else }}
+    {{ range .listsAndItems }}
+      {{ template "list.tmpl" . }}
+    {{ end }}
   {{ end }}
   </div>
 
@@ -139,13 +147,6 @@
              $('#loginDialog').dialog('close');
           },
         }
-      });
-      $('#login').click(() => {
-        {{ if .IsAuthDisabled }}
-          window.location = 'login';
-        {{ else }}
-          $('#loginDialog').dialog('open');
-        {{ end }}
       });
 
       $('div.item').click((e) => {

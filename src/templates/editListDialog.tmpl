@@ -1,12 +1,18 @@
-<div id="editListDialog" class="dialog">
-  <form method="post">
-    <div class="dialog-field">
-      <label for="listTitle">Title</label>
-      <input id="listTitle" type="text" name="title" required>
-    </div>
-    <div class="dialog-field">
-      <label for="listRows">Number of Rows</label>
-      <input id="listRows" type="number" min="1" name="number_of_rows" required>
-    </div>
-  </form>
+<div id="modal" _="on closeModal add .closing then wait for animationend then remove me">
+	<div class="modal-content">
+    <form hx-patch="/list/{{ .Id }}" hx-target="#list_{{ .Id }}" hx-swap="outerHTML">
+      <div class="dialog-field">
+        <label for="listTitle">Title</label>
+        <input id="listTitle" type="text" name="title" value="{{ .Title }}" required>
+      </div>
+      <div class="dialog-field">
+        <label for="listRows">Number of Rows</label>
+        <input id="listRows" type="number" min="1" name="number_of_rows" value="{{ .Number_of_rows }}" required>
+      </div>
+      <div class="dialog-buttons">
+        <button type="submit" _="on click trigger closeModal">Save</button>
+        <button type="button" _="on click trigger closeModal">Cancel</button>
+      </div>
+    </form>
+  </div>
 </div>

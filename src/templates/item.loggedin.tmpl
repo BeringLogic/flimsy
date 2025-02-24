@@ -1,0 +1,9 @@
+<div class="item" id="item_{{ .Id }}" hx-get="/item/{{ .Id }}" hx-target="body" hx-swap="beforeend">
+  <div class="iconDiv">
+    <img class="icon" src="/data/icons/{{ .Icon }}" />
+  </div>
+  <div class="details">
+    <div class="title">{{ .Title }}</div>
+    <div class="url">{{ .Url }}</div>
+  </div>
+</div>

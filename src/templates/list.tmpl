@@ -4,8 +4,5 @@
     {{ range .Items }}
       {{ template "item.tmpl" . }} 
     {{ end }}
-    {{/* TODO: if .IsLoggedIn */}}
-      <div class="item addItem"><button id="addItem_{{ .List.Id }}">➕ Add Item</button></div>
-    {{/* end */}}
   </div>
 </div>

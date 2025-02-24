@@ -11,8 +11,8 @@ type Item struct {
 }
 
 
-func (flimsyDB *FlimsyDB) LoadItems() (*[]Item, error) {
-  Items := []Item{}
+func (flimsyDB *FlimsyDB) LoadItems() (map[int]*Item, error) {
+  Items := make(map[int]*Item);
 
   rows, err := flimsyDB.sqlDb.Query("SELECT * FROM item"); if err != nil {
     return nil, err
@@ -23,9 +23,9 @@ func (flimsyDB *FlimsyDB) LoadItems() (*[]Item, error) {
     if err = rows.Scan(&item.Id, &item.List_id, &item.Title, &item.Url, &item.Icon, &item.Position); err != nil {
       return nil, err
     }
-    Items = append(Items, item)
+    Items[item.Id] = &item
   }
 
-  return &Items, nil
+  return Items, nil
 }
 

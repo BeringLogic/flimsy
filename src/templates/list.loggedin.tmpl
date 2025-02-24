@@ -1,0 +1,9 @@
+<div class="list" id="list_{{ .List.Id }}">
+  <h2 hx-get="/list/{{ .List.Id }}" hx-target="body" hx-swap="beforeend">{{ .List.Title }}</h2>
+  <div class="items" style="grid-template-columns: repeat({{ .List.Number_of_rows }}, 1fr);">
+    {{ range .Items }}
+      {{ template "item.loggedin.tmpl" . }} 
+    {{ end }}
+    <div class="item addItem"><button id="addItem_{{ .List.Id }}">➕ Add Item</button></div>
+  </div>
+</div>
