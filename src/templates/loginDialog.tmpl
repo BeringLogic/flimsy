@@ -1,12 +1,23 @@
-<div id="loginDialog" class="dialog">
-  <form action="login" method="post">
-    <div class="dialog-field">
-      <label for="username">Username</label>
-      <input id="username" type="text" name="username" required>
-    </div>
-    <div class="dialog-field">
-      <label for="password">Password</label>
-      <input id="password" type="password" name="password" required>
-    </div>
-  </form>
+<div id="modal" _="on closeModal add .closing then wait for animationend then remove me">
+	<div class="modal-content">
+    <form hx-post="/login" hx-target="#modal" hx-swap="outerHTML">
+      <div class="dialog-field">
+        <label for="username">Username</label>
+        <input id="username" type="text" name="username" autofocus required>
+      </div>
+      <div class="dialog-field">
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password" required>
+      </div>
+      {{ if .error }}
+      <div class="dialog-field">
+        <span style="color: red; font-weight: bold">{{ .error }}</span>
+      </div>
+      {{ end }}
+      <div class="dialog-buttons">
+        <button type="submit">Save</button>
+        <button type="button" _="on click trigger closeModal">Cancel</button>
+      </div>
+    </form>
+  </div>
 </div>

@@ -31,7 +31,7 @@
         <button id="configButton" hx-get="/config" hx-target="body" hx-swap="beforeend">⚙️</button>
         <a id="logout" href="logout">Logout</a>
       {{ else }}
-        <a id="login" href="#">Login</a>
+        <a id="login" href="#" hx-get="/login" hx-target="body" hx-swap="beforeend">Login</a>
       {{ end }}
       <div id="system-info" hx-get="/systemInfo" hx-trigger="load"></div>
       {{ if .FLIMSY_WEATHER_API_KEY }}
