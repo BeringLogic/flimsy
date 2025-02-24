@@ -7,7 +7,6 @@ import (
 	"bytes"
 	"net/http"
 	"html/template"
-	"encoding/json"
 
 	"github.com/BeringLogic/flimsy/internal/auth"
 	"github.com/BeringLogic/flimsy/internal/icons"
@@ -172,7 +171,7 @@ func (flimsyServer *FlimsyServer) GET_login(w http.ResponseWriter, r *http.Reque
     session_message = "Authentication is disabled. You can enable it by setting the environment variables FLIMSY_USERNAME and FLIMSY_PASSWORD.\n\n- Click on the gear button to customize the appearance\n- Click on items and lists to edit them\n- Drag & drop to reorder."
     http.Redirect(w, r, "/", http.StatusSeeOther)
   } else {
-    http.Error(w, "Authentication is enabled. You must POST credentials to authenticate.", http.StatusBadRequest)
+    flimsyServer.executeTemplate("loginDialog.tmpl", &w, nil)
   }
 }
 
@@ -182,18 +181,16 @@ func (flimsyServer *FlimsyServer) POST_login(w http.ResponseWriter, r *http.Requ
   username := r.FormValue("username")
   password := r.FormValue("password")
   if username != utils.GetEnv("FLIMSY_USERNAME", "") || password != utils.GetEnv("FLIMSY_PASSWORD", "") {
-    json.NewEncoder(w).Encode(map[string]interface{}{
-      "success" : false,
-      "error" : "Invalid username or password.",
+    flimsyServer.log.Print("Invalid username or password")
+    flimsyServer.executeTemplate("loginDialog.tmpl", &w, map[string]string{
+      "error" : "Invalid username or password",
     })
     return
   }
 
   flimsyServer.logUserIn(w)
   session_message = "You are now logged in!\n- Click on the gear button to customize the appearance\n- Click on items and lists to edit them\n- Drag & drop to reorder."
-  json.NewEncoder(w).Encode(map[string]interface{}{
-    "success" : true,
-  })
+  w.Header().Set("HX-Location", "/")
 }
 
 func (flimsyServer *FlimsyServer) GET_logout(w http.ResponseWriter, r *http.Request) {

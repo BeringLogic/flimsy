@@ -182,7 +182,7 @@ div.addItem {
 	bottom: 0px;
 	left:0px;
 	right:0px;
-	background-color:rgba(0,0,0,0.5);
+	background-color:rgba(0,0,0,0.8);
 	z-index:1000;
 
 	/* Flexbox centers the .modal-content vertically and horizontally */
@@ -194,17 +194,6 @@ div.addItem {
 	animation-name: fadeIn;
 	animation-duration:150ms;
 	animation-timing-function: ease;
-}
-
-#modal > .modal-underlay {
-	/* underlay takes up the entire viewport. This is only
-	required if you want to click to dismiss the popup */
-	position: absolute;
-	z-index: -1;
-	top:0px;
-	bottom:0px;
-	left: 0px;
-	right: 0px;
 }
 
 #modal > .modal-content {
@@ -280,10 +269,11 @@ div.addItem {
     width: 100%;
   }
   div.modal-content div.dialog-buttons {
+    margin-top: 20px;
     text-align: right;
   }
   div.modal-content div.dialog-buttons button {
-    margin-left: 10px;
+    margin-right: 10px;
     padding: 10px 20px;
   }
 
