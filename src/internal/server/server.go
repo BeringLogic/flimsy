@@ -1,10 +1,10 @@
 package server
 
-
 import (
 	"io"
 	"time"
 	"bytes"
+	"strconv"
 	"net/http"
 	"html/template"
 
@@ -53,6 +53,8 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
 
   adminRouter := http.NewServeMux()
   adminRouter.HandleFunc("POST /config", flimsyServer.POST_config)
+  adminRouter.HandleFunc("GET /list/{id}", flimsyServer.GET_list)
+  adminRouter.HandleFunc("PATCH /list/{id}", flimsyServer.PATCH_list)
   flimsyServer.router.Handle("/", middleware.MustBeAuthenticated(adminRouter))
 
   wrappedLogger := middleware.Logging(flimsyServer.log)
@@ -310,4 +312,66 @@ func (flimsyServer *FlimsyServer) POST_config(w http.ResponseWriter, r *http.Req
   }
 
   http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func (flimsyServer *FlimsyServer) GET_list(w http.ResponseWriter, r *http.Request) {
+  idString := r.PathValue("id")
+  if idString == "" {
+    flimsyServer.log.Print("Missing id")
+    http.Error(w, "Missing id", http.StatusBadRequest)
+    return
+  }
+
+  id, err := strconv.Atoi(idString); if err != nil {
+    flimsyServer.log.Print(err.Error())
+    http.Error(w, err.Error(), http.StatusBadRequest)
+    return
+  }
+
+  list, exists := flimsyServer.storage.Lists[id]; if !exists {
+    flimsyServer.log.Print("List not found")
+    http.Error(w, "List not found", http.StatusNotFound)
+    return
+  }
+
+  flimsyServer.executeTemplate("editListDialog.tmpl", &w, list)
+}
+
+func (flimsyServer *FlimsyServer) PATCH_list(w http.ResponseWriter, r *http.Request) {
+  idString := r.PathValue("id")
+  if idString == "" {
+    flimsyServer.log.Print("Missing id")
+    http.Error(w, "Missing id", http.StatusBadRequest)
+    return
+  }
+
+  id, err := strconv.Atoi(idString); if err != nil {
+    flimsyServer.log.Print(err.Error())
+    http.Error(w, err.Error(), http.StatusBadRequest)
+    return
+  }
+
+  list, exists := flimsyServer.storage.Lists[id]; if !exists {
+    flimsyServer.log.Print("List not found")
+    http.Error(w, "List not found", http.StatusNotFound)
+    return
+  }
+
+  list.Title = r.FormValue("title")
+
+  Number_of_rows_string := r.FormValue("number_of_rows")
+  list.Number_of_rows, err = strconv.Atoi(Number_of_rows_string); if err != nil {
+    flimsyServer.log.Print(err.Error())
+    http.Error(w, err.Error(), http.StatusBadRequest)
+    return
+  }
+
+  listAndItems, err := flimsyServer.storage.SaveList(list); if err != nil { 
+    flimsyServer.log.Print(err.Error())
+    flimsyServer.executeTemplate("500.tmpl", &w, nil)
+    w.WriteHeader(http.StatusInternalServerError)
+    return
+  }
+
+  flimsyServer.executeTemplate("list.loggedin.tmpl", &w, listAndItems)
 }
