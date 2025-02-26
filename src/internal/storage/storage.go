@@ -1,10 +1,9 @@
 package storage
 
-
 import (
-  "errors"
+	"errors"
 
-  "github.com/BeringLogic/flimsy/internal/db"
+	"github.com/BeringLogic/flimsy/internal/db"
 )
 
 
@@ -98,4 +97,8 @@ func (flimsyStorage *FlimsyStorage) SaveList(list *db.List) (*listAndItems, erro
   }
 
   return flimsyStorage.ListsAndItems[list.Id], nil
+}
+
+func (flimsyStorage *FlimsyStorage) SaveItem(item *db.Item) error {
+  return flimsyStorage.db.SaveItem(item)
 }

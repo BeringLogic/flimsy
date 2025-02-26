@@ -1,16 +1,22 @@
-<div id="editItemDialog" class="dialog">
-  <form method="post">
-    <div class="dialog-field">
-      <label for="itemTitle">Title</label>
-      <input id="itemTitle" type="text" name="title" required>
-    </div>
-    <div class="dialog-field">
-      <label for="itemUrl">URL</label>
-      <input id="itemUrl" type="text" name="url" required>
-    </div>
-    <div class="dialog-field">
-      <label for="itemIcon">Icon</label>
-      <input id="itemIcon" type="text" name="icon" required>
-    </div>
-  </form>
+<div id="modal" _="on closeModal add .closing then wait for animationend then remove me">
+	<div class="modal-content">
+    <form hx-patch="/item/{{ .Id }}" hx-target="#item_{{ .Id }}" hx-swap="outerHTML">
+      <div class="dialog-field">
+        <label for="itemTitle">Title</label>
+        <input id="itemTitle" type="text" name="title" value="{{ .Title }}" required>
+      </div>
+      <div class="dialog-field">
+        <label for="itemUrl">URL</label>
+        <input id="itemUrl" type="text" name="url" value="{{ .Url }}" required>
+      </div>
+      <div class="dialog-field">
+        <label for="itemIcon">Icon</label>
+        <input id="itemIcon" type="text" name="icon" value="{{ .Icon }}" required>
+      </div>
+      <div class="dialog-buttons">
+        <button type="submit" _="on click trigger closeModal">Save</button>
+        <button type="button" _="on click trigger closeModal">Cancel</button>
+      </div>
+    </form>
+  </div>
 </div>
