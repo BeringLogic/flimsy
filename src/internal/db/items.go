@@ -29,3 +29,7 @@ func (flimsyDB *FlimsyDB) LoadItems() (map[int]*Item, error) {
   return Items, nil
 }
 
+func (flimsyDB *FlimsyDB) SaveItem(item *Item) error {
+  _, err := flimsyDB.sqlDb.Exec("UPDATE item SET list_id = ?, title = ?, url = ?, icon = ?, position = ? WHERE id = ?", item.List_id, item.Title, item.Url, item.Icon, item.Position, item.Id)
+  return err
+}

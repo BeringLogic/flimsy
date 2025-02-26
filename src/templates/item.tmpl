@@ -1,10 +1,12 @@
 <div class="item" id="item_{{ .Id }}">
-  <div class="iconDiv">
-    <img class="icon" src="/data/icons/{{ .Icon }}" />
-  </div>
-  <div class="details">
-    <i class="status nf nf-oct-dot_fill" hx-get="/onlineStatus?url={{ .Url }}" hx-swap="outerHTML" hx-trigger="load"></i>
-    <div class="title">{{ .Title }}</div>
-    <div class="url">{{ .Url }}</div>
-  </div>
+  <a href="{{ .Url }}" target="_blank">
+    <div class="iconDiv">
+      <img class="icon" src="/data/icons/{{ .Icon }}" />
+    </div>
+    <div class="details">
+      <i class="status nf nf-oct-dot_fill" hx-get="/onlineStatus?url={{ .Url }}" hx-swap="outerHTML" hx-trigger="load"></i>
+      <div class="title">{{ .Title }}</div>
+      <div class="url">{{ .Url }}</div>
+    </div>
+  </a>
 </div>
