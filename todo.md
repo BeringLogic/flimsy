@@ -77,6 +77,11 @@
 
 # Bugs
 - http: superfluous response.WriteHeader call from github.com/BeringLogic/flimsy/internal/middleware.(*wrappedWriter).WriteHeader (logging.go:19)
-  That call isn't superfluous, it's to set the error code in GET_login
+  I get this if I do a w.Write() before w.WriteHeader() but not if I do http.Error() or flimsyServer.executeTemplate()
+  That call isn't superfluous, it's to set the error code
 - Border above buttons in the config dialog is too thick
 - Error in console when clicking a list when logged in
+- There's an item for list 5 in the DB. Deleting a list doesn't delete its items.
+- When logging in with auth disabled, it should mention it in the log
+- Clicking add item if the form is not valid should not close the dialog
+- Added items cannot be reordered
