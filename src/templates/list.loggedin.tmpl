@@ -4,6 +4,6 @@
     {{ range .Items }}
       {{ template "item.loggedin.tmpl" . }} 
     {{ end }}
-    <div class="item addItem"><button id="addItem_{{ .List.Id }}">➕ Add Item</button></div>
+    <div class="item addItem" hx-put="/item/{{ .List.Id }}" hx-target="body" hx-swap="beforeend"><button id="addItem_{{ .List.Id }}">➕ Add Item</button></div>
   </div>
 </div>

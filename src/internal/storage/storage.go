@@ -10,14 +10,14 @@ import (
 type FlimsyStorage struct {
   db *db.FlimsyDB
   Config *db.Config
-  Lists map[int]*db.List
-  Items map[int]*db.Item
-  ListsAndItems map[int]*listAndItems
+  Lists map[int64]*db.List
+  Items map[int64]*db.Item
+  ListsAndItems map[int64]*listAndItems
 }
 
 type listAndItems struct {
   List *db.List
-  Items map[int]*db.Item
+  Items map[int64]*db.Item
 }
 
 
@@ -63,12 +63,12 @@ func (storage *FlimsyStorage) Init() error {
   return nil
 }
 
-func (flimsyStorage *FlimsyStorage) getAllListsAndItems() map[int]*listAndItems {
-  AllListsAndItems := make(map[int]*listAndItems, 0)
+func (flimsyStorage *FlimsyStorage) getAllListsAndItems() map[int64]*listAndItems {
+  AllListsAndItems := make(map[int64]*listAndItems, 0)
   for _, list := range flimsyStorage.Lists {
     lai := listAndItems {
       List: list,
-      Items: make(map[int]*db.Item),
+      Items: make(map[int64]*db.Item),
     }
 
     for _, item := range flimsyStorage.Items {
@@ -99,6 +99,31 @@ func (flimsyStorage *FlimsyStorage) SaveList(list *db.List) (*listAndItems, erro
   return flimsyStorage.ListsAndItems[list.Id], nil
 }
 
+func (flimsyStorage *FlimsyStorage) AddItem(list_id int64, title string, url string, icon string) (*db.Item, error) {
+  item, err := flimsyStorage.db.AddItem(list_id, title, url, icon); if err != nil {
+    return nil, err
+  }
+
+  flimsyStorage.Items[item.Id] = item
+  flimsyStorage.ListsAndItems[list_id].Items[item.Id] = item
+
+  return item, nil
+}
+
 func (flimsyStorage *FlimsyStorage) SaveItem(item *db.Item) error {
   return flimsyStorage.db.SaveItem(item)
+}
+
+func (flimsyStorage *FlimsyStorage) DeleteItem(id int64) error {
+  if err := flimsyStorage.db.DeleteItem(id); err != nil {
+    return err
+  }
+
+  for _, listAndItems := range flimsyStorage.ListsAndItems {
+    if listAndItems.Items[id] != nil {
+      delete(listAndItems.Items, id)
+    }
+  }
+
+  return nil
 }
