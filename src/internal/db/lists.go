@@ -2,15 +2,15 @@ package db
 
 
 type List struct {
-  Id int
+  Id int64
   Title string
   Number_of_rows int
   Position int
 }
 
 
-func (flimsyDB *FlimsyDB) LoadLists() (map[int]*List, error) {
-  Lists := make(map[int]*List);
+func (flimsyDB *FlimsyDB) LoadLists() (map[int64]*List, error) {
+  Lists := make(map[int64]*List);
 
   rows, err := flimsyDB.sqlDb.Query("SELECT * FROM list"); if err != nil {
     return nil, err

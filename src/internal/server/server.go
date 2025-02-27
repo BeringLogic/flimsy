@@ -55,8 +55,10 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
   adminRouter.HandleFunc("POST /config", flimsyServer.POST_config)
   adminRouter.HandleFunc("GET /list/{id}", flimsyServer.GET_list)
   adminRouter.HandleFunc("PATCH /list/{id}", flimsyServer.PATCH_list)
+  adminRouter.HandleFunc("PUT /item/{list_id}", flimsyServer.PUT_item)
   adminRouter.HandleFunc("GET /item/{id}", flimsyServer.GET_item)
   adminRouter.HandleFunc("PATCH /item/{id}", flimsyServer.PATCH_item)
+  adminRouter.HandleFunc("DELETE /item/{id}", flimsyServer.DELETE_item)
   flimsyServer.router.Handle("/", middleware.MustBeAuthenticated(adminRouter))
 
   wrappedLogger := middleware.Logging(flimsyServer.log)
@@ -73,12 +75,20 @@ func (flimsyServer *FlimsyServer) Start() error {
   return http.ListenAndServe(":8080", flimsyServer.middlewareStack(flimsyServer.router))
 }
 
+func (flimsyServer *FlimsyServer) error(w http.ResponseWriter, statusCode int, errorMessage string) {
+  flimsyServer.log.Print(errorMessage)
+  flimsyServer.executeTemplate("error.tmpl", &w, map[string]string{
+    "header": http.StatusText(statusCode),
+    "error": errorMessage,
+  })
+  w.WriteHeader(statusCode)
+}
+
 func (flimsyServer *FlimsyServer) executeTemplate(templateName string, w *http.ResponseWriter, data interface{}) error {
   buffer := &bytes.Buffer{};
 
   if err := flimsyServer.templates.ExecuteTemplate(buffer, templateName, data); err != nil {
-    flimsyServer.log.Print(err.Error())
-    flimsyServer.templates.ExecuteTemplate(*w, "500.tmpl", nil)
+    flimsyServer.error(*w, http.StatusInternalServerError, err.Error())
     return err
   } else {
     buffer.WriteTo(*w)
@@ -298,12 +308,8 @@ func (flimsyServer *FlimsyServer) POST_config(w http.ResponseWriter, r *http.Req
     flimsyServer.storage.Config.Show_free_space = 1
   }
 
-  w.Header().Set("Content-Type", "application/json")
-
   if err := flimsyServer.storage.SaveConfig(); err != nil {
-    flimsyServer.log.Print(err.Error())
-    flimsyServer.executeTemplate("500.tmpl", &w, nil)
-    w.WriteHeader(http.StatusInternalServerError)
+    flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
 
@@ -324,15 +330,14 @@ func (flimsyServer *FlimsyServer) GET_list(w http.ResponseWriter, r *http.Reques
     return
   }
 
-  id, err := strconv.Atoi(idString); if err != nil {
+  id, err := strconv.ParseInt(idString, 10, 64); if err != nil {
     flimsyServer.log.Print(err.Error())
     http.Error(w, err.Error(), http.StatusBadRequest)
     return
   }
 
   list, exists := flimsyServer.storage.Lists[id]; if !exists {
-    flimsyServer.log.Print("List not found")
-    http.Error(w, "List not found", http.StatusNotFound)
+    flimsyServer.error(w, http.StatusNotFound, "List not found")
     return
   }
 
@@ -342,20 +347,17 @@ func (flimsyServer *FlimsyServer) GET_list(w http.ResponseWriter, r *http.Reques
 func (flimsyServer *FlimsyServer) PATCH_list(w http.ResponseWriter, r *http.Request) {
   idString := r.PathValue("id")
   if idString == "" {
-    flimsyServer.log.Print("Missing id")
-    http.Error(w, "Missing id", http.StatusBadRequest)
+    flimsyServer.error(w, http.StatusBadRequest, "Missing id")
     return
   }
 
-  id, err := strconv.Atoi(idString); if err != nil {
-    flimsyServer.log.Print(err.Error())
-    http.Error(w, err.Error(), http.StatusBadRequest)
+  id, err := strconv.ParseInt(idString, 10, 64); if err != nil {
+    flimsyServer.error(w, http.StatusBadRequest, err.Error())
     return
   }
 
   list, exists := flimsyServer.storage.Lists[id]; if !exists {
-    flimsyServer.log.Print("List not found")
-    http.Error(w, "List not found", http.StatusNotFound)
+    flimsyServer.error(w, http.StatusNotFound, "List not found")
     return
   }
 
@@ -363,38 +365,76 @@ func (flimsyServer *FlimsyServer) PATCH_list(w http.ResponseWriter, r *http.Requ
 
   Number_of_rows_string := r.FormValue("number_of_rows")
   list.Number_of_rows, err = strconv.Atoi(Number_of_rows_string); if err != nil {
-    flimsyServer.log.Print(err.Error())
-    http.Error(w, err.Error(), http.StatusBadRequest)
+    flimsyServer.error(w, http.StatusBadRequest, err.Error())
     return
   }
 
   listAndItems, err := flimsyServer.storage.SaveList(list); if err != nil { 
-    flimsyServer.log.Print(err.Error())
-    flimsyServer.executeTemplate("500.tmpl", &w, nil)
-    w.WriteHeader(http.StatusInternalServerError)
+    flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
 
   flimsyServer.executeTemplate("list.loggedin.tmpl", &w, listAndItems)
 }
 
-func (flimsyServer *FlimsyServer) GET_item(w http.ResponseWriter, r *http.Request) {
-  idString := r.PathValue("id")
-  if idString == "" {
-    flimsyServer.log.Print("Missing id")
-    http.Error(w, "Missing id", http.StatusBadRequest)
+func (flimsyServer *FlimsyServer) PUT_item(w http.ResponseWriter, r *http.Request) {
+  listIdString := r.PathValue("list_id")
+  if listIdString == "" {
+    flimsyServer.error(w, http.StatusBadRequest, "Missing list id")
     return
   }
 
-  id, err := strconv.Atoi(idString); if err != nil {
-    flimsyServer.log.Print(err.Error())
-    http.Error(w, err.Error(), http.StatusBadRequest)
+  confirm := r.FormValue("confirm")
+  if confirm != "true" {
+    flimsyServer.executeTemplate("addItemDialog.tmpl", &w, listIdString)
+    return
+  }
+
+  listId, err := strconv.ParseInt(listIdString, 10, 64); if err != nil {
+    flimsyServer.error(w, http.StatusBadRequest, err.Error())
+    return
+  }
+
+  title := r.FormValue("title")
+  if title == "" {
+    flimsyServer.error(w, http.StatusBadRequest, "Missing title")
+    return
+  }
+
+  url := r.FormValue("url")
+  if url == "" {
+    flimsyServer.error(w, http.StatusBadRequest, "Missing url")
+    return
+  }
+
+  icon := r.FormValue("icon")
+  if icon == "" {
+    flimsyServer.error(w, http.StatusBadRequest, "Missing icon")
+    return
+  }
+
+  item, err := flimsyServer.storage.AddItem(listId, title, url, icon); if err != nil {
+    flimsyServer.error(w, http.StatusInternalServerError, err.Error())
+    return
+  }
+
+  flimsyServer.executeTemplate("item.loggedin.tmpl", &w, item)
+}
+
+func (flimsyServer *FlimsyServer) GET_item(w http.ResponseWriter, r *http.Request) {
+  idString := r.PathValue("id")
+  if idString == "" {
+    flimsyServer.error(w, http.StatusBadRequest, "Missing id")
+    return
+  }
+
+  id, err := strconv.ParseInt(idString, 10, 64); if err != nil {
+    flimsyServer.error(w, http.StatusBadRequest, err.Error())
     return
   }
 
   item, exists := flimsyServer.storage.Items[id]; if !exists {
-    flimsyServer.log.Print("Item not found")
-    http.Error(w, "Item not found", http.StatusNotFound)
+    flimsyServer.error(w, http.StatusNotFound, "Item not found")
     return
   }
 
@@ -404,20 +444,17 @@ func (flimsyServer *FlimsyServer) GET_item(w http.ResponseWriter, r *http.Reques
 func (flimsyServer *FlimsyServer) PATCH_item(w http.ResponseWriter, r *http.Request) {
   idString := r.PathValue("id")
   if idString == "" {
-    flimsyServer.log.Print("Missing id")
-    http.Error(w, "Missing id", http.StatusBadRequest)
+    flimsyServer.error(w, http.StatusBadRequest, "Missing id")
     return
   }
 
-  id, err := strconv.Atoi(idString); if err != nil {
-    flimsyServer.log.Print(err.Error())
-    http.Error(w, err.Error(), http.StatusBadRequest)
+  id, err := strconv.ParseInt(idString, 10, 64); if err != nil {
+    flimsyServer.error(w, http.StatusBadRequest, err.Error())
     return
   }
 
   item, exists := flimsyServer.storage.Items[id]; if !exists {
-    flimsyServer.log.Print("Item not found")
-    http.Error(w, "Item not found", http.StatusNotFound)
+    flimsyServer.error(w, http.StatusNotFound, "Item not found")
     return
   }
 
@@ -426,11 +463,34 @@ func (flimsyServer *FlimsyServer) PATCH_item(w http.ResponseWriter, r *http.Requ
   item.Icon = r.FormValue("icon")
 
   if err := flimsyServer.storage.SaveItem(item); err != nil {
-    flimsyServer.log.Print(err.Error())
-    flimsyServer.executeTemplate("500.tmpl", &w, nil)
-    w.WriteHeader(http.StatusInternalServerError)
+    flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
 
   flimsyServer.executeTemplate("item.loggedin.tmpl", &w, item)
+}
+
+func (flimsyServer *FlimsyServer) DELETE_item(w http.ResponseWriter, r *http.Request) {
+  idString := r.PathValue("id")
+  if idString == "" {
+    flimsyServer.error(w, http.StatusBadRequest, "Missing id")
+    return
+  }
+
+  confirm := r.FormValue("confirm")
+
+  if confirm != "true" {
+    flimsyServer.executeTemplate("deleteItemDialog.tmpl", &w, idString)
+    return
+  }
+
+  id, err := strconv.ParseInt(idString, 10, 64); if err != nil {
+    flimsyServer.error(w, http.StatusBadRequest, err.Error())
+    return
+  }
+
+  if err := flimsyServer.storage.DeleteItem(id); err != nil {
+    flimsyServer.error(w, http.StatusInternalServerError, err.Error())
+    return
+  }
 }
