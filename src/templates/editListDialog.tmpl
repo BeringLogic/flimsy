@@ -10,6 +10,7 @@
         <input id="listRows" type="number" min="1" name="number_of_rows" value="{{ .Number_of_rows }}" required>
       </div>
       <div class="dialog-buttons">
+        <button type="button" hx-delete="/list/{{ .Id }}" hx-target="#modal" hx-swap="outerHTML">Delete</button>
         <button type="submit" _="on click trigger closeModal">Save</button>
         <button type="button" _="on click trigger closeModal">Cancel</button>
       </div>

@@ -1,16 +1,16 @@
 # TODO
-* [ ] Add list GUI
-* [ ] Add item GUI
-* [ ] Edit list
-* [ ] Edit item
-* [ ] Delete list
-* [ ] Delete item
+* [x] Add list GUI
+* [x] Add item GUI
+* [x] Edit list
+* [x] Edit item
+* [x] Delete list
+* [x] Delete item
 * [ ] Drag & Drop to reorder list
 * [ ] Drag & Drop to reorder items
 * [x] Make items clickable
 * [x] Login to edit
 * [x] Preserve icons aspect ratio
-* [ ] Deal with really long items
+* [x] Deal with really long items
 * [x] Weather widget
 * [x] Default colors based on Catppucchin-mocha
 * [x] Download icon when saving items and use local copy
@@ -42,7 +42,7 @@
 * [ ] HTMX ?
 * [ ] Update system info and weather every X minutes
 * [ ] CSRF
-* [ ] rename href => url all over the place
+* [x] rename href => url all over the place
 
 # Switch to golang
 * [x] golang base image
@@ -77,11 +77,8 @@
 
 # Bugs
 - http: superfluous response.WriteHeader call from github.com/BeringLogic/flimsy/internal/middleware.(*wrappedWriter).WriteHeader (logging.go:19)
-  I get this if I do a w.Write() before w.WriteHeader() but not if I do http.Error() or flimsyServer.executeTemplate()
+  I get this if I do a w.Write() before w.WriteHeader() but not if I do http.Error()? Looks like flimsyServer.executeTemplate is doing it too
   That call isn't superfluous, it's to set the error code
-- Border above buttons in the config dialog is too thick
-- Error in console when clicking a list when logged in
-- There's an item for list 5 in the DB. Deleting a list doesn't delete its items.
 - When logging in with auth disabled, it should mention it in the log
-- Clicking add item if the form is not valid should not close the dialog
+- Clicking add item if the form is not valid should not close the dialog (use on submit instead of on click?)
 - Added items cannot be reordered

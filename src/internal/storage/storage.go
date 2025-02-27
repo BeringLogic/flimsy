@@ -91,12 +91,43 @@ func (flimsyStorage *FlimsyStorage) SaveConfig() error {
   return flimsyStorage.db.SaveConfig(flimsyStorage.Config)
 }
 
+func (flimsyStorage *FlimsyStorage) AddList(title string, number_of_rows int) (*listAndItems, error) {
+  list, err := flimsyStorage.db.AddList(title, number_of_rows); if err != nil {
+    return nil, err
+  }
+
+  flimsyStorage.Lists[list.Id] = list
+  flimsyStorage.ListsAndItems[list.Id] = &listAndItems {
+    List: list,
+    Items: make(map[int64]*db.Item),
+  }
+
+  return flimsyStorage.ListsAndItems[list.Id], nil
+}
+
 func (flimsyStorage *FlimsyStorage) SaveList(list *db.List) (*listAndItems, error) {
   if err := flimsyStorage.db.SaveList(list); err != nil {
     return nil, err
   }
 
   return flimsyStorage.ListsAndItems[list.Id], nil
+}
+
+func (flimsyStorage *FlimsyStorage) DeleteList(id int64) error {
+  for _, item := range flimsyStorage.ListsAndItems[id].Items {
+    if err := flimsyStorage.DeleteItem(item.Id); err != nil {
+      return err
+    }
+  }
+
+  if err := flimsyStorage.db.DeleteList(id); err != nil {
+    return err
+  }
+
+  delete(flimsyStorage.ListsAndItems, id)
+  delete(flimsyStorage.Lists, id)
+
+  return nil
 }
 
 func (flimsyStorage *FlimsyStorage) AddItem(list_id int64, title string, url string, icon string) (*db.Item, error) {
@@ -124,6 +155,8 @@ func (flimsyStorage *FlimsyStorage) DeleteItem(id int64) error {
       delete(listAndItems.Items, id)
     }
   }
+
+  delete(flimsyStorage.Items, id)
 
   return nil
 }

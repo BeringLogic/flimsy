@@ -60,7 +60,7 @@
   </div>
 
   {{ if .IsLoggedIn }}
-    <button id="addList">➕ Add List</button>
+    <button id="addList" hx-put="/list" hx-target="body" hx-swap="beforeend">➕ Add List</button>
   {{ end }}
 
   <script type="text/javascript">

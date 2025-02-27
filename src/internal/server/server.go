@@ -53,8 +53,10 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
 
   adminRouter := http.NewServeMux()
   adminRouter.HandleFunc("POST /config", flimsyServer.POST_config)
+  adminRouter.HandleFunc("PUT /list", flimsyServer.PUT_list)
   adminRouter.HandleFunc("GET /list/{id}", flimsyServer.GET_list)
   adminRouter.HandleFunc("PATCH /list/{id}", flimsyServer.PATCH_list)
+  adminRouter.HandleFunc("DELETE /list/{id}", flimsyServer.DELETE_list)
   adminRouter.HandleFunc("PUT /item/{list_id}", flimsyServer.PUT_item)
   adminRouter.HandleFunc("GET /item/{id}", flimsyServer.GET_item)
   adminRouter.HandleFunc("PATCH /item/{id}", flimsyServer.PATCH_item)
@@ -322,6 +324,38 @@ func (flimsyServer *FlimsyServer) POST_config(w http.ResponseWriter, r *http.Req
   http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
+func (flimsyServer *FlimsyServer) PUT_list(w http.ResponseWriter, r *http.Request) {
+  confirm := r.FormValue("confirm")
+  if confirm != "true" {
+    flimsyServer.executeTemplate("addListDialog.tmpl", &w, nil)
+    return
+  }
+
+  title := r.FormValue("title")
+  if title == "" {
+    flimsyServer.error(w, http.StatusBadRequest, "Missing title")
+    return
+  }
+
+  numberOfRowsString := r.FormValue("number_of_rows")
+  if numberOfRowsString == "" {
+    flimsyServer.error(w, http.StatusBadRequest, "Missing number of rows")
+    return
+  }
+
+  numberOfRows, err := strconv.Atoi(numberOfRowsString); if err != nil {
+    flimsyServer.error(w, http.StatusBadRequest, err.Error())
+    return
+  }
+
+  lai, err := flimsyServer.storage.AddList(title, numberOfRows); if err != nil {
+    flimsyServer.error(w, http.StatusInternalServerError, err.Error())
+    return
+  }
+
+  flimsyServer.executeTemplate("list.loggedin.tmpl", &w, lai)
+}
+
 func (flimsyServer *FlimsyServer) GET_list(w http.ResponseWriter, r *http.Request) {
   idString := r.PathValue("id")
   if idString == "" {
@@ -375,6 +409,30 @@ func (flimsyServer *FlimsyServer) PATCH_list(w http.ResponseWriter, r *http.Requ
   }
 
   flimsyServer.executeTemplate("list.loggedin.tmpl", &w, listAndItems)
+}
+
+func (flimsyServer *FlimsyServer) DELETE_list(w http.ResponseWriter, r *http.Request) {
+  idString := r.PathValue("id")
+  if idString == "" {
+    flimsyServer.error(w, http.StatusBadRequest, "Missing id")
+    return
+  }
+
+  confirm := r.FormValue("confirm")
+  if confirm != "true" {
+    flimsyServer.executeTemplate("deleteListDialog.tmpl", &w, idString)
+    return
+  }
+
+  id, err := strconv.ParseInt(idString, 10, 64); if err != nil {
+    flimsyServer.error(w, http.StatusBadRequest, err.Error())
+    return
+  }
+
+  if err := flimsyServer.storage.DeleteList(id); err != nil {
+    flimsyServer.error(w, http.StatusInternalServerError, err.Error())
+    return
+  }
 }
 
 func (flimsyServer *FlimsyServer) PUT_item(w http.ResponseWriter, r *http.Request) {
