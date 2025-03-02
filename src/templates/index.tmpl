@@ -129,44 +129,6 @@
             $('#configDialog input[type=color]').removeAttr('disabled');
           }
         });
-
-        /* 
-        $('#lists').sortable({
-          helper : 'clone',
-          stop: function(event, ui) {
-            const listIds = $(ui.item).parent().children("div.list").map((l, el) => el.id.replace('list_', '')).toArray();
-            $.ajax({
-              url: 'lists/reorder',
-              method: 'POST',
-              data: {
-                listIds: listIds
-              }
-            });
-          } 
-        })
-        $("div.list").sortable({
-          helper: 'clone',
-          items: "div.item",
-          connectWith: ".list",
-          stop: function(event, ui) {
-            const listId = $(ui.item).parent().parent().attr('id').replace('list_', '');
-            const itemIds = $(ui.item).parent().children("div.item").map((i, el) => el.id.replace('item_', '')).toArray();
-
-            // Move the addItem button to the end of the list, in case the item was dropped after it
-            $('#addItem_' + listId).parent().appendTo($('#addItem_' + listId).parent().parent());
-
-            $.ajax({
-              url: 'items/reorder',
-              method: 'POST',
-              data: {
-                listId: listId,
-                itemIds: itemIds
-              }
-            });
-          }
-        });
-        */
-
       {{ end }}
 
       {{ if .FLIMSY_WEATHER_API_KEY }}updateWeather();{{ end }} 
