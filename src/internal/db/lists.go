@@ -9,10 +9,10 @@ type List struct {
 }
 
 
-func (flimsyDB *FlimsyDB) LoadLists() (map[int64]*List, error) {
-  Lists := make(map[int64]*List);
+func (flimsyDB *FlimsyDB) LoadLists() ([]*List, error) {
+  Lists := make([]*List, 0);
 
-  rows, err := flimsyDB.sqlDb.Query("SELECT * FROM list"); if err != nil {
+  rows, err := flimsyDB.sqlDb.Query("SELECT * FROM list ORDER BY position"); if err != nil {
     return nil, err
   }
 
@@ -21,7 +21,7 @@ func (flimsyDB *FlimsyDB) LoadLists() (map[int64]*List, error) {
     if err = rows.Scan(&list.Id, &list.Title, &list.Number_of_rows, &list.Position); err != nil {
       return nil, err
     }
-    Lists[list.Id] = &list
+    Lists = append(Lists, &list)
   }
 
   return Lists, nil
@@ -61,4 +61,14 @@ func (flimsyDB *FlimsyDB) SaveList(list *List) error {
 func (flimsyDB *FlimsyDB) DeleteList(id int64) error {
   _, err := flimsyDB.sqlDb.Exec("DELETE FROM list WHERE id = ?", id)
   return err
+}
+
+func (flimsyDB *FlimsyDB) ReorderLists(list_ids []int64) error {
+  for position, id := range list_ids {
+    if _, err := flimsyDB.sqlDb.Exec("UPDATE list SET position = ? WHERE id = ?", position, id); err != nil {
+      return err
+    }
+  }
+
+  return nil
 }

@@ -57,10 +57,12 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
   adminRouter.HandleFunc("GET /list/{id}", flimsyServer.GET_list)
   adminRouter.HandleFunc("PATCH /list/{id}", flimsyServer.PATCH_list)
   adminRouter.HandleFunc("DELETE /list/{id}", flimsyServer.DELETE_list)
+  adminRouter.HandleFunc("POST /reorderLists", flimsyServer.POST_reorderLists)
   adminRouter.HandleFunc("PUT /item/{list_id}", flimsyServer.PUT_item)
   adminRouter.HandleFunc("GET /item/{id}", flimsyServer.GET_item)
   adminRouter.HandleFunc("PATCH /item/{id}", flimsyServer.PATCH_item)
   adminRouter.HandleFunc("DELETE /item/{id}", flimsyServer.DELETE_item)
+  adminRouter.HandleFunc("POST /reorderItems", flimsyServer.POST_reorderItems)
   flimsyServer.router.Handle("/", middleware.MustBeAuthenticated(adminRouter))
 
   wrappedLogger := middleware.Logging(flimsyServer.log)
@@ -108,7 +110,7 @@ func (flimsyServer *FlimsyServer) GET_root(w http.ResponseWriter, r *http.Reques
     "FLIMSY_WEATHER_UNITS" : utils.GetEnv("FLIMSY_WEATHER_UNITS", "standard"),
     "FLIMSY_WEATHER_LANGUAGE" : utils.GetEnv("FLIMSY_WEATHER_LANGUAGE", "en"),
     "config" : flimsyServer.storage.Config,
-    "listsAndItems" : flimsyServer.storage.ListsAndItems,
+    "listsAndItems" : flimsyServer.storage.AllListsAndItems,
   }
 
   session_message = ""
@@ -370,8 +372,8 @@ func (flimsyServer *FlimsyServer) GET_list(w http.ResponseWriter, r *http.Reques
     return
   }
 
-  list, exists := flimsyServer.storage.Lists[id]; if !exists {
-    flimsyServer.error(w, http.StatusNotFound, "List not found")
+  list, err := flimsyServer.storage.GetList(id); if err != nil {
+    flimsyServer.error(w, http.StatusNotFound, err.Error())
     return
   }
 
@@ -390,8 +392,8 @@ func (flimsyServer *FlimsyServer) PATCH_list(w http.ResponseWriter, r *http.Requ
     return
   }
 
-  list, exists := flimsyServer.storage.Lists[id]; if !exists {
-    flimsyServer.error(w, http.StatusNotFound, "List not found")
+  list, err := flimsyServer.storage.GetList(id); if err != nil {
+    flimsyServer.error(w, http.StatusNotFound, err.Error())
     return
   }
 
@@ -430,6 +432,33 @@ func (flimsyServer *FlimsyServer) DELETE_list(w http.ResponseWriter, r *http.Req
   }
 
   if err := flimsyServer.storage.DeleteList(id); err != nil {
+    flimsyServer.error(w, http.StatusInternalServerError, err.Error())
+    return
+  }
+}
+
+func (flimsyServer *FlimsyServer) POST_reorderLists(w http.ResponseWriter, r *http.Request) {
+  if err := r.ParseForm(); err != nil {
+    flimsyServer.error(w, http.StatusBadRequest, err.Error())
+    return
+  }
+
+  list_id_strings, exists := r.Form["ids"]
+  if !exists || list_id_strings == nil {
+    flimsyServer.error(w, http.StatusBadRequest, "Missing ids")
+    return
+  }
+
+  list_ids := make([]int64, len(list_id_strings))
+  for i, list_id_string := range list_id_strings {
+    list_id, err := strconv.ParseInt(list_id_string, 10, 64); if err != nil {
+      flimsyServer.error(w, http.StatusBadRequest, err.Error())
+      return
+    }
+    list_ids[i] = list_id
+  }
+
+  if err := flimsyServer.storage.ReorderLists(list_ids); err != nil {
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
@@ -491,8 +520,8 @@ func (flimsyServer *FlimsyServer) GET_item(w http.ResponseWriter, r *http.Reques
     return
   }
 
-  item, exists := flimsyServer.storage.Items[id]; if !exists {
-    flimsyServer.error(w, http.StatusNotFound, "Item not found")
+  item, err := flimsyServer.storage.GetItem(id); if err != nil {
+    flimsyServer.error(w, http.StatusNotFound, err.Error())
     return
   }
 
@@ -511,8 +540,8 @@ func (flimsyServer *FlimsyServer) PATCH_item(w http.ResponseWriter, r *http.Requ
     return
   }
 
-  item, exists := flimsyServer.storage.Items[id]; if !exists {
-    flimsyServer.error(w, http.StatusNotFound, "Item not found")
+  item, err := flimsyServer.storage.GetItem(id); if err != nil {
+    flimsyServer.error(w, http.StatusNotFound, err.Error())
     return
   }
 
@@ -548,6 +577,44 @@ func (flimsyServer *FlimsyServer) DELETE_item(w http.ResponseWriter, r *http.Req
   }
 
   if err := flimsyServer.storage.DeleteItem(id); err != nil {
+    flimsyServer.error(w, http.StatusInternalServerError, err.Error())
+    return
+  }
+}
+
+func (flimsyServer *FlimsyServer) POST_reorderItems(w http.ResponseWriter, r *http.Request) {
+  if err := r.ParseForm(); err != nil {
+    flimsyServer.error(w, http.StatusBadRequest, err.Error())
+    return
+  }
+
+  list_id_string, exists := r.Form["list_id"]
+  if !exists || len(list_id_string) < 1 || list_id_string[0] == "" {
+    flimsyServer.error(w, http.StatusBadRequest, "Missing list_id")
+    return
+  }
+
+  list_id, err := strconv.ParseInt(list_id_string[0], 10, 64); if err != nil {
+    flimsyServer.error(w, http.StatusBadRequest, err.Error())
+    return
+  }
+
+  item_id_strings, exists := r.Form["ids"]
+  if !exists || item_id_strings == nil {
+    flimsyServer.error(w, http.StatusBadRequest, "Missing ids")
+    return
+  }
+
+  item_ids := make([]int64, len(item_id_strings))
+  for i, item_id_string := range item_id_strings {
+    item_id, err := strconv.ParseInt(item_id_string, 10, 64); if err != nil {
+      flimsyServer.error(w, http.StatusBadRequest, err.Error())
+      return
+    }
+    item_ids[i] = item_id
+  }
+
+  if err := flimsyServer.storage.ReorderItems(list_id, item_ids); err != nil {
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }

@@ -12,12 +12,9 @@
 			  src="https://code.jquery.com/jquery-3.7.1.min.js"
 			  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
 			  crossorigin="anonymous"></script>
-  <script
-			  src="https://code.jquery.com/ui/1.14.1/jquery-ui.min.js"
-			  integrity="sha256-AlTido85uXPlSyyaZNsjJXeCs07eSv3r43kyCVc8ChI="
-			  crossorigin="anonymous"></script>
   <script src="/static/htmx.min.js"></script>
   <script src="/static/hyperscript.min.js"></script>
+  <script src="/static/sortable.min.js"></script>
 </head>
 
 <body>
@@ -47,11 +44,22 @@
     </div>
   </header>
 
-  <div id="lists" style="clear:both;">
+  <div id="lists" style="clear:both;" hx-post="/reorderLists" hx-swap="none" hx-trigger="reorderLists" hx-vars="js:{ids: [...event.target.querySelectorAll('.list')].map(i => i.id.replace('list_', ''))}" >
   {{ if .IsLoggedIn }}
     {{ range .listsAndItems }}
       {{ template "list.loggedin.tmpl" . }}
     {{ end }}
+    <script>
+      new Sortable(document.querySelector("#lists"), {
+        filter: "#addList",
+        animation: 150,
+        swapThreshold: 0.65,
+        group: "lists",
+        onEnd: function (e) {
+          htmx.trigger(e.to, 'reorderLists');
+        }
+      });
+    </script>
   {{ else }}
     {{ range .listsAndItems }}
       {{ template "list.tmpl" . }}
@@ -122,6 +130,7 @@
           }
         });
 
+        /* 
         $('#lists').sortable({
           helper : 'clone',
           stop: function(event, ui) {
@@ -156,6 +165,7 @@
             });
           }
         });
+        */
 
       {{ end }}
 
