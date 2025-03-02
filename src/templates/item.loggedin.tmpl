@@ -1,4 +1,4 @@
-<div class="item" id="item_{{ .Id }}" hx-get="/item/{{ .Id }}" hx-target="body" hx-swap="beforeend">
+<div id="item_{{ .Id }}" class="item" hx-get="/item/{{ .Id }}" hx-trigger="click" hx-target="body" hx-swap="beforeend">
   <div class="iconDiv">
     <img class="icon" src="/data/icons/{{ .Icon }}" />
   </div>

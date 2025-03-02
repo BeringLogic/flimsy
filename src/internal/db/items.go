@@ -11,10 +11,10 @@ type Item struct {
 }
 
 
-func (flimsyDB *FlimsyDB) LoadItems() (map[int64]*Item, error) {
-  Items := make(map[int64]*Item);
+func (flimsyDB *FlimsyDB) LoadItems() ([]*Item, error) {
+  Items := make([]*Item, 0);
 
-  rows, err := flimsyDB.sqlDb.Query("SELECT * FROM item"); if err != nil {
+  rows, err := flimsyDB.sqlDb.Query("SELECT * FROM item ORDER BY list_id, position"); if err != nil {
     return nil, err
   }
 
@@ -23,7 +23,7 @@ func (flimsyDB *FlimsyDB) LoadItems() (map[int64]*Item, error) {
     if err = rows.Scan(&item.Id, &item.List_id, &item.Title, &item.Url, &item.Icon, &item.Position); err != nil {
       return nil, err
     }
-    Items[item.Id] = &item
+    Items = append(Items, &item)
   }
 
   return Items, nil
@@ -64,4 +64,14 @@ func (flimsyDB *FlimsyDB) SaveItem(item *Item) error {
 func (flimsyDB *FlimsyDB) DeleteItem(id int64) error {
   _, err := flimsyDB.sqlDb.Exec("DELETE FROM item WHERE id = ?", id)
   return err
+}
+
+func (flimsyDB *FlimsyDB) ReorderItems(list_id int64, item_ids []int64) error {
+  for position, item_id := range item_ids {
+    if _, err := flimsyDB.sqlDb.Exec("UPDATE item SET list_id = ?, position = ? WHERE id = ?", list_id, position, item_id); err != nil {
+      return err
+    }
+  }
+
+  return nil
 }

@@ -1,9 +1,20 @@
 <div class="list" id="list_{{ .List.Id }}">
   <h2 hx-get="/list/{{ .List.Id }}" hx-target="body" hx-swap="beforeend">{{ .List.Title }}</h2>
-  <div class="items" style="grid-template-columns: repeat({{ .List.Number_of_rows }}, 1fr);">
+  <div class="items" style="grid-template-columns: repeat({{ .List.Number_of_rows }}, 1fr);" hx-post="/reorderItems" hx-swap="none" hx-trigger="reorderItems" hx-vals="js:{list_id: event.target.parentNode.id.replace('list_', ''), ids: [...event.target.querySelectorAll('.item')].map(i => i.id.replace('item_', ''))}">
     {{ range .Items }}
-      {{ template "item.loggedin.tmpl" . }} 
+      {{ template "item.loggedin.tmpl" . }}
     {{ end }}
-    <div class="item addItem" hx-put="/item/{{ .List.Id }}" hx-target="body" hx-swap="beforeend"><button id="addItem_{{ .List.Id }}">➕ Add Item</button></div>
   </div>
+  <div class="addItem"><button type="button" hx-put="/item/{{ .List.Id }}" hx-target="body" hx-swap="beforeend">➕ Add Item</button></div>
 </div>
+<script>
+ new Sortable(document.querySelector("#list_{{ .List.Id }} .items"), {
+   animation: 150,
+   swapThreshold: 0.65,
+   fallbackTolerance: 4,
+   group: "items",
+   onEnd: function (e) {
+     htmx.trigger(e.to, 'reorderItems');
+   }
+ });
+</script>

@@ -1,7 +1,7 @@
 <div id="modal" _="on closeModal add .closing then wait for animationend then remove me">
 	<div class="modal-content">
     <div id="addItemDialog" class="dialog">
-      <form hx-put="/item/{{ . }}" hx-target="#list_{{ . }} div.item.addItem" hx-swap="beforebegin">
+      <form hx-put="/item/{{ . }}" hx-target="#list_{{ . }} div.items" hx-swap="beforeend">
         <input type="hidden" name="confirm" value="true">
         <div class="dialog-field">
           <label for="itemTitle">Title</label>
