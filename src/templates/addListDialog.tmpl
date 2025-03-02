@@ -1,7 +1,7 @@
 <div id="modal" _="on closeModal add .closing then wait for animationend then remove me">
 	<div class="modal-content">
     <div id="addListDialog" class="dialog">
-      <form hx-put="/list" hx-target="#lists" hx-swap="beforeend">
+      <form hx-put="/list" hx-target="#lists" hx-swap="beforeend" _="on submit trigger closeModal">
         <input type="hidden" name="confirm" value="true">
         <div class="dialog-field">
           <label for="listTitle">Title</label>
@@ -12,7 +12,7 @@
           <input id="listRows" type="number" min="1" name="number_of_rows" required>
         </div>
         <div class="dialog-buttons">
-          <button type="submit" _="on click trigger closeModal">Add</button>
+          <button type="submit">Add</button>
           <button type="button" _="on click trigger closeModal">Cancel</button>
         </div>
       </form>

@@ -1,6 +1,6 @@
 <div id="modal" _="on closeModal add .closing then wait for animationend then remove me">
 	<div class="modal-content">
-    <form id="editItemForm" hx-patch="/item/{{ .Id }}" hx-target="#item_{{ .Id }}" hx-swap="outerHTML">
+    <form id="editItemForm" hx-patch="/item/{{ .Id }}" hx-target="#item_{{ .Id }}" hx-swap="outerHTML" _="on submit trigger closeModal">
       <div class="dialog-field">
         <label for="itemTitle">Title</label>
         <input id="itemTitle" type="text" name="title" value="{{ .Title }}" required>
@@ -15,7 +15,7 @@
       </div>
       <div class="dialog-buttons">
         <button type="button" hx-delete="/item/{{ .Id }}" hx-target="#modal" hx-swap="outerHTML">Delete</button>
-        <button type="submit" _="on click trigger closeModal">Save</button>
+        <button type="submit">Save</button>
         <button type="button" _="on click trigger closeModal">Cancel</button>
       </div>
     </form>

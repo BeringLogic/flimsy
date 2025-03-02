@@ -5,8 +5,8 @@
 * [x] Edit item
 * [x] Delete list
 * [x] Delete item
-* [ ] Drag & Drop to reorder list
-* [ ] Drag & Drop to reorder items
+* [x] Drag & Drop to reorder list
+* [x] Drag & Drop to reorder items
 * [x] Make items clickable
 * [x] Login to edit
 * [x] Preserve icons aspect ratio
@@ -38,11 +38,9 @@
 * [ ] Update README.md with screenshots, features, infos on how to install and how to use the app
 * [ ] Docker integration
 * [ ] favicons for items (https://dashy.to/docs/icons/)
-* [ ] AJAX for everything?
-* [ ] HTMX ?
+* [x] HTMX ?
 * [ ] Update system info and weather every X minutes
 * [ ] CSRF
-* [x] rename href => url all over the place
 
 # Switch to golang
 * [x] golang base image
@@ -80,5 +78,3 @@
   I get this if I do a w.Write() before w.WriteHeader() but not if I do http.Error()? Looks like flimsyServer.executeTemplate is doing it too
   That call isn't superfluous, it's to set the error code
 - When logging in with auth disabled, it should mention it in the log
-- Clicking add item if the form is not valid should not close the dialog (use on submit instead of on click?)
-- Added items cannot be reordered
