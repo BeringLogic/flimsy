@@ -2,9 +2,12 @@ package server
 
 import (
 	"bytes"
+	"encoding/json"
+	"fmt"
 	"html/template"
 	"io"
 	"net/http"
+	"net/url"
 	"strconv"
 	"time"
 
@@ -46,6 +49,7 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
   flimsyServer.router.HandleFunc("GET /style.css", flimsyServer.GET_style)
   flimsyServer.router.HandleFunc("GET /onlineStatus", flimsyServer.GET_onlineStatus)
   flimsyServer.router.HandleFunc("GET /systemInfo", flimsyServer.GET_systemInfo)
+  flimsyServer.router.HandleFunc("GET /weather", flimsyServer.GET_weather)
   flimsyServer.router.HandleFunc("GET /login", flimsyServer.GET_login)
   flimsyServer.router.HandleFunc("POST /login", flimsyServer.POST_login)
   flimsyServer.router.HandleFunc("GET /logout", flimsyServer.GET_logout)
@@ -124,9 +128,9 @@ func (flimsyServer *FlimsyServer) GET_style(w http.ResponseWriter, r *http.Reque
 }
 
 func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *http.Request) {
-  url := r.URL.Query().Get("url")
+  u := r.URL.Query().Get("url")
   
-  resp, err := http.Get(url); if err != nil {
+  resp, err := http.Get(u); if err != nil {
     flimsyServer.executeTemplate("onlineStatus.tmpl", &w, map[string]string{
       "class" : "offline",
       "color" : "red",
@@ -156,6 +160,59 @@ func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *htt
 
 func (flimsyServer *FlimsyServer) GET_systemInfo(w http.ResponseWriter, r *http.Request) {
   flimsyServer.executeTemplate("systemInfo.tmpl", &w, systemInfo.GetSystemInfo(flimsyServer.storage.Config))
+}
+
+func (flimsyServer *FlimsyServer) GET_weather(w http.ResponseWriter, r *http.Request) {
+  u := "https://api.openweathermap.org/data/2.5/weather"
+  u += "?q=" + url.QueryEscape(utils.GetEnv("FLIMSY_WEATHER_LOCATION", "New York"))
+  u += "&units=" + url.QueryEscape(utils.GetEnv("FLIMSY_WEATHER_UNITS", "standard"))
+  u += "&lang=" + url.QueryEscape(utils.GetEnv("FLIMSY_WEATHER_LANGUAGE", "en"))
+  u += "&appid=" + url.QueryEscape(utils.GetEnv("FLIMSY_WEATHER_API_KEY", ""))
+
+  response, err := http.Get(u); if err != nil {
+    flimsyServer.error(w, http.StatusInternalServerError, err.Error())
+    return
+  }
+
+  if response.StatusCode != 200 {
+    flimsyServer.error(w, http.StatusInternalServerError, "Failed to fetch weather")
+    return
+  }
+
+  defer response.Body.Close()
+
+  bytes, err := io.ReadAll(response.Body); if err != nil {
+    flimsyServer.error(w, http.StatusInternalServerError, err.Error())
+    return
+  }
+
+  var data map[string]interface{}
+  err = json.Unmarshal(bytes, &data); if err != nil {
+    flimsyServer.error(w, http.StatusInternalServerError, err.Error())
+    return
+  }
+
+  icon := data["weather"].([]interface{})[0].(map[string]interface{})["icon"].(string)
+  iconString := fmt.Sprintf("https://openweathermap.org/img/wn/%s@2x.png", icon)
+
+  temp := data["main"].(map[string]interface{})["temp"].(float64)
+  tempString := ""
+
+  switch utils.GetEnv("FLIMSY_WEATHER_UNITS", "standard") {
+    case "standard":
+      tempString = fmt.Sprintf("%.1f °K", temp)
+    case "metric":
+      tempString = fmt.Sprintf("%.1f °C", temp)
+    case "imperial":
+      tempString = fmt.Sprintf("%.1f °F", temp)
+  }
+
+  flimsyServer.executeTemplate("weather.tmpl", &w, map[string]interface{}{
+    "icon" : iconString,
+    "description" : data["weather"].([]interface{})[0].(map[string]interface{})["description"].(string),
+    "location" : data["name"].(string) + ", " + data["sys"].(map[string]interface{})["country"].(string),
+    "temp" : tempString,
+  })
 }
 
 func (flimsyServer *FlimsyServer) logUserIn(w http.ResponseWriter) {
