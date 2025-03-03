@@ -99,36 +99,9 @@
     }
     {{ end }}
 
-    $('document').ready(() => {
+    htmx.onLoad(function() {
       {{ if .session_message }}
         alert("{{ .session_message }}");
-      {{ end }}
-
-      {{ if .IsLoggedIn }}
-        $('#configBackgroundUpload').change(() => {
-          $('#autodetect_colors').removeAttr('disabled');
-          $('#configBackgroundTypeUpload').prop('checked', true);
-        });
-        $('#configBackgroundImage').change((e) => {
-          if (e.target.value != '') { 
-            $('#autodetect_colors').removeAttr('disabled');
-            $('#configBackgroundTypeKeep').prop('checked', true);
-          }
-          else {
-            $('#autodetect_colors').attr('disabled', 'disabled');
-            $('#manual_colors').prop('checked', true);
-          }
-        });
-        $('#autodetect_colors').change(() => {
-          if ($('#autodetect_colors').is(':checked')) {
-            $('#configDialog input[type=color]').attr('disabled', 'disabled');
-          }
-        });
-        $('#manual_colors').change(() => {
-          if ($('#manual_colors').is(':checked')) {
-            $('#configDialog input[type=color]').removeAttr('disabled');
-          }
-        });
       {{ end }}
 
       {{ if .FLIMSY_WEATHER_API_KEY }}updateWeather();{{ end }} 

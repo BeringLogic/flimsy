@@ -17,11 +17,11 @@
           <legend>Background</legend>
           <div class="dialog-field">
             <input id="configBackgroundTypeUpload" type="radio" style="width:auto;" name="background_type" value="upload">
-            <input id="configBackgroundUpload" type="file" style="width:85%; display:inline-block;" name="background_file">
+            <input id="configBackgroundUpload" type="file" style="width:85%; display:inline-block;" name="background_file" _="on change add @checked to #configBackgroundTypeUpload">
           </div>
           <div class="dialog-field">
             <input id="configBackgroundTypeKeep" type="radio" style="width:auto;" name="background_type" value="keep" checked>
-            <select id="configBackgroundImage" style="width:85%; display:inline-block;" name="background_image">
+            <select id="configBackgroundImage" style="width:85%; display:inline-block;" name="background_image" _="on change add @checked to #configBackgroundTypeKeep">
             {{ $Background_image := .config.Background_image }}
             {{ range .backgrounds }}
               <option value="{{ . }}"{{ if eq . $Background_image }} selected="selected"{{ end }}>{{ . }}</option>
@@ -29,7 +29,7 @@
             </select>
           </div>
           <div class="dialog-field">
-            <input id="configBackgroundTypeNone" type="radio" style="width:auto;" name="background_type" value="none">
+            <input id="configBackgroundTypeNone" type="radio" style="width:auto;" name="background_type" value="none" {{ if not .config.Background_image }}checked{{ end }}>
             <label for="configBackgroundTypeNone" style="display:inline-block;">None</label>
           </div>
         </fieldset>
@@ -39,7 +39,7 @@
           <legend>Colors</legend>
           <div class="dialog-field">
             <input type="radio" id="autodetect_colors" name="color_type" style="width:auto;" value="autodetect">
-            <label for="autodetect_colors" style="display:inline-block;">Autodetect Colors</label>
+            <label for="autodetect_colors" style="display:inline-block;">Autodetect Colors from Background</label>
           </div>
           <div class="dialog-field">
             <input type="radio" id="catppuccin_latte_colors" name="color_type" style="width:auto;" value="catppuccin_latte">
