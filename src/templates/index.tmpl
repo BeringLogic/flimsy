@@ -5,13 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ or .config.Title "Flimsy" }}</title>
   <link rel="stylesheet" href="/style.css">
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="https://www.nerdfonts.com/assets/css/webfont.css">
   <link rel="icon" type="image/png" href="/static/homepage.png">
-  <script
-			  src="https://code.jquery.com/jquery-3.7.1.min.js"
-			  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-			  crossorigin="anonymous"></script>
   <script src="/static/htmx.min.js"></script>
   <script src="/static/hyperscript.min.js"></script>
   <script src="/static/sortable.min.js"></script>
@@ -34,11 +29,8 @@
       {{ end }}
       <div id="system-info" hx-get="/systemInfo" hx-trigger="load"></div>
       {{ if .FLIMSY_WEATHER_API_KEY }}
-        <div class="weather">
-          <img>
-          <div class="location"></div>
-          <div class="temp"></div>
-          <div class="description"></div>
+        <div class="weather" hx-get="/weather" hx-trigger="load">
+        {{ template "weather.tmpl" . }}
         </div>
       {{ end }}
     </div>
@@ -72,40 +64,9 @@
   {{ end }}
 
   <script type="text/javascript">
-    {{ if .FLIMSY_WEATHER_API_KEY }}
-    function updateWeather() {
-      $.ajax({
-        url: 'https://api.openweathermap.org/data/2.5/weather',
-        data: {
-          q: '{{ .FLIMSY_WEATHER_LOCATION }}',
-          units : '{{ .FLIMSY_WEATHER_UNITS }}',
-          lang : '{{ .FLIMSY_WEATHER_LANGUAGE }}',
-          appid : '{{ .FLIMSY_WEATHER_API_KEY }}',
-        },
-        success: (data) => {
-          var units;
-          switch ('{{ .FLIMSY_WEATHER_UNITS }}') {
-            default:
-            case 'standard': units = 'K'; break;
-            case 'metric': units = 'C'; break;
-            case 'imperial': units = 'F'; break;
-          };
-          $('.weather img').attr('src', 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png');
-          $('.weather .location').html(data.name + ', ' + data.sys.country);
-          $('.weather .description').html(data.weather[0].description);
-          $('.weather .temp').html(Math.round(data.main.temp) + ' °' + units);
-        }
-      });
-    }
+    {{ if .session_message }}
+      alert("{{ .session_message }}");
     {{ end }}
-
-    htmx.onLoad(function() {
-      {{ if .session_message }}
-        alert("{{ .session_message }}");
-      {{ end }}
-
-      {{ if .FLIMSY_WEATHER_API_KEY }}updateWeather();{{ end }} 
-    });
   </script>
 
 </body>
