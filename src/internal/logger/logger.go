@@ -26,20 +26,20 @@ func CreateNew() *FlimsyLogger {
   return flimsyLogger
 }
 
-func (log *FlimsyLogger) Print(v ...interface{}) {
-  prepended := append([]interface{}{"| "}, v...)
+func (log *FlimsyLogger) Print(v ...any) {
+  prepended := append([]any{"| "}, v...)
   log.logger.Print(prepended...)
 }
 
-func (log *FlimsyLogger) Printf(format string, v ...interface{}) {
+func (log *FlimsyLogger) Printf(format string, v ...any) {
   log.logger.Printf("| " + format, v...)
 }
 
-func (log *FlimsyLogger) Fatal(v ...interface{}) {
-  prepended := append([]interface{}{"| "}, v...)
+func (log *FlimsyLogger) Fatal(v ...any) {
+  prepended := append([]any{"| "}, v...)
   log.logger.Fatal(prepended...)
 }
 
-func (log *FlimsyLogger) Fatalf(format string, v ...interface{}) {
+func (log *FlimsyLogger) Fatalf(format string, v ...any) {
   log.logger.Fatalf("| " + format, v...)
 }
