@@ -92,7 +92,7 @@ func (flimsyServer *FlimsyServer) error(w http.ResponseWriter, statusCode int, e
   w.WriteHeader(statusCode)
 }
 
-func (flimsyServer *FlimsyServer) executeTemplate(templateName string, w *http.ResponseWriter, data interface{}) error {
+func (flimsyServer *FlimsyServer) executeTemplate(templateName string, w *http.ResponseWriter, data any) error {
   buffer := &bytes.Buffer{};
 
   if err := flimsyServer.templates.ExecuteTemplate(buffer, templateName, data); err != nil {
@@ -105,7 +105,7 @@ func (flimsyServer *FlimsyServer) executeTemplate(templateName string, w *http.R
 }
 
 func (flimsyServer *FlimsyServer) GET_root(w http.ResponseWriter, r *http.Request) {
-  data := map[string]interface{}{
+  data := map[string]any{
     "IsAuthDisabled" : utils.GetEnv("FLIMSY_USERNAME", "") == "" && utils.GetEnv("FLIMSY_PASSWORD", "") == "",
     "IsLoggedIn" : r.Context().Value(middleware.IsAuthenticatedContextKey).(bool),
     "session_message" : session_message, 
@@ -186,16 +186,16 @@ func (flimsyServer *FlimsyServer) GET_weather(w http.ResponseWriter, r *http.Req
     return
   }
 
-  var data map[string]interface{}
+  var data map[string]any
   err = json.Unmarshal(bytes, &data); if err != nil {
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
 
-  icon := data["weather"].([]interface{})[0].(map[string]interface{})["icon"].(string)
+  icon := data["weather"].([]any)[0].(map[string]any)["icon"].(string)
   iconString := fmt.Sprintf("https://openweathermap.org/img/wn/%s@2x.png", icon)
 
-  temp := data["main"].(map[string]interface{})["temp"].(float64)
+  temp := data["main"].(map[string]any)["temp"].(float64)
   tempString := ""
 
   switch utils.GetEnv("FLIMSY_WEATHER_UNITS", "standard") {
@@ -207,10 +207,10 @@ func (flimsyServer *FlimsyServer) GET_weather(w http.ResponseWriter, r *http.Req
       tempString = fmt.Sprintf("%.1f °F", temp)
   }
 
-  flimsyServer.executeTemplate("weather.tmpl", &w, map[string]interface{}{
+  flimsyServer.executeTemplate("weather.tmpl", &w, map[string]any{
     "icon" : iconString,
-    "description" : data["weather"].([]interface{})[0].(map[string]interface{})["description"].(string),
-    "location" : data["name"].(string) + ", " + data["sys"].(map[string]interface{})["country"].(string),
+    "description" : data["weather"].([]any)[0].(map[string]any)["description"].(string),
+    "location" : data["name"].(string) + ", " + data["sys"].(map[string]any)["country"].(string),
     "temp" : tempString,
   })
 }
@@ -296,7 +296,7 @@ func (flimsyServer *FlimsyServer) GET_config(w http.ResponseWriter, r *http.Requ
     flimsyServer.log.Print(err.Error())
   }
 
-  flimsyServer.executeTemplate("configDialog.tmpl", &w, map[string]interface{}{
+  flimsyServer.executeTemplate("configDialog.tmpl", &w, map[string]any{
     "config" : flimsyServer.storage.Config,
     "backgrounds" : backgrounds,
     "sensors" : sensors,
