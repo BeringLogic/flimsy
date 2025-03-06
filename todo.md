@@ -22,7 +22,7 @@
 * [x] Customizable background image
 * [x] Customizable number of columns (customizable per list)
 * [x] Customizable colors 
-* [ ] File upload for backgrounds
+* [x] File upload for backgrounds
 * [ ] Automatically pick the colors from the background image
 * [x] Catppuccin colors (mocha and latte)
 * [x] Output of lm-sensors in a list so users can figure out their CPU sensor's name
@@ -41,6 +41,7 @@
 * [x] HTMX ?
 * [ ] Update system info and weather every X minutes
 * [ ] CSRF
+* [ ] Log actions, and don't log 200s
 
 # Switch to golang
 * [x] golang base image
@@ -63,8 +64,6 @@
 * [ ] PORT
 * [x] Logger
 * [ ] Let's Encrypt?
-* [ ] Serve jQuery from /static instead of cdn?
-* [x] Figure out how to deal with if ({{ .IsLoggedIn }}), I don't want the user to just flip a bool in js to unlock everything...
 * [ ] Use the 404 template
 
 # Docker stuff I need to learn
@@ -78,3 +77,4 @@
   I get this if I do a w.Write() before w.WriteHeader() but not if I do http.Error()? Looks like flimsyServer.executeTemplate is doing it too
   That call isn't superfluous, it's to set the error code
 - When logging in with auth disabled, it should mention it in the log
+- Error in the console when clicking anything and also when drag&dropping: "TypeError: this is undefined" in some bootstrap file coming out of the blue !?

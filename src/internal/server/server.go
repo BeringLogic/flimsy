@@ -8,8 +8,13 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"os"
+	"path"
 	"strconv"
+	"strings"
 	"time"
+
+  "github.com/dustin/go-humanize"
 
 	"github.com/BeringLogic/flimsy/internal/auth"
 	"github.com/BeringLogic/flimsy/internal/icons"
@@ -320,8 +325,13 @@ func (flimsyServer *FlimsyServer) POST_config(w http.ResponseWriter, r *http.Req
 
   switch Background_type {
   case "upload":
-    // flimsyServer.storage.Config.Background_image = $upBg->upload(); 
-    flimsyServer.log.Print("TODO: Background image upload")
+    var uploadError error
+    var uploadedBackgroundSize uint64
+    flimsyServer.storage.Config.Background_image, uploadedBackgroundSize, uploadError = saveUploadedBackground(r); if uploadError != nil {
+      flimsyServer.error(w, http.StatusInternalServerError, uploadError.Error())
+      return
+    }
+    flimsyServer.log.Printf("Background image uploaded: %s (%s)", flimsyServer.storage.Config.Background_image, humanize.Bytes(uploadedBackgroundSize))
   case "keep":
     flimsyServer.storage.Config.Background_image = r.FormValue("background_image")
   case "none":
@@ -381,6 +391,29 @@ func (flimsyServer *FlimsyServer) POST_config(w http.ResponseWriter, r *http.Req
   }
 
   http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func saveUploadedBackground(r *http.Request) (string, uint64, error) {
+  err := r.ParseMultipartForm(100 << 20); if err != nil {
+    return "", 0, fmt.Errorf("ParseMultipartForm error: %w", err)
+  }
+
+  file, header, err := r.FormFile("background_file"); if err != nil {
+    return "", 0, fmt.Errorf("FormFile error: %w", err)
+  }
+  defer file.Close()
+
+  bytes, err := io.ReadAll(file); if err != nil {
+    return "", 0, fmt.Errorf("ReadAll error: %w", err)
+  }
+
+  outputFileName := "/data/backgrounds/" + strings.ReplaceAll(header.Filename, "/", "_")
+
+  err = os.WriteFile(outputFileName, bytes, 0644); if err != nil {
+    return "", 0, fmt.Errorf("WriteFile error: %w", err)
+  }
+
+  return path.Base(outputFileName), uint64(header.Size), nil
 }
 
 func (flimsyServer *FlimsyServer) PUT_list(w http.ResponseWriter, r *http.Request) {
