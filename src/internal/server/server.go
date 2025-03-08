@@ -1,5 +1,6 @@
 package server
 
+
 import (
 	"bytes"
 	"encoding/json"
@@ -14,7 +15,8 @@ import (
 	"strings"
 	"time"
 
-  "github.com/dustin/go-humanize"
+	"github.com/dustin/go-humanize"
+	"github.com/thomas-bouvier/palette-extractor"
 
 	"github.com/BeringLogic/flimsy/internal/auth"
 	"github.com/BeringLogic/flimsy/internal/icons"
@@ -340,7 +342,16 @@ func (flimsyServer *FlimsyServer) POST_config(w http.ResponseWriter, r *http.Req
 
   switch Color_type {
   case "autodetect":
-    flimsyServer.log.Print("TODO: autodetect background colors")
+    var getColorsError error
+    flimsyServer.storage.Config.Color_background = "black"
+    flimsyServer.storage.Config.Color_foreground,
+    flimsyServer.storage.Config.Color_items,
+    flimsyServer.storage.Config.Color_borders,
+    getColorsError = getColorsFromBackground(flimsyServer.storage.Config.Background_image); if getColorsError != nil {
+      flimsyServer.error(w, http.StatusInternalServerError, getColorsError.Error())
+      return
+    }
+    flimsyServer.log.Printf("Autodetected colors from background image: %s, %s, %s", flimsyServer.storage.Config.Color_foreground, flimsyServer.storage.Config.Color_items, flimsyServer.storage.Config.Color_borders)
   case "catppuccin_latte":
     flimsyServer.storage.Config.Color_background = "#eff1f5"
     flimsyServer.storage.Config.Color_foreground = "#4c4f69"
@@ -414,6 +425,23 @@ func saveUploadedBackground(r *http.Request) (string, uint64, error) {
   }
 
   return path.Base(outputFileName), uint64(header.Size), nil
+}
+
+func getColorsFromBackground(backgroundImageName string) (string, string, string, error) {
+  backgroundImage, err := os.Open("/data/backgrounds/" + backgroundImageName); if err != nil {
+    return "", "", "", fmt.Errorf("Open error: %w", err)
+  }
+  defer backgroundImage.Close()
+
+  extractor := extractor.NewExtractor("/data/backgrounds/" + backgroundImageName, 1)
+
+  palette := extractor.GetPalette(3)
+
+  foregroundColor := fmt.Sprintf("#%02x%02x%02x", palette[2][0], palette[2][1], palette[2][2])
+  itemsColor := fmt.Sprintf("#%02x%02x%02x", palette[0][0], palette[0][1], palette[0][2])
+  bordersColor := fmt.Sprintf("#%02x%02x%02x", palette[1][0], palette[1][1], palette[1][2])
+
+  return foregroundColor, itemsColor, bordersColor, nil
 }
 
 func (flimsyServer *FlimsyServer) PUT_list(w http.ResponseWriter, r *http.Request) {
