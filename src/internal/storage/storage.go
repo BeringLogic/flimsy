@@ -11,7 +11,8 @@ import (
 type FlimsyStorage struct {
   db *db.FlimsyDB
   Config *db.Config
-  AuthTokenPairs []*db.AuthTokenPair
+  Sessions []*db.Session
+  CsrfTokens map[string][]*db.CsrfToken
   Lists []*db.List
   Items []*db.Item
   AllListsAndItems []*listAndItems
@@ -26,8 +27,8 @@ type listAndItems struct {
 var OpenError error = errors.New("Failed to open DB")
 var SeedError error = errors.New("Failed to seed DB")
 var LoadConfigError error = errors.New("Failed to load config")
-var DeleteExpiredTokensError error = errors.New("Failed to delete expired tokens")
-var LoadAuthTokensError error = errors.New("Failed to load auth tokens")
+var DeleteExpiredSessionsError error = errors.New("Failed to delete expired sessions")
+var LoadSessionsError error = errors.New("Failed to load sessions")
 var LoadListsError error = errors.New("Failed to load lists")
 var LoadItemsError error = errors.New("Failed to load items")
 
@@ -54,11 +55,11 @@ func (storage *FlimsyStorage) Init() error {
     }
   }
 
-  if err = storage.db.DeleteExpiredTokens(); err != nil {
-    return errors.Join(DeleteExpiredTokensError, err);
+  if err = storage.db.DeleteExpiredSessions(); err != nil {
+    return errors.Join(DeleteExpiredSessionsError, err);
   }
-  if storage.AuthTokenPairs, err = storage.db.LoadAuthTokens(); err != nil {
-    return errors.Join(LoadAuthTokensError, err);
+  if storage.Sessions, err = storage.db.LoadSessions(); err != nil {
+    return errors.Join(LoadSessionsError, err);
   }
 
   if storage.Lists, err = storage.db.LoadLists(); err != nil {
@@ -98,19 +99,19 @@ func (flimsyStorage *FlimsyStorage) Close() {
   flimsyStorage.db.Close()
 }
 
-func (flimsyStorage *FlimsyStorage) GenerateTokenPair() (*db.AuthTokenPair, error) {
-  tokenPair, err := flimsyStorage.db.GenerateTokenPair(); if err != nil {
+func (flimsyStorage *FlimsyStorage) CreateNewSession() (*db.Session, error) {
+  session, err := flimsyStorage.db.CreateNewSession(); if err != nil {
     return nil, err
   }
 
-  flimsyStorage.AuthTokenPairs = append(flimsyStorage.AuthTokenPairs, tokenPair)
+  flimsyStorage.Sessions = append(flimsyStorage.Sessions, session)
 
-  return tokenPair, nil
+  return session, nil
 }
 
 func (flimsyStorage *FlimsyStorage) CheckSessionToken(tokenToCheck string) bool {
-  for _, tokenPair := range flimsyStorage.AuthTokenPairs {
-    if tokenPair.SessionToken == tokenToCheck && !tokenPair.IsExpired() {
+  for _, session := range flimsyStorage.Sessions {
+    if session.Token == tokenToCheck && !session.IsExpired() {
       return true
     }
   }
@@ -118,28 +119,40 @@ func (flimsyStorage *FlimsyStorage) CheckSessionToken(tokenToCheck string) bool 
   return false
 }
 
-func (flimsyStorage *FlimsyStorage) CheckCsrfToken(tokenToCheck string) bool {
-  for _, tokenPair := range flimsyStorage.AuthTokenPairs {
-    if tokenPair.CsrfToken == tokenToCheck && !tokenPair.IsExpired() {
-      return true
-    }
-  }
-
-  return false
-}
-
-func (flimsyStorage *FlimsyStorage) DeleteTokenPair(sessionToken string) error {
-  for i, tokenPair := range flimsyStorage.AuthTokenPairs {
-    if tokenPair.SessionToken == sessionToken {
-      if err := flimsyStorage.db.DeleteTokenPair(tokenPair.Id); err != nil {
+func (flimsyStorage *FlimsyStorage) DeleteSession(sessionToken string) error {
+  for i, session := range flimsyStorage.Sessions {
+    if session.Token == sessionToken {
+      if err := flimsyStorage.db.DeleteSession(sessionToken); err != nil {
         return err
       }
-      flimsyStorage.AuthTokenPairs = slices.Delete(flimsyStorage.AuthTokenPairs, i, i+1)
+
+      flimsyStorage.Sessions = slices.Delete(flimsyStorage.Sessions, i, i+1)
+
+      // if err := flimsyStorage.db.DeleteCsrfTokens(sessionToken); err != nil {
+      //   return err
+      // }
+      //
+      // flimsyStorage.CsrfTokens[sessionToken] = nil
+
       return nil
     }
   }
 
-  return errors.New("Token not found in cache")
+  return errors.New("Session not found in cache")
+}
+
+func (flimsyStorage *FlimsyStorage) CheckCsrfToken(sessionToken, csrfToken string) bool {
+  csrfTokens, exists := flimsyStorage.CsrfTokens[sessionToken]; if !exists {
+    return false
+  }
+
+  for _, csrf := range csrfTokens {
+    if csrf.Token == csrfToken && !csrf.IsExpired() {
+      return true
+    }
+  }
+
+  return false
 }
 
 func (flimsyStorage *FlimsyStorage) SaveConfig() error {

@@ -84,10 +84,8 @@ func (flimsyDB *FlimsyDB) Seed() error {
       position INTEGER NOT  NULL,
       FOREIGN KEY(list_id) REFERENCES list(id)
     );`,
-    `CREATE TABLE auth_tokens (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      session_token TEXT NOT NULL,
-      csrf_token TEXT NOT NULL,
+    `CREATE TABLE session (
+      token TEXT NOT NULL,
       expires_at TEXT NOT NULL
     );`,
   }

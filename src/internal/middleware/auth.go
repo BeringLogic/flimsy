@@ -45,11 +45,17 @@ func MustBeAuthenticated(next http.Handler) http.Handler {
 
 func mustHaveValidCSRFToken(s *storage.FlimsyStorage, next http.Handler) http.Handler {
   return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-    csrfToken := r.Header.Get("X-CSRF-TOKEN")
-    if !s.CheckCsrfToken(csrfToken) {
+    session_cookie, err := r.Cookie("session_token"); if err != nil {
       http.Error(w, "Forbidden", http.StatusForbidden)
       return
     }
+
+    csrfToken := r.FormValue("CSRF")
+    if !s.CheckCsrfToken(session_cookie.Value, csrfToken) {
+      http.Error(w, "Forbidden", http.StatusForbidden)
+      return
+    }
+
     next.ServeHTTP(w, r)
   })
 }

@@ -66,9 +66,9 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
   flimsyServer.router.HandleFunc("GET /login", flimsyServer.GET_login)
   flimsyServer.router.HandleFunc("POST /login", flimsyServer.POST_login)
   flimsyServer.router.HandleFunc("GET /logout", flimsyServer.GET_logout)
-  flimsyServer.router.HandleFunc("GET /config", flimsyServer.GET_config)
 
   adminRouter := http.NewServeMux()
+  adminRouter.HandleFunc("GET /config", flimsyServer.GET_config)
   adminRouter.HandleFunc("POST /config", flimsyServer.POST_config)
   adminRouter.HandleFunc("PUT /list", flimsyServer.PUT_list)
   adminRouter.HandleFunc("GET /list/{id}", flimsyServer.GET_list)
@@ -81,10 +81,15 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
   adminRouter.HandleFunc("DELETE /item/{id}", flimsyServer.DELETE_item)
   adminRouter.HandleFunc("POST /reorderItems", flimsyServer.POST_reorderItems)
 
-  flimsyServer.router.Handle("/", middleware.MustBeAuthenticated(adminRouter))
-
   wrappedLogger := middleware.Logging(flimsyServer.log, false)
   wrappedIsAuthenticated := middleware.IsAuthenticated(flimsyServer.storage)
+  // wrappedMustHaveValidCSRFToken := middleware.MustHaveValidCSRFToken(flimsyServer.storage)
+
+  adminMiddlewareStack := middleware.CreateStack(
+    middleware.MustBeAuthenticated,
+    // wrappedMustHaveValidCSRFToken,
+  )
+  flimsyServer.router.Handle("/", adminMiddlewareStack(adminRouter))
 
   flimsyServer.middlewareStack = middleware.CreateStack(
     wrappedLogger,
@@ -231,35 +236,24 @@ func (flimsyServer *FlimsyServer) GET_weather(w http.ResponseWriter, r *http.Req
 }
 
 func (flimsyServer *FlimsyServer) logUserIn(w http.ResponseWriter, r *http.Request) {
-  authTokens, err := flimsyServer.storage.GenerateTokenPair(); if err != nil {
+  session, err := flimsyServer.storage.CreateNewSession(); if err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return
   }
 
   sessionCookie := http.Cookie{
     Name: "session_token",
-    Value: authTokens.SessionToken,
+    Value: session.Token,
     HttpOnly: true,
-    Expires: authTokens.ExpiresAt,
-    SameSite: http.SameSiteLaxMode,
-  }
-
-
-  csrfCookie := http.Cookie{
-    Name: "csrf_token",
-    Value: authTokens.CsrfToken,
-    HttpOnly: false,
-    Expires: authTokens.ExpiresAt,
-    SameSite: http.SameSiteLaxMode,
+    Expires: session.ExpiresAt,
+    SameSite: http.SameSiteStrictMode,
   }
 
   if r.URL.Scheme == "https" {
     sessionCookie.Secure = true
-    csrfCookie.Secure = true
   }
 
   http.SetCookie(w, &sessionCookie)
-  http.SetCookie(w, &csrfCookie)
 
   flimsyServer.log.Print("User logged in")
 }
@@ -299,7 +293,7 @@ func (flimsyServer *FlimsyServer) GET_logout(w http.ResponseWriter, r *http.Requ
     return
   }
 
-  if err := flimsyServer.storage.DeleteTokenPair(currentSessionCookie.Value); err != nil {
+  if err := flimsyServer.storage.DeleteSession(currentSessionCookie.Value); err != nil {
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
@@ -309,24 +303,14 @@ func (flimsyServer *FlimsyServer) GET_logout(w http.ResponseWriter, r *http.Requ
     Value: "",
     HttpOnly: true,
     Expires: time.Now(),
-    SameSite: http.SameSiteLaxMode,
-  }
-
-  newCsrfCookie := http.Cookie{
-    Name: "csrf_token",
-    Value: "",
-    HttpOnly: false,
-    Expires: time.Now(),
-    SameSite: http.SameSiteLaxMode,
+    SameSite: http.SameSiteStrictMode,
   }
 
   if r.URL.Scheme == "https" {
     newSessionCookie.Secure = true
-    newCsrfCookie.Secure = true
   }
 
   http.SetCookie(w, &newSessionCookie)
-  http.SetCookie(w, &newCsrfCookie)
 
   http.Redirect(w, r, "/", http.StatusSeeOther)
 
