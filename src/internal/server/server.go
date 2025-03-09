@@ -14,9 +14,17 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	  "image"
+	_ "image/jpeg"
+	_ "image/png"
+	_ "image/gif"
+
+	_ "golang.org/x/image/webp"
+	_ "golang.org/x/image/bmp"
+	_ "golang.org/x/image/tiff"
 
 	"github.com/dustin/go-humanize"
-	"github.com/thomas-bouvier/palette-extractor"
+	"github.com/BeringLogic/palette-extractor"
 
 	"github.com/BeringLogic/flimsy/internal/auth"
 	"github.com/BeringLogic/flimsy/internal/icons"
@@ -433,7 +441,13 @@ func getColorsFromBackground(backgroundImageName string) (string, string, string
   }
   defer backgroundImage.Close()
 
-  extractor := extractor.NewExtractor("/data/backgrounds/" + backgroundImageName, 1)
+  img, _, err := image.Decode(backgroundImage); if err != nil {
+    return "", "", "", fmt.Errorf("Decode error: %w", err)
+  }
+
+  extractor, err := extractor.NewExtractor(img, 1); if err != nil {
+    return "", "", "", fmt.Errorf("NewExtractor error: %w", err)
+  }
 
   palette := extractor.GetPalette(3)
 
