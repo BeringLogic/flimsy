@@ -259,7 +259,7 @@ func (flimsyServer *FlimsyServer) logUserIn(w http.ResponseWriter) {
 func (flimsyServer *FlimsyServer) GET_login(w http.ResponseWriter, r *http.Request) {
   if utils.GetEnv("FLIMSY_USERNAME", "") == "" && utils.GetEnv("FLIMSY_PASSWORD", "") == "" {
     flimsyServer.logUserIn(w)
-    session_message = "Authentication is disabled. You can enable it by setting the environment variables FLIMSY_USERNAME and FLIMSY_PASSWORD.\n\n- Click on the gear button to customize the appearance\n- Click on items and lists to edit them\n- Drag & drop to reorder."
+    session_message = "Authentication is disabled. You can enable it by setting the environment variables FLIMSY_USERNAME and FLIMSY_PASSWORD.\n\nYou are now logged in!\n\n- Click on the gear button to customize the appearance\n- Click on items and lists to edit them\n- Drag & drop to reorder."
     http.Redirect(w, r, "/", http.StatusSeeOther)
   } else {
     flimsyServer.executeTemplate("loginDialog.tmpl", &w, nil)
