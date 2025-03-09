@@ -14,19 +14,10 @@ Flimsy home page for your homelab
 ### Create a compose.yaml file
 ```yaml
 services:
-  web:
-    image: beringlogic/flimsy-web:latest
-    ports:
-      - 8888:80
-    volumes:
-      - data:/var/www/data
-    # Optional: Only used for log files...
-    environment:
-      - TZ=${TZ:-UTC}
   app:
     image: beringlogic/flimsy-app:latest
     volumes:
-      - data:/data # If using a local directory instead of a managed volume, make sure it exists and is owned by the user with UID 1000
+      - data:/data
             
       # If you want to monitor free space on a filesystem, mount it read-only on /mnt/name in the container
       - /home/phil/Data:/mnt/Data:ro
@@ -49,7 +40,7 @@ services:
       - FLIMSY_CPU_TEMP_SENSOR=${FLIMSY_CPU_TEMP_SENSOR}
 ```
 
-### Start the containers
+### Start the container
 ```bash
 docker compose up -d
 ```
@@ -65,5 +56,5 @@ docker compose up -d
 - [catppuccin themes](https://github.com/catppuccin/catppuccin/blob/main/docs/style-guide.md)
 - [dashboard-icons](https://github.com/homarr-labs/dashboard-icons)
 - The favicon is [homarr-labs/dashboard-icons homepage.png](https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png)
-- The autodetection of colors from the uploaded background is using this code: [League Color Extractor](https://github.com/thephpleague/color-extractor)
+- The autodetection of colors from the uploaded background is using this code: [palette-extractor](https://github.com/BeringLogic/palette-extractor)
 
