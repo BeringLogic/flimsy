@@ -1,11 +1,14 @@
 package server
 
-
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"image"
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 	"io"
 	"net/http"
 	"net/url"
@@ -14,14 +17,10 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	  "image"
-	_ "image/jpeg"
-	_ "image/png"
-	_ "image/gif"
 
-	_ "golang.org/x/image/webp"
 	_ "golang.org/x/image/bmp"
 	_ "golang.org/x/image/tiff"
+	_ "golang.org/x/image/webp"
 
 	"github.com/dustin/go-humanize"
 	"github.com/BeringLogic/palette-extractor"
