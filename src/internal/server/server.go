@@ -230,27 +230,36 @@ func (flimsyServer *FlimsyServer) GET_weather(w http.ResponseWriter, r *http.Req
   })
 }
 
-func (flimsyServer *FlimsyServer) logUserIn(w http.ResponseWriter) {
+func (flimsyServer *FlimsyServer) logUserIn(w http.ResponseWriter, r *http.Request) {
   authTokens, err := flimsyServer.storage.GenerateTokenPair(); if err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return
   }
 
-  http.SetCookie(w, &http.Cookie{
+  sessionCookie := http.Cookie{
     Name: "session_token",
     Value: authTokens.SessionToken,
     HttpOnly: true,
     Expires: authTokens.ExpiresAt,
     SameSite: http.SameSiteLaxMode,
-  })
+  }
 
-  http.SetCookie(w, &http.Cookie{
+
+  csrfCookie := http.Cookie{
     Name: "csrf_token",
     Value: authTokens.CsrfToken,
     HttpOnly: false,
     Expires: authTokens.ExpiresAt,
     SameSite: http.SameSiteLaxMode,
-  })
+  }
+
+  if r.URL.Scheme == "https" {
+    sessionCookie.Secure = true
+    csrfCookie.Secure = true
+  }
+
+  http.SetCookie(w, &sessionCookie)
+  http.SetCookie(w, &csrfCookie)
 
   flimsyServer.log.Print("User logged in")
 }
@@ -258,7 +267,7 @@ func (flimsyServer *FlimsyServer) logUserIn(w http.ResponseWriter) {
 func (flimsyServer *FlimsyServer) GET_login(w http.ResponseWriter, r *http.Request) {
   if utils.GetEnv("FLIMSY_USERNAME", "") == "" && utils.GetEnv("FLIMSY_PASSWORD", "") == "" {
     flimsyServer.log.Print("Authentication is disabled. You can enable it by setting the environment variables FLIMSY_USERNAME and FLIMSY_PASSWORD.")
-    flimsyServer.logUserIn(w)
+    flimsyServer.logUserIn(w, r)
     session_message = "Authentication is disabled. You can enable it by setting the environment variables FLIMSY_USERNAME and FLIMSY_PASSWORD.\n\nYou are now logged in!\n\n- Click on the gear button to customize the appearance\n- Click on items and lists to edit them\n- Drag & drop to reorder."
     http.Redirect(w, r, "/", http.StatusSeeOther)
   } else {
@@ -279,36 +288,46 @@ func (flimsyServer *FlimsyServer) POST_login(w http.ResponseWriter, r *http.Requ
     return
   }
 
-  flimsyServer.logUserIn(w)
+  flimsyServer.logUserIn(w, r)
   session_message = "You are now logged in!\n- Click on the gear button to customize the appearance\n- Click on items and lists to edit them\n- Drag & drop to reorder."
   w.Header().Set("HX-Location", "/")
 }
 
 func (flimsyServer *FlimsyServer) GET_logout(w http.ResponseWriter, r *http.Request) {
-  sessionCookie, err := r.Cookie("session_token"); if err != nil {
+  currentSessionCookie, err := r.Cookie("session_token"); if err != nil {
     http.Redirect(w, r, "/", http.StatusSeeOther)
     return
   }
 
-  if err := flimsyServer.storage.DeleteTokenPair(sessionCookie.Value); err != nil {
+  if err := flimsyServer.storage.DeleteTokenPair(currentSessionCookie.Value); err != nil {
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
 
-  http.SetCookie(w, &http.Cookie{
+  newSessionCookie := http.Cookie{
     Name: "session_token",
     Value: "",
     HttpOnly: true,
     Expires: time.Now(),
     SameSite: http.SameSiteLaxMode,
-  })
-  http.SetCookie(w, &http.Cookie{
+  }
+
+  newCsrfCookie := http.Cookie{
     Name: "csrf_token",
     Value: "",
     HttpOnly: false,
     Expires: time.Now(),
     SameSite: http.SameSiteLaxMode,
-  })
+  }
+
+  if r.URL.Scheme == "https" {
+    newSessionCookie.Secure = true
+    newCsrfCookie.Secure = true
+  }
+
+  http.SetCookie(w, &newSessionCookie)
+  http.SetCookie(w, &newCsrfCookie)
+
   http.Redirect(w, r, "/", http.StatusSeeOther)
 
   flimsyServer.log.Print("User logged out")

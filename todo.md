@@ -76,4 +76,3 @@
   That call isn't superfluous, it's to set the error code
 - When logging in with auth disabled, it should mention it in the log
 - Error in the console when clicking anything and also when drag&dropping: "TypeError: this is undefined" in some bootstrap file coming out of the blue !?
-- cookies are not secure
