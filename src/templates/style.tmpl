@@ -6,11 +6,17 @@ body {
   background-size: cover;
   color: {{ .Color_foreground }};
   padding: 50px;
+  text-shadow: 1px 1px 1px {{ .Color_background }};
 }
 
 header {
   display: flex;
   justify-content: space-between;
+  background-color: {{ .Color_items }};
+  border: 3px solid {{ .Color_borders }};
+  border-radius: 5px;
+  padding: 10px;
+  opacity: 0.8;
 }
   header div:last-child {
     flex-shrink: 0;
@@ -28,7 +34,6 @@ header {
   display: inline-block;
   margin: 0;
   font-size: 4em;
-  text-shadow: 0 0 2px {{ .Color_background }};
 }
 
 #configButton {
@@ -68,7 +73,7 @@ header {
     margin: 0;
   }
 
-  
+
 /*
 * Weather
 */
@@ -84,14 +89,6 @@ div.weather {
     margin-top: -20px;
   }
 
-div.list h2,
-div.system-info,
-div.weather,
-div.details,
-a.login,
-a.logout {
-  text-shadow: 0 0 2px {{ .Color_background }};
-}
 
 /*
 * Lists and Items
