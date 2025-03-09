@@ -23,7 +23,7 @@
 * [x] Customizable number of columns (customizable per list)
 * [x] Customizable colors 
 * [x] File upload for backgrounds
-* [ ] Automatically pick the colors from the background image
+* [x] Autodetect the colors from the background image
 * [x] Catppuccin colors (mocha and latte)
 * [x] Output of lm-sensors in a list so users can figure out their CPU sensor's name
 * [x] Server status (CPU temp)
@@ -57,7 +57,6 @@
 * [x] login
 * [x] sqlite
 * [x] debugger
-* [ ] [prominentcolor](https://github.com/EdlinOrg/prominentcolor)
 * [ ] Dockerfile app prod (from scratch)
 * [ ] tests?
 * [ ] ADDRESS, INTERFACE? or DOMAIN?
