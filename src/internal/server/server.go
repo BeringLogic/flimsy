@@ -84,7 +84,7 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
 
   flimsyServer.router.Handle("/", middleware.MustBeAuthenticated(adminRouter))
 
-  wrappedLogger := middleware.Logging(flimsyServer.log)
+  wrappedLogger := middleware.Logging(flimsyServer.log, false)
   wrappedIsAuthenticated := middleware.IsAuthenticated(flimsyServer.storage)
 
   flimsyServer.middlewareStack = middleware.CreateStack(
@@ -155,7 +155,7 @@ func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *htt
     return
   }
 
-  if resp.StatusCode != 200 {
+  if resp.StatusCode > 399 {
     flimsyServer.executeTemplate("onlineStatus.tmpl", &w, map[string]string{
       "class" : "offline",
       "color" : "red",
@@ -258,6 +258,7 @@ func (flimsyServer *FlimsyServer) logUserIn(w http.ResponseWriter) {
 
 func (flimsyServer *FlimsyServer) GET_login(w http.ResponseWriter, r *http.Request) {
   if utils.GetEnv("FLIMSY_USERNAME", "") == "" && utils.GetEnv("FLIMSY_PASSWORD", "") == "" {
+    flimsyServer.log.Print("Authentication is disabled. You can enable it by setting the environment variables FLIMSY_USERNAME and FLIMSY_PASSWORD.")
     flimsyServer.logUserIn(w)
     session_message = "Authentication is disabled. You can enable it by setting the environment variables FLIMSY_USERNAME and FLIMSY_PASSWORD.\n\nYou are now logged in!\n\n- Click on the gear button to customize the appearance\n- Click on items and lists to edit them\n- Drag & drop to reorder."
     http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -420,6 +421,8 @@ func (flimsyServer *FlimsyServer) POST_config(w http.ResponseWriter, r *http.Req
     }
   }
 
+  flimsyServer.log.Print("Config saved")
+
   http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
@@ -498,6 +501,8 @@ func (flimsyServer *FlimsyServer) PUT_list(w http.ResponseWriter, r *http.Reques
     return
   }
 
+  flimsyServer.log.Print("List added")
+
   flimsyServer.executeTemplate("list.loggedin.tmpl", &w, lai)
 }
 
@@ -540,6 +545,8 @@ func (flimsyServer *FlimsyServer) PATCH_list(w http.ResponseWriter, r *http.Requ
     return
   }
 
+  flimsyServer.log.Print("List saved")
+
   list.Title = r.FormValue("title")
 
   Number_of_rows_string := r.FormValue("number_of_rows")
@@ -578,6 +585,8 @@ func (flimsyServer *FlimsyServer) DELETE_list(w http.ResponseWriter, r *http.Req
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
+
+  flimsyServer.log.Print("List deleted")
 }
 
 func (flimsyServer *FlimsyServer) POST_reorderLists(w http.ResponseWriter, r *http.Request) {
@@ -605,6 +614,8 @@ func (flimsyServer *FlimsyServer) POST_reorderLists(w http.ResponseWriter, r *ht
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
+
+  flimsyServer.log.Print("Lists reordered")
 }
 
 func (flimsyServer *FlimsyServer) PUT_item(w http.ResponseWriter, r *http.Request) {
@@ -647,6 +658,8 @@ func (flimsyServer *FlimsyServer) PUT_item(w http.ResponseWriter, r *http.Reques
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
+
+  flimsyServer.log.Print("Item added")
 
   flimsyServer.executeTemplate("item.loggedin.tmpl", &w, item)
 }
@@ -697,6 +710,8 @@ func (flimsyServer *FlimsyServer) PATCH_item(w http.ResponseWriter, r *http.Requ
     return
   }
 
+  flimsyServer.log.Print("Item updated")
+
   flimsyServer.executeTemplate("item.loggedin.tmpl", &w, item)
 }
 
@@ -723,6 +738,8 @@ func (flimsyServer *FlimsyServer) DELETE_item(w http.ResponseWriter, r *http.Req
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
+
+  flimsyServer.log.Print("Item deleted")
 }
 
 func (flimsyServer *FlimsyServer) POST_reorderItems(w http.ResponseWriter, r *http.Request) {
@@ -761,4 +778,6 @@ func (flimsyServer *FlimsyServer) POST_reorderItems(w http.ResponseWriter, r *ht
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
+
+  flimsyServer.log.Print("Items reordered")
 }

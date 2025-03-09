@@ -20,7 +20,7 @@ func (w *wrappedWriter) WriteHeader(statusCode int) {
   w.statusCode = statusCode
 }
 
-func logging(log *logger.FlimsyLogger, next http.Handler) http.Handler {
+func logging(log *logger.FlimsyLogger, logAll bool, next http.Handler) http.Handler {
   return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
     start := time.Now()
 
@@ -30,12 +30,15 @@ func logging(log *logger.FlimsyLogger, next http.Handler) http.Handler {
     }
 
     next.ServeHTTP(wrapped, r)
-    log.Printf("%d | %s | %s | %s", wrapped.statusCode, r.Method, r.URL.Path, time.Since(start))
+
+    if logAll || wrapped.statusCode > 399 {
+      log.Printf("%d | %s | %s | %s", wrapped.statusCode, r.Method, r.URL.Path, time.Since(start))
+    }
   })
 }
 
-func Logging(log *logger.FlimsyLogger) func(http.Handler) http.Handler {
+func Logging(log *logger.FlimsyLogger, logAll bool) func(http.Handler) http.Handler {
   return func(next http.Handler) http.Handler {
-    return logging(log, next)
+    return logging(log, logAll, next)
   }
 }
