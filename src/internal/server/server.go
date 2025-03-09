@@ -26,7 +26,6 @@ import (
 	"github.com/dustin/go-humanize"
 	"github.com/BeringLogic/palette-extractor"
 
-	"github.com/BeringLogic/flimsy/internal/auth"
 	"github.com/BeringLogic/flimsy/internal/icons"
 	"github.com/BeringLogic/flimsy/internal/logger"
 	"github.com/BeringLogic/flimsy/internal/middleware"
@@ -82,13 +81,15 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
   adminRouter.HandleFunc("PATCH /item/{id}", flimsyServer.PATCH_item)
   adminRouter.HandleFunc("DELETE /item/{id}", flimsyServer.DELETE_item)
   adminRouter.HandleFunc("POST /reorderItems", flimsyServer.POST_reorderItems)
+
   flimsyServer.router.Handle("/", middleware.MustBeAuthenticated(adminRouter))
 
   wrappedLogger := middleware.Logging(flimsyServer.log)
+  wrappedIsAuthenticated := middleware.IsAuthenticated(flimsyServer.storage)
 
   flimsyServer.middlewareStack = middleware.CreateStack(
     wrappedLogger,
-    middleware.IsAuthenticated,
+    wrappedIsAuthenticated,
   )
 
   return flimsyServer
@@ -231,24 +232,24 @@ func (flimsyServer *FlimsyServer) GET_weather(w http.ResponseWriter, r *http.Req
 }
 
 func (flimsyServer *FlimsyServer) logUserIn(w http.ResponseWriter) {
-  session_token, csrf_token, err := auth.GenerateTokens(); if err != nil {
+  authTokens, err := flimsyServer.storage.GenerateTokenPair(); if err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return
   }
 
   http.SetCookie(w, &http.Cookie{
     Name: "session_token",
-    Value: session_token,
+    Value: authTokens.SessionToken,
     HttpOnly: true,
-    Expires: time.Now().Add(time.Hour * 3),
+    Expires: authTokens.ExpiresAt,
     SameSite: http.SameSiteLaxMode,
   })
 
   http.SetCookie(w, &http.Cookie{
     Name: "csrf_token",
-    Value: csrf_token,
+    Value: authTokens.CsrfToken,
     HttpOnly: false,
-    Expires: time.Now().Add(time.Hour * 3),
+    Expires: authTokens.ExpiresAt,
     SameSite: http.SameSiteLaxMode,
   })
 
@@ -284,6 +285,16 @@ func (flimsyServer *FlimsyServer) POST_login(w http.ResponseWriter, r *http.Requ
 }
 
 func (flimsyServer *FlimsyServer) GET_logout(w http.ResponseWriter, r *http.Request) {
+  sessionCookie, err := r.Cookie("session_token"); if err != nil {
+    http.Redirect(w, r, "/", http.StatusSeeOther)
+    return
+  }
+
+  if err := flimsyServer.storage.DeleteTokenPair(sessionCookie.Value); err != nil {
+    flimsyServer.error(w, http.StatusInternalServerError, err.Error())
+    return
+  }
+
   http.SetCookie(w, &http.Cookie{
     Name: "session_token",
     Value: "",

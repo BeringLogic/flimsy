@@ -11,6 +11,7 @@ import (
 type FlimsyStorage struct {
   db *db.FlimsyDB
   Config *db.Config
+  AuthTokenPairs []*db.AuthTokenPair
   Lists []*db.List
   Items []*db.Item
   AllListsAndItems []*listAndItems
@@ -25,6 +26,8 @@ type listAndItems struct {
 var OpenError error = errors.New("Failed to open DB")
 var SeedError error = errors.New("Failed to seed DB")
 var LoadConfigError error = errors.New("Failed to load config")
+var DeleteExpiredTokensError error = errors.New("Failed to delete expired tokens")
+var LoadAuthTokensError error = errors.New("Failed to load auth tokens")
 var LoadListsError error = errors.New("Failed to load lists")
 var LoadItemsError error = errors.New("Failed to load items")
 
@@ -49,6 +52,13 @@ func (storage *FlimsyStorage) Init() error {
     if storage.Config, err = storage.db.LoadConfig(); err != nil {
       return errors.Join(LoadConfigError, err);
     }
+  }
+
+  if err = storage.db.DeleteExpiredTokens(); err != nil {
+    return errors.Join(DeleteExpiredTokensError, err);
+  }
+  if storage.AuthTokenPairs, err = storage.db.LoadAuthTokens(); err != nil {
+    return errors.Join(LoadAuthTokensError, err);
   }
 
   if storage.Lists, err = storage.db.LoadLists(); err != nil {
@@ -86,6 +96,50 @@ func (flimsyStorage *FlimsyStorage) getAllListsAndItems() []*listAndItems {
 
 func (flimsyStorage *FlimsyStorage) Close() {
   flimsyStorage.db.Close()
+}
+
+func (flimsyStorage *FlimsyStorage) GenerateTokenPair() (*db.AuthTokenPair, error) {
+  tokenPair, err := flimsyStorage.db.GenerateTokenPair(); if err != nil {
+    return nil, err
+  }
+
+  flimsyStorage.AuthTokenPairs = append(flimsyStorage.AuthTokenPairs, tokenPair)
+
+  return tokenPair, nil
+}
+
+func (flimsyStorage *FlimsyStorage) CheckSessionToken(tokenToCheck string) bool {
+  for _, tokenPair := range flimsyStorage.AuthTokenPairs {
+    if tokenPair.SessionToken == tokenToCheck && !tokenPair.IsExpired() {
+      return true
+    }
+  }
+
+  return false
+}
+
+func (flimsyStorage *FlimsyStorage) CheckCsrfToken(tokenToCheck string) bool {
+  for _, tokenPair := range flimsyStorage.AuthTokenPairs {
+    if tokenPair.CsrfToken == tokenToCheck && !tokenPair.IsExpired() {
+      return true
+    }
+  }
+
+  return false
+}
+
+func (flimsyStorage *FlimsyStorage) DeleteTokenPair(sessionToken string) error {
+  for i, tokenPair := range flimsyStorage.AuthTokenPairs {
+    if tokenPair.SessionToken == sessionToken {
+      if err := flimsyStorage.db.DeleteTokenPair(tokenPair.Id); err != nil {
+        return err
+      }
+      flimsyStorage.AuthTokenPairs = slices.Delete(flimsyStorage.AuthTokenPairs, i, i+1)
+      return nil
+    }
+  }
+
+  return errors.New("Token not found in cache")
 }
 
 func (flimsyStorage *FlimsyStorage) SaveConfig() error {

@@ -1,23 +1,22 @@
 package middleware
 
-
 import (
-  "context"
-  "net/http"
+	"context"
+	"net/http"
 
-  "github.com/BeringLogic/flimsy/internal/auth"
+	"github.com/BeringLogic/flimsy/internal/storage"
 )
 
 
 var IsAuthenticatedContextKey string = "middleware.IsAuthenticated"
 
 
-func IsAuthenticated(next http.Handler) http.Handler {
+func isAuthenticated(s *storage.FlimsyStorage, next http.Handler) http.Handler {
   return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
     isAuthenticated := false;
 
     if session_cookie, err := r.Cookie("session_token"); err == nil {
-      if auth.CheckSessionToken(session_cookie.Value) {
+      if s.CheckSessionToken(session_cookie.Value) {
         isAuthenticated = true
       }
     }
@@ -25,6 +24,12 @@ func IsAuthenticated(next http.Handler) http.Handler {
     ctx := context.WithValue(r.Context(), IsAuthenticatedContextKey, isAuthenticated)
     next.ServeHTTP(w, r.WithContext(ctx))
   })
+}
+
+func IsAuthenticated(flimsyStorage *storage.FlimsyStorage) func (http.Handler) http.Handler {
+  return func(next http.Handler) http.Handler {
+    return isAuthenticated(flimsyStorage, next)
+  }
 }
 
 func MustBeAuthenticated(next http.Handler) http.Handler {
@@ -38,13 +43,19 @@ func MustBeAuthenticated(next http.Handler) http.Handler {
   })
 }
 
-func MustHaveValidCSRFToken(next http.Handler) http.Handler {
+func mustHaveValidCSRFToken(s *storage.FlimsyStorage, next http.Handler) http.Handler {
   return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
     csrfToken := r.Header.Get("X-CSRF-TOKEN")
-    if !auth.CheckCSRFToken(csrfToken) {
+    if !s.CheckCsrfToken(csrfToken) {
       http.Error(w, "Forbidden", http.StatusForbidden)
       return
     }
     next.ServeHTTP(w, r)
   })
+}
+
+func MustHaveValidCSRFToken(flimsyStorage *storage.FlimsyStorage) func (http.Handler) http.Handler {
+  return func(next http.Handler) http.Handler {
+    return mustHaveValidCSRFToken(flimsyStorage, next)
+  }
 }
