@@ -81,19 +81,14 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
   adminRouter.HandleFunc("DELETE /item/{id}", flimsyServer.DELETE_item)
   adminRouter.HandleFunc("POST /reorderItems", flimsyServer.POST_reorderItems)
 
-  wrappedLogger := middleware.Logging(flimsyServer.log, false)
-  wrappedIsAuthenticated := middleware.IsAuthenticated(flimsyServer.storage)
-  // wrappedMustHaveValidCSRFToken := middleware.MustHaveValidCSRFToken(flimsyServer.storage)
-
   adminMiddlewareStack := middleware.CreateStack(
     middleware.MustBeAuthenticated,
-    // wrappedMustHaveValidCSRFToken,
   )
   flimsyServer.router.Handle("/", adminMiddlewareStack(adminRouter))
 
   flimsyServer.middlewareStack = middleware.CreateStack(
-    wrappedLogger,
-    wrappedIsAuthenticated,
+    middleware.Logging(flimsyServer.log, false),
+    middleware.IsAuthenticated(flimsyServer.storage),
   )
 
   return flimsyServer

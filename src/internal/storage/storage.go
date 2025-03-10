@@ -12,7 +12,6 @@ type FlimsyStorage struct {
   db *db.FlimsyDB
   Config *db.Config
   Sessions []*db.Session
-  CsrfTokens map[string][]*db.CsrfToken
   Lists []*db.List
   Items []*db.Item
   AllListsAndItems []*listAndItems
@@ -128,31 +127,11 @@ func (flimsyStorage *FlimsyStorage) DeleteSession(sessionToken string) error {
 
       flimsyStorage.Sessions = slices.Delete(flimsyStorage.Sessions, i, i+1)
 
-      // if err := flimsyStorage.db.DeleteCsrfTokens(sessionToken); err != nil {
-      //   return err
-      // }
-      //
-      // flimsyStorage.CsrfTokens[sessionToken] = nil
-
       return nil
     }
   }
 
   return errors.New("Session not found in cache")
-}
-
-func (flimsyStorage *FlimsyStorage) CheckCsrfToken(sessionToken, csrfToken string) bool {
-  csrfTokens, exists := flimsyStorage.CsrfTokens[sessionToken]; if !exists {
-    return false
-  }
-
-  for _, csrf := range csrfTokens {
-    if csrf.Token == csrfToken && !csrf.IsExpired() {
-      return true
-    }
-  }
-
-  return false
 }
 
 func (flimsyStorage *FlimsyStorage) SaveConfig() error {

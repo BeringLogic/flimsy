@@ -40,7 +40,6 @@
 * [ ] favicons for items (https://dashy.to/docs/icons/)
 * [x] HTMX ?
 * [ ] Update system info and weather every X minutes
-* [ ] CSRF
 * [ ] Register first user
 
 # Switch to golang
