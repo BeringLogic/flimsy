@@ -8,6 +8,8 @@ Flimsy home page for your homelab
 - Autodetection of colors from the uploaded background image
 - System-information including CPU temperature, free memory and swap, public IP and free space on filesystems
 - Current Weather from OpenWeatherMap
+- Login to edit lists and items
+- HTMX, HyperScript and Sortable.js
 
 ## Installation
 
