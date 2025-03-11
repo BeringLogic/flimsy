@@ -4,7 +4,7 @@ package db
 type List struct {
   Id int64
   Title string
-  Number_of_rows int
+  Number_of_cols int
   Position int
 }
 
@@ -18,7 +18,7 @@ func (flimsyDB *FlimsyDB) LoadLists() ([]*List, error) {
 
   for rows.Next() {
     var list List
-    if err = rows.Scan(&list.Id, &list.Title, &list.Number_of_rows, &list.Position); err != nil {
+    if err = rows.Scan(&list.Id, &list.Title, &list.Number_of_cols, &list.Position); err != nil {
       return nil, err
     }
     Lists = append(Lists, &list)
@@ -27,7 +27,7 @@ func (flimsyDB *FlimsyDB) LoadLists() ([]*List, error) {
   return Lists, nil
 }
 
-func (flimsyDB *FlimsyDB) AddList(title string, number_of_rows int) (*List, error) {
+func (flimsyDB *FlimsyDB) AddList(title string, number_of_cols int) (*List, error) {
   row := flimsyDB.sqlDb.QueryRow("SELECT MAX(position) + 1 FROM list")
 
   var position int
@@ -35,7 +35,7 @@ func (flimsyDB *FlimsyDB) AddList(title string, number_of_rows int) (*List, erro
     return nil, err
   }
 
-  result, err := flimsyDB.sqlDb.Exec("INSERT INTO list (title, number_of_rows, position) VALUES (?, ?, ?)", title, number_of_rows, position); if err != nil {
+  result, err := flimsyDB.sqlDb.Exec("INSERT INTO list (title, number_of_cols, position) VALUES (?, ?, ?)", title, number_of_cols, position); if err != nil {
     return nil, err
   }
 
@@ -46,7 +46,7 @@ func (flimsyDB *FlimsyDB) AddList(title string, number_of_rows int) (*List, erro
   list := &List {
     Id: id,
     Title: title,
-    Number_of_rows: number_of_rows,
+    Number_of_cols: number_of_cols,
     Position: position,
   }
 
@@ -54,7 +54,7 @@ func (flimsyDB *FlimsyDB) AddList(title string, number_of_rows int) (*List, erro
 }
 
 func (flimsyDB *FlimsyDB) SaveList(list *List) error {
-  _, err := flimsyDB.sqlDb.Exec("UPDATE list SET title = ?, number_of_rows = ?, position = ? WHERE id = ?", list.Title, list.Number_of_rows, list.Position, list.Id)
+  _, err := flimsyDB.sqlDb.Exec("UPDATE list SET title = ?, number_of_cols = ?, position = ? WHERE id = ?", list.Title, list.Number_of_cols, list.Position, list.Id)
   return err
 }
 

@@ -72,7 +72,7 @@ func (flimsyDB *FlimsyDB) Seed() error {
     `CREATE TABLE list (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
-      number_of_rows INTEGER NOT NULL,
+      number_of_cols INTEGER NOT NULL,
       position INTEGER NOT NULL
     );`,
     `CREATE TABLE item (

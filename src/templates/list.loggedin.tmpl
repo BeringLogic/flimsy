@@ -1,6 +1,6 @@
 <div class="list" id="list_{{ .List.Id }}">
   <h2 hx-get="/list/{{ .List.Id }}" hx-target="body" hx-swap="beforeend">{{ .List.Title }}</h2>
-  <div class="items" style="grid-template-columns: repeat({{ .List.Number_of_rows }}, 1fr);" hx-post="/reorderItems" hx-swap="none" hx-trigger="reorderItems" hx-vals="js:{list_id: event.target.parentNode.id.replace('list_', ''), ids: [...event.target.querySelectorAll('.item')].map(i => i.id.replace('item_', ''))}">
+  <div class="items" style="grid-template-columns: repeat({{ .List.Number_of_cols }}, 1fr);" hx-post="/reorderItems" hx-swap="none" hx-trigger="reorderItems" hx-vals="js:{list_id: event.target.parentNode.id.replace('list_', ''), ids: [...event.target.querySelectorAll('.item')].map(i => i.id.replace('item_', ''))}">
     {{ range .Items }}
       {{ template "item.loggedin.tmpl" . }}
     {{ end }}

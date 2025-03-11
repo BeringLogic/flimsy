@@ -138,8 +138,8 @@ func (flimsyStorage *FlimsyStorage) SaveConfig() error {
   return flimsyStorage.db.SaveConfig(flimsyStorage.Config)
 }
 
-func (flimsyStorage *FlimsyStorage) AddList(title string, number_of_rows int) (*listAndItems, error) {
-  list, err := flimsyStorage.db.AddList(title, number_of_rows); if err != nil {
+func (flimsyStorage *FlimsyStorage) AddList(title string, number_of_cols int) (*listAndItems, error) {
+  list, err := flimsyStorage.db.AddList(title, number_of_cols); if err != nil {
     return nil, err
   }
 

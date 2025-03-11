@@ -482,18 +482,18 @@ func (flimsyServer *FlimsyServer) PUT_list(w http.ResponseWriter, r *http.Reques
     return
   }
 
-  numberOfRowsString := r.FormValue("number_of_rows")
-  if numberOfRowsString == "" {
-    flimsyServer.error(w, http.StatusBadRequest, "Missing number of rows")
+  numberOfColsString := r.FormValue("number_of_cols")
+  if numberOfColsString == "" {
+    flimsyServer.error(w, http.StatusBadRequest, "Missing number of cols")
     return
   }
 
-  numberOfRows, err := strconv.Atoi(numberOfRowsString); if err != nil {
+  numberOfCols, err := strconv.Atoi(numberOfColsString); if err != nil {
     flimsyServer.error(w, http.StatusBadRequest, err.Error())
     return
   }
 
-  lai, err := flimsyServer.storage.AddList(title, numberOfRows); if err != nil {
+  lai, err := flimsyServer.storage.AddList(title, numberOfCols); if err != nil {
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
@@ -546,8 +546,8 @@ func (flimsyServer *FlimsyServer) PATCH_list(w http.ResponseWriter, r *http.Requ
 
   list.Title = r.FormValue("title")
 
-  Number_of_rows_string := r.FormValue("number_of_rows")
-  list.Number_of_rows, err = strconv.Atoi(Number_of_rows_string); if err != nil {
+  Number_of_cols_string := r.FormValue("number_of_cols")
+  list.Number_of_cols, err = strconv.Atoi(Number_of_cols_string); if err != nil {
     flimsyServer.error(w, http.StatusBadRequest, err.Error())
     return
   }

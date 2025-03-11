@@ -6,8 +6,8 @@
         <input id="listTitle" type="text" name="title" value="{{ .Title }}" required>
       </div>
       <div class="dialog-field">
-        <label for="listRows">Number of Rows</label>
-        <input id="listRows" type="number" min="1" name="number_of_rows" value="{{ .Number_of_rows }}" required>
+        <label for="listCols">Number of Cols</label>
+        <input id="listCols" type="number" min="1" name="number_of_cols" value="{{ .Number_of_cols }}" required>
       </div>
       <div class="dialog-buttons">
         <button type="button" hx-delete="/list/{{ .Id }}" hx-target="#modal" hx-swap="outerHTML">Delete</button>
