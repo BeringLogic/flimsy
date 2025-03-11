@@ -66,9 +66,9 @@
 
 # Docker stuff I need to learn
 * [ ] Docker secrets
-* [ ] How to deal with /data. I want it to work with a managed volume, but I want it to work with a bound volume too. If bound, user must mkdir and chown 1000:1000 (flimsy user in the container). Awkward since 1000 might not be the user's id on the host...
+* [ ] How to deal with /data. I want it to work with a managed volume, but I want it to work with a bound volume too.
 * [ ] How to run rootless (https://docs.docker.com/engine/security/rootless/)
-* [ ] Find the proper way to deal with Dev and Production. (php-production.ini, max_execution_time, grep max_input_time)
+* [ ] Find the proper way to deal with Dev and Production.
 
 # Bugs
 - http: superfluous response.WriteHeader call from github.com/BeringLogic/flimsy/internal/middleware.(*wrappedWriter).WriteHeader (logging.go:19)
