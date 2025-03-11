@@ -27,9 +27,9 @@
       {{ else }}
         <a id="login" href="#" hx-get="/login" hx-target="body" hx-swap="beforeend">Login</a>
       {{ end }}
-      <div id="system-info" hx-get="/systemInfo" hx-trigger="load"></div>
+      <div id="system-info" hx-get="/systemInfo" hx-trigger="load, every 1m"></div>
       {{ if .FLIMSY_WEATHER_API_KEY }}
-        <div class="weather" hx-get="/weather" hx-trigger="load">
+        <div class="weather" hx-get="/weather" hx-trigger="load, every 60m">
         {{ template "weather.tmpl" . }}
         </div>
       {{ end }}

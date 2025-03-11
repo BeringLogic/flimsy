@@ -39,7 +39,7 @@
 * [ ] Docker integration
 * [ ] favicons for items (https://dashy.to/docs/icons/)
 * [x] HTMX ?
-* [ ] Update system info and weather every X minutes
+* [x] Update system info and weather every X minutes
 * [ ] Register first user
 
 # Switch to golang
