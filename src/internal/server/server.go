@@ -498,7 +498,7 @@ func (flimsyServer *FlimsyServer) PUT_list(w http.ResponseWriter, r *http.Reques
     return
   }
 
-  flimsyServer.log.Print("List added")
+  flimsyServer.log.Print("List added:", title)
 
   flimsyServer.executeTemplate("list.loggedin.tmpl", &w, lai)
 }
@@ -542,7 +542,7 @@ func (flimsyServer *FlimsyServer) PATCH_list(w http.ResponseWriter, r *http.Requ
     return
   }
 
-  flimsyServer.log.Print("List saved")
+  flimsyServer.log.Print("List saved:", list.Title)
 
   list.Title = r.FormValue("title")
 
@@ -656,7 +656,7 @@ func (flimsyServer *FlimsyServer) PUT_item(w http.ResponseWriter, r *http.Reques
     return
   }
 
-  flimsyServer.log.Print("Item added")
+  flimsyServer.log.Print("Item added:", title)
 
   flimsyServer.executeTemplate("item.loggedin.tmpl", &w, item)
 }
@@ -707,7 +707,7 @@ func (flimsyServer *FlimsyServer) PATCH_item(w http.ResponseWriter, r *http.Requ
     return
   }
 
-  flimsyServer.log.Print("Item updated")
+  flimsyServer.log.Print("Item updated:", item.Title)
 
   flimsyServer.executeTemplate("item.loggedin.tmpl", &w, item)
 }
