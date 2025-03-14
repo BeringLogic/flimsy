@@ -651,6 +651,11 @@ func (flimsyServer *FlimsyServer) PUT_item(w http.ResponseWriter, r *http.Reques
     return
   }
 
+  if err := icons.DownloadIcon(icon); err != nil {
+    flimsyServer.error(w, http.StatusInternalServerError, err.Error())
+    return
+  }
+
   item, err := flimsyServer.storage.AddItem(listId, title, url, icon); if err != nil {
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
@@ -701,6 +706,11 @@ func (flimsyServer *FlimsyServer) PATCH_item(w http.ResponseWriter, r *http.Requ
   item.Title = r.FormValue("title")
   item.Url = r.FormValue("url")
   item.Icon = r.FormValue("icon")
+
+  if err := icons.DownloadIcon(item.Icon); err != nil {
+    flimsyServer.error(w, http.StatusInternalServerError, err.Error())
+    return
+  }
 
   if err := flimsyServer.storage.SaveItem(item); err != nil {
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
