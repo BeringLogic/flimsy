@@ -41,6 +41,9 @@
 * [x] HTMX ?
 * [x] Update system info and weather every X minutes
 * [ ] /signup to create user
+* [ ] Keyboard shortcuts?
+* [ ] RSS feeds?
+* [ ] Pihole widget?
 
 # Switch to golang
 * [x] golang base image
@@ -74,4 +77,5 @@
 - http: superfluous response.WriteHeader call from github.com/BeringLogic/flimsy/internal/middleware.(*wrappedWriter).WriteHeader (logging.go:19)
   I get this if I do a w.Write() before w.WriteHeader() but not if I do http.Error()? Looks like flimsyServer.executeTemplate is doing it too
   That call isn't superfluous, it's to set the error code
-- Error in the console when clicking anything and also when drag&dropping: "TypeError: this is undefined" in some bootstrap file coming out of the blue !?
+- Error when clicking a list or an item and also when drag&dropping: "TypeError: this is undefined" in moz-extension://c1bc3b73-63a9-49a2-8dda-77940ea6c9de/content/bootstrap-legacy-autofill-overlay.js
+  Appears to be a Bitwarden and Sortable.js issue
