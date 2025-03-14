@@ -1,19 +1,25 @@
+:root {
+  --color-background: {{ .Color_background }};
+  --color-foreground: {{ .Color_foreground }};
+  --color-items: {{ .Color_items }};
+  --color-borders: {{ .Color_borders }};
+}
 
 body {
-  background-color: {{ .Color_background }};
+  background-color: var(--color-background);
   background-image: url(/data/backgrounds/{{ .Background_image }});
   background-repeat: no-repeat;
   background-size: cover;
-  color: {{ .Color_foreground }};
+  color: var(--color-foreground);
   padding: 50px;
-  text-shadow: 1px 1px 1px {{ .Color_background }};
+  text-shadow: 1px 1px 1px var(--color-background);
 }
 
 header {
   display: flex;
   justify-content: space-between;
-  background-color: {{ .Color_items }};
-  border: 3px solid {{ .Color_borders }};
+  background-color: var(--color-items);
+  border: 3px solid var(--color-borders);
   border-radius: 5px;
   padding: 10px;
   opacity: 0.9;
@@ -44,7 +50,7 @@ header {
 #login,
 #logout {
   vertical-align: -20px;
-  color: {{ .Color_foreground }};
+  color: var(--color-foreground);
   margin: 0 20px;
 }
 
@@ -110,15 +116,15 @@ div.list div.items {
   div.item {
     display: inline-block;
     align-content: center;
-    border: 3px solid {{ .Color_borders }};
+    border: 3px solid var(--color-borders);
     border-radius: 5px;
     padding: 5px;
-    background-color: {{ .Color_items }};
+    background-color: var(--color-items);
     opacity: 0.9;
     cursor: pointer;
   }
   div.item a {
-    color: {{ .Color_foreground }};
+    color: var(--color-foreground);
     text-decoration: none;
   }
   
@@ -201,10 +207,10 @@ div.addItem {
 	margin-top:10vh;
 
 	/* Display properties for visible dialog*/
-	border:solid 1px {{ .Color_borders }};
+	border:solid 1px var(--color-borders);
 	border-radius:8px;
 	box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.3);
-	background-color: {{ .Color_items }};
+	background-color: var(--color-items);
 	padding:20px;
 
 	/* Animate when opening */
