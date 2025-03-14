@@ -7,7 +7,7 @@
 
 body {
   background-color: var(--color-background);
-  background-image: url(/data/backgrounds/{{ .Background_image }});
+  {{ if .Background_image }}background-image: url(/data/backgrounds/{{ .Background_image }});{{ end }}
   background-repeat: no-repeat;
   background-size: cover;
   color: var(--color-foreground);

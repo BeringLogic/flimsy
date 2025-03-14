@@ -30,9 +30,9 @@ func (flimsyDB *FlimsyDB) Seed() error {
   queries := []string {
     `CREATE TABLE config (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      icon TEXT NULL,
-      title TEXT NULL,
-      background_image TEXT NULL,
+      icon TEXT NOT NULL,
+      title TEXT NOT NULL,
+      background_image TEXT NOT NULL,
       color_background TEXT NOT NULL,
       color_foreground TEXT NOT NULL,
       color_items TEXT NOT NULL,
@@ -46,6 +46,7 @@ func (flimsyDB *FlimsyDB) Seed() error {
     `INSERT INTO config (
       icon,
       title,
+      background_image,
       color_background,
       color_foreground,
       color_items,
@@ -56,9 +57,10 @@ func (flimsyDB *FlimsyDB) Seed() error {
       show_public_ip, 
       show_free_space
     )
-    VALUES
-      NULL,
+    VALUES (
+      '',
       'Flimsy Home Page',
+      '',
       '#1e1e2e',
       '#cdd6f4',
       '#11111b',
@@ -81,7 +83,7 @@ func (flimsyDB *FlimsyDB) Seed() error {
       title TEXT NOT NULL,
       url TEXT NOT NULL,
       icon TEXT NOT NULL,
-      position INTEGER NOT  NULL,
+      position INTEGER NOT NULL,
       FOREIGN KEY(list_id) REFERENCES list(id)
     );`,
     `CREATE TABLE session (

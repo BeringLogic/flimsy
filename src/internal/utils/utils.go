@@ -16,7 +16,14 @@ func GetEnv(key, def string) string {
 
 func GetBackgrounds() ([]string, error) {
   files, err := os.ReadDir("/data/backgrounds"); if err != nil {
-    return []string{}, err
+    if os.IsNotExist(err) {
+      if err := os.Mkdir("/data/backgrounds", 0755); err != nil {
+        return nil, err
+      }
+      return []string{}, nil
+    } else {
+      return nil, err
+    }
   }
 
   filenames := []string{}
