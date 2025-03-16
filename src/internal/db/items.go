@@ -30,7 +30,7 @@ func (flimsyDB *FlimsyDB) LoadItems() ([]*Item, error) {
 }
 
 func (flimsyDB *FlimsyDB) AddItem(list_id int64, title string, url string, icon string) (*Item, error) {
-  row := flimsyDB.sqlDb.QueryRow("SELECT MAX(position) FROM item")
+  row := flimsyDB.sqlDb.QueryRow("SELECT IFNULL(MAX(position),0) FROM item")
 
   var position int
   if err := row.Scan(&position); err != nil {

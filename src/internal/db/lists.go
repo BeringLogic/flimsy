@@ -28,7 +28,7 @@ func (flimsyDB *FlimsyDB) LoadLists() ([]*List, error) {
 }
 
 func (flimsyDB *FlimsyDB) AddList(title string, number_of_cols int) (*List, error) {
-  row := flimsyDB.sqlDb.QueryRow("SELECT MAX(position) + 1 FROM list")
+  row := flimsyDB.sqlDb.QueryRow("SELECT IFNULL(MAX(position),0) + 1 FROM list")
 
   var position int
   if err := row.Scan(&position); err != nil {
