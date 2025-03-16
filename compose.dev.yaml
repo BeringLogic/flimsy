@@ -1,10 +1,12 @@
 services:
   app:
-    container_name: flimsy
     build:
+      dockerfile: Dockerfile.dev
       context: .
     volumes:
-      - data:/data
+      - ./data:/data
+      - /home/phil/Data:/mnt/Data/:ro
+      - /home/phil/OldData:/mnt/OldData/:ro
     environment:
       # Optional: Only used for log files...
       - TZ=${TZ:-UTC}
@@ -22,6 +24,20 @@ services:
       # Optional: Name of the CPU Temp sensor in lm-sensors. Most likely "Tctl" for Ryzen CPUs or "Package id 0" for Xeon CPUs.
       - FLIMSY_CPU_TEMP_SENSOR=${FLIMSY_CPU_TEMP_SENSOR}
     ports:
-      - 8080:8080
-volumes:
-  data:
+      - 8888:8080
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /usr/src/flimsy
+          ignore:
+            - static/
+            - templates/
+        - action: sync
+          path: ./src/static
+          target: /var/lib/flimsy/static
+        - action: sync
+          path: ./src/templates
+          target: /var/lib/flimsy/templates
+#volumes:
+  #  data:
