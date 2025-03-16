@@ -8,6 +8,7 @@ Flimsy home page for your homelab
 - Autodetection of colors from the uploaded background image
 - System-information including CPU temperature, free memory and swap, public IP and free space on filesystems
 - Current Weather from OpenWeatherMap
+- Online status of each items
 - Login to edit lists and items
 - HTMX, HyperScript and Sortable.js
 
@@ -17,7 +18,8 @@ Flimsy home page for your homelab
 ```yaml
 services:
   app:
-    image: beringlogic/flimsy-app:latest
+    container_name: flimsy
+    image: beringlogic/flimsy:latest
     volumes:
       - data:/data
             
@@ -26,20 +28,22 @@ services:
       - /mnt/backups:/mnt/backups:ro
     environment:
       # Optional: Only used for log files...
-      - TZ=${TZ:-UTC}
+      - TZ=America/New_York
 
       # Optional: Login credentials. If none are specified, authentication is disabled.
-      - FLIMSY_USERNAME=${FLIMSY_USERNAME}
-      - FLIMSY_PASSWORD=${FLIMSY_PASSWORD}
+      - FLIMSY_USERNAME=admin
+      - FLIMSY_PASSWORD=admin
 
       # Optional: OpenWeatherMap.org API settings.
-      - FLIMSY_WEATHER_API_KEY=${FLIMSY_WEATHER_API_KEY}
-      - FLIMSY_WEATHER_LOCATION=${FLIMSY_WEATHER_LOCATION}
-      - FLIMSY_WEATHER_UNITS=${FLIMSY_WEATHER_UNITS}
-      - FLIMSY_WEATHER_LANGUAGE=${FLIMSY_WEATHER_LANGUAGE}
+      - FLIMSY_WEATHER_API_KEY=abc123
+      - FLIMSY_WEATHER_LOCATION=New York
+      - FLIMSY_WEATHER_UNITS=imperial
+      - FLIMSY_WEATHER_LANGUAGE=en
 
       # Optional: Name of the CPU Temp sensor in lm-sensors. ex: "Tctl" for Ryzen CPUs or "Package id 0" for Xeon CPUs.
-      - FLIMSY_CPU_TEMP_SENSOR=${FLIMSY_CPU_TEMP_SENSOR}
+      - FLIMSY_CPU_TEMP_SENSOR=Package id 0
+volumes:
+  data:
 ```
 
 ### Start the container
@@ -47,11 +51,17 @@ services:
 docker compose up -d
 ```
 
+### Check the logs
+```bash
+docker compose logs -f
+```
+
 ## Usage
-- When logged out, click on items to go there
+- When logged out, click on items to navigate to the destination URL
 - Login to be able to edit
 - Click the gear button to customize appearance
-- Click the lists and items to edit them
+- Click on Add List and Add Item
+- Click on the lists and items to edit them
 - Drag & drop to reorder lists and items
 
 ## References
