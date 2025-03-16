@@ -79,3 +79,8 @@
   That call isn't superfluous, it's to set the error code
 - Error when clicking a list or an item and also when drag&dropping: "TypeError: this is undefined" in moz-extension://c1bc3b73-63a9-49a2-8dda-77940ea6c9de/content/bootstrap-legacy-autofill-overlay.js
   Appears to be a Bitwarden and Sortable.js issue
+- mounted folders in /mnt are listed alphabetically, not in the order in the compose file
+- if icon download fails but there is an icon of that name, just use it
+- /onlinestatus should timeout after 3 seconds
+- /onlinestatus shows offline for glances, pi-hole, portainer, dockge, all the syncthings, and router, even though they are online
+
