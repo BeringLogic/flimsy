@@ -1,9 +1,9 @@
 package systemInfo
 
-
 import (
-  "strings"
-  "os/exec"
+	"os/exec"
+	"regexp"
+	"strings"
 )
 
 
@@ -32,6 +32,7 @@ func GetSensors() ([]*Chip, error) {
   var chip *Chip
   var sensor *Sensor
   var reading *Reading
+  var readingRegex = regexp.MustCompile(`_input$`)
 
   for _, line := range strings.Split(string(output), "\n") {
     line = strings.TrimSpace(line)
@@ -55,6 +56,9 @@ func GetSensors() ([]*Chip, error) {
       sensor.Readings = []*Reading{}
       chip.Sensors = append(chip.Sensors, sensor)
     } else {
+      if !readingRegex.MatchString(parts[0]) {
+        continue
+      }
       reading = new(Reading)
       reading.Name = parts[0]
       reading.Value = parts[1]
