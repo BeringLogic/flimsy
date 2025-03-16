@@ -154,7 +154,7 @@ func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *htt
     return
   }
 
-  if resp.StatusCode > 399 {
+  if resp.StatusCode > 399 && resp.StatusCode != http.StatusUnauthorized && resp.StatusCode != http.StatusForbidden {
     flimsyServer.executeTemplate("onlineStatus.tmpl", &w, map[string]string{
       "class" : "offline",
       "color" : "red",
