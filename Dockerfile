@@ -25,6 +25,4 @@ COPY --from=builder /usr/src/flimsy/templates /var/lib/flimsy/templates
 RUN mkdir /data
 VOLUME /data
 
-EXPOSE 8080
-
 CMD ["flimsy"]

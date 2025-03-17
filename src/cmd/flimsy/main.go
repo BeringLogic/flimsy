@@ -5,6 +5,7 @@ import (
   "github.com/BeringLogic/flimsy/internal/logger"
   "github.com/BeringLogic/flimsy/internal/server"
   "github.com/BeringLogic/flimsy/internal/storage"
+  "github.com/BeringLogic/flimsy/internal/utils"
 )
 
 
@@ -29,8 +30,9 @@ func main() {
   }
   defer app.storage.Close()
 
-  app.log.Print("Starting server on port 0.0.0.0:8080")
-  if err := app.server.Start(); err != nil {
+  host := utils.GetEnv("FLIMSY_HOST", "0.0.0.0")
+  port := utils.GetEnv("FLIMSY_PORT", "8080")
+  if err := app.server.Start(host, port); err != nil {
     app.log.Fatalf("Failed to start server: %s", err.Error())
   }
 }

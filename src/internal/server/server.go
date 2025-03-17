@@ -94,8 +94,9 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
   return flimsyServer
 }
 
-func (flimsyServer *FlimsyServer) Start() error {
-  return http.ListenAndServe(":8080", flimsyServer.middlewareStack(flimsyServer.router))
+func (flimsyServer *FlimsyServer) Start(host string, port string) error {
+  flimsyServer.log.Printf("Starting server on %s:%s", host, port)
+  return http.ListenAndServe(host + ":" + port, flimsyServer.middlewareStack(flimsyServer.router))
 }
 
 func (flimsyServer *FlimsyServer) error(w http.ResponseWriter, statusCode int, errorMessage string) {

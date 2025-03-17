@@ -23,8 +23,12 @@ services:
 
       # Optional: Name of the CPU Temp sensor in lm-sensors. Most likely "Tctl" for Ryzen CPUs or "Package id 0" for Xeon CPUs.
       - FLIMSY_CPU_TEMP_SENSOR=${FLIMSY_CPU_TEMP_SENSOR}
+
+      # Optional: Set if you want to bind to something else than 0.0.0.0:8080
+      - FLIMSY_HOST=${FLIMSY_HOST}
+      - FLIMSY_PORT=${FLIMSY_PORT}
     ports:
-      - 8080:8080
+      - 8080:${FLIMSY_PORT:-8080}
     develop:
       watch:
         - action: sync

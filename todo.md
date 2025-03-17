@@ -61,10 +61,10 @@
 * [x] login
 * [x] sqlite
 * [x] debugger
-* [ ] Dockerfile app prod (from scratch)
+* [x] Dockerfile app prod (from scratch)
 * [ ] tests?
-* [ ] ADDRESS, INTERFACE? or DOMAIN?
-* [ ] PORT
+* [x] FLIMSY_HOST
+* [x] FLIMSY_PORT
 * [x] Logger
 * [ ] Let's Encrypt?
 * [ ] Use the 404 template
