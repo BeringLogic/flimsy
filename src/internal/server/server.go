@@ -143,13 +143,14 @@ func (flimsyServer *FlimsyServer) GET_style(w http.ResponseWriter, r *http.Reque
 }
 
 func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *http.Request) {
-  u := r.URL.Query().Get("url")
+  url := r.URL.Query().Get("url")
   
-  resp, err := http.Get(u); if err != nil {
+  resp, err := http.Get(url); if err != nil {
     flimsyServer.executeTemplate("onlineStatus.tmpl", &w, map[string]string{
       "class" : "offline",
       "color" : "red",
       "title" : err.Error(),
+      "Url" : url,
     })
     return
   }
@@ -159,6 +160,7 @@ func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *htt
       "class" : "offline",
       "color" : "red",
       "title" : err.Error(),
+      "Url" : url,
     })
     return
   }
@@ -170,6 +172,7 @@ func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *htt
     "class" : "online",
     "color" : "green",
     "title" : "Online",
+    "Url" : url,
   })
 }
 

@@ -36,8 +36,8 @@
     </div>
   </header>
 
-  <div id="lists" style="clear:both;" hx-post="/reorderLists" hx-swap="none" hx-trigger="reorderLists" hx-vars="js:{ids: [...event.target.querySelectorAll('.list')].map(i => i.id.replace('list_', ''))}" >
   {{ if .IsLoggedIn }}
+  <div id="lists" hx-post="/reorderLists" hx-swap="none" hx-trigger="reorderLists" hx-vars="js:{ids: [...event.target.querySelectorAll('.list')].map(i => i.id.replace('list_', ''))}" >
     {{ range .listsAndItems }}
       {{ template "list.loggedin.tmpl" . }}
     {{ end }}
@@ -53,6 +53,7 @@
       });
     </script>
   {{ else }}
+  <div id="lists">
     {{ range .listsAndItems }}
       {{ template "list.tmpl" . }}
     {{ end }}
