@@ -165,7 +165,6 @@ func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *htt
     return
   }
 
-  _, _ = io.ReadAll(resp.Body);
   resp.Body.Close()
 
   flimsyServer.executeTemplate("onlineStatus.tmpl", &w, map[string]string{
