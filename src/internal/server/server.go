@@ -159,7 +159,7 @@ func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *htt
     flimsyServer.executeTemplate("onlineStatus.tmpl", &w, map[string]string{
       "class" : "offline",
       "color" : "red",
-      "title" : err.Error(),
+      "title" : fmt.Sprintf("%d %s", resp.StatusCode, http.StatusText(resp.StatusCode)),
       "Url" : url,
     })
     return
