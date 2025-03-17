@@ -84,3 +84,4 @@
 - mounted folders in /mnt are listed alphabetically, not in the order in the compose file
 - /onlinestatus shows offline for glances, pi-hole, portainer, dockge, all the syncthings, and router, even though they are online
   Get "https://muthur:8381": tls: failed to verify certificate: x509: certificate signed by unknown authority
+- Error: Attempt to postMessage on disconnected port
