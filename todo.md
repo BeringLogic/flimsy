@@ -82,6 +82,5 @@
 - Error when clicking a list or an item and also when drag&dropping: "TypeError: this is undefined" in moz-extension://c1bc3b73-63a9-49a2-8dda-77940ea6c9de/content/bootstrap-legacy-autofill-overlay.js
   Appears to be a Bitwarden extension and Sortable.js issue
 - mounted folders in /mnt are listed alphabetically, not in the order in the compose file
-- /onlinestatus should timeout after 3 seconds
 - /onlinestatus shows offline for glances, pi-hole, portainer, dockge, all the syncthings, and router, even though they are online
   Get "https://muthur:8381": tls: failed to verify certificate: x509: certificate signed by unknown authority

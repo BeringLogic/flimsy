@@ -145,7 +145,11 @@ func (flimsyServer *FlimsyServer) GET_style(w http.ResponseWriter, r *http.Reque
 func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *http.Request) {
   url := r.URL.Query().Get("url")
   
-  resp, err := http.Get(url); if err != nil {
+  client := http.Client{
+    Timeout: 5 * time.Second,
+  }
+
+  resp, err := client.Get(url); if err != nil {
     flimsyServer.executeTemplate("onlineStatus.tmpl", &w, map[string]string{
       "class" : "offline",
       "color" : "red",
