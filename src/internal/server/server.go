@@ -245,11 +245,11 @@ func (flimsyServer *FlimsyServer) GET_weather(w http.ResponseWriter, r *http.Req
 
   switch utils.GetEnv("FLIMSY_WEATHER_UNITS", "standard") {
     case "standard":
-      tempString = fmt.Sprintf("%.1f °K", temp)
+      tempString = fmt.Sprintf("%.0f °K", temp)
     case "metric":
-      tempString = fmt.Sprintf("%.1f °C", temp)
+      tempString = fmt.Sprintf("%.0f °C", temp)
     case "imperial":
-      tempString = fmt.Sprintf("%.1f °F", temp)
+      tempString = fmt.Sprintf("%.0f °F", temp)
   }
 
   flimsyServer.executeTemplate("weather.tmpl", &w, map[string]any{
