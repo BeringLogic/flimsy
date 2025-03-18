@@ -16,11 +16,11 @@
         <fieldset>
           <legend>Background</legend>
           <div class="dialog-field">
-            <input id="configBackgroundTypeUpload" type="radio" style="width:auto;" name="background_type" value="upload">
+            <input id="configBackgroundTypeUpload" type="radio" name="background_type" value="upload">
             <input id="configBackgroundUpload" type="file" style="width:85%; display:inline-block;" name="background_file" _="on change add @checked to #configBackgroundTypeUpload">
           </div>
           <div class="dialog-field">
-            <input id="configBackgroundTypeKeep" type="radio" style="width:auto;" name="background_type" value="keep" checked>
+            <input id="configBackgroundTypeKeep" type="radio" name="background_type" value="keep" checked>
             <select id="configBackgroundImage" style="width:85%; display:inline-block;" name="background_image" _="on change add @checked to #configBackgroundTypeKeep">
             {{ $Background_image := .config.Background_image }}
             {{ range .backgrounds }}
@@ -29,7 +29,7 @@
             </select>
           </div>
           <div class="dialog-field">
-            <input id="configBackgroundTypeNone" type="radio" style="width:auto;" name="background_type" value="none" {{ if not .config.Background_image }}checked{{ end }}>
+            <input id="configBackgroundTypeNone" type="radio" name="background_type" value="none" {{ if not .config.Background_image }}checked{{ end }}>
             <label for="configBackgroundTypeNone" style="display:inline-block;">None</label>
           </div>
         </fieldset>
@@ -38,19 +38,19 @@
         <fieldset>
           <legend>Colors</legend>
           <div class="dialog-field">
-            <input type="radio" id="autodetect_colors" name="color_type" style="width:auto;" value="autodetect">
+            <input type="radio" id="autodetect_colors" name="color_type"  value="autodetect">
             <label for="autodetect_colors" style="display:inline-block;">Autodetect Colors from Background</label>
           </div>
           <div class="dialog-field">
-            <input type="radio" id="catppuccin_latte_colors" name="color_type" style="width:auto;" value="catppuccin_latte">
+            <input type="radio" id="catppuccin_latte_colors" name="color_type" value="catppuccin_latte">
             <label for="catppuccin_latte_colors" style="display:inline-block;">Catppuccin Latte</label>
           </div>
           <div class="dialog-field">
-            <input type="radio" id="catppuccin_mocha_colors" name="color_type" style="width:auto;" value="catppuccin_mocha">
+            <input type="radio" id="catppuccin_mocha_colors" name="color_type" value="catppuccin_mocha">
             <label for="catppuccin_mocha_colors" style="display:inline-block;">Catppuccin Mocha</label>
           </div>
           <div class="dialog-field">
-            <input type="radio" id="manual_colors" name="color_type" style="width:auto;" value="manual" checked>
+            <input type="radio" id="manual_colors" name="color_type"  value="manual" checked>
             <label for="manual_colors" style="display:inline-block;">Manual Colors</label>
           </div>
           <div class="dialog-field">
@@ -92,19 +92,19 @@
             </select>
           </div>
           <div class="dialog-field">
-            <input id="configShowFreeRam" type="checkbox" style="width:auto;" name="show_free_ram" value="1" {{ if .config.Show_free_ram }}checked{{ end }}>
+            <input id="configShowFreeRam" type="checkbox" name="show_free_ram" value="1" {{ if .config.Show_free_ram }}checked{{ end }}>
             <label for="configShowFreeRam" style="display:inline-block">Show Free RAM</label>
           </div>
           <div class="dialog-field">
-            <input id="configShowFreeSwap" type="checkbox" style="width:auto;" name="show_free_swap" value="1" {{ if .config.Show_free_swap }}checked{{ end }}>
+            <input id="configShowFreeSwap" type="checkbox" name="show_free_swap" value="1" {{ if .config.Show_free_swap }}checked{{ end }}>
             <label for="configShowFreeSwap" style="display:inline-block">Show Free Swap</label>
           </div>
           <div class="dialog-field">
-            <input id="configShowPublicIp" type="checkbox" style="width:auto;" name="show_public_ip" value="1" {{ if .config.Show_public_ip }}checked{{ end }}>
+            <input id="configShowPublicIp" type="checkbox" name="show_public_ip" value="1" {{ if .config.Show_public_ip }}checked{{ end }}>
             <label for="configShowPublicIp" style="display:inline-block">Show Public IP</label>
           </div>
           <div class="dialog-field">
-            <input id="configShowFreeSpace" type="checkbox" style="width:auto;" name="show_free_space" value="1" {{ if .config.Show_free_space }}checked{{ end }}>
+            <input id="configShowFreeSpace" type="checkbox" name="show_free_space" value="1" {{ if .config.Show_free_space }}checked{{ end }}>
             <label for="configShowFreeSpace" style="display:inline-block">Show Free Space</label>
           </div>
         </fieldset>
