@@ -4,7 +4,7 @@
       <img class="icon" src="/data/icons/{{ .Icon }}" />
     </div>
     <div class="details">
-      <i class="status nf nf-oct-dot_fill" hx-get="/onlineStatus?url={{ .Url }}" hx-swap="outerHTML" hx-trigger="load"></i>
+      <i class="status nf nf-oct-dot_fill" hx-get="/onlineStatus/{{ .Id }}" hx-swap="outerHTML" hx-trigger="load"></i>
       <div class="title">{{ .Title }}</div>
       <div class="url">{{ .Url }}</div>
     </div>

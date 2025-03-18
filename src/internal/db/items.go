@@ -8,6 +8,7 @@ type Item struct {
   Url string
   Icon string
   Position int
+  Skip_certificate_verification int
 }
 
 
@@ -20,7 +21,7 @@ func (flimsyDB *FlimsyDB) LoadItems() ([]*Item, error) {
 
   for rows.Next() {
     var item Item
-    if err = rows.Scan(&item.Id, &item.List_id, &item.Title, &item.Url, &item.Icon, &item.Position); err != nil {
+    if err = rows.Scan(&item.Id, &item.List_id, &item.Title, &item.Url, &item.Icon, &item.Position, &item.Skip_certificate_verification); err != nil {
       return nil, err
     }
     Items = append(Items, &item)
@@ -29,7 +30,7 @@ func (flimsyDB *FlimsyDB) LoadItems() ([]*Item, error) {
   return Items, nil
 }
 
-func (flimsyDB *FlimsyDB) AddItem(list_id int64, title string, url string, icon string) (*Item, error) {
+func (flimsyDB *FlimsyDB) AddItem(list_id int64, title string, url string, icon string, skip_certificate_verification int) (*Item, error) {
   row := flimsyDB.sqlDb.QueryRow("SELECT IFNULL(MAX(position),0) FROM item")
 
   var position int
@@ -43,9 +44,10 @@ func (flimsyDB *FlimsyDB) AddItem(list_id int64, title string, url string, icon 
     Url: url,
     Icon: icon,
     Position: position,
+    Skip_certificate_verification: skip_certificate_verification,
   }
 
-  result, err := flimsyDB.sqlDb.Exec("INSERT INTO item (list_id, title, url, icon, position) VALUES (?, ?, ?, ?, ?)", list_id, title, url, icon, position); if err != nil {
+  result, err := flimsyDB.sqlDb.Exec("INSERT INTO item (list_id, title, url, icon, position, skip_certificate_verification) VALUES (?, ?, ?, ?, ?, ?)", list_id, title, url, icon, position, skip_certificate_verification); if err != nil {
     return nil, err
   }
 
@@ -57,7 +59,7 @@ func (flimsyDB *FlimsyDB) AddItem(list_id int64, title string, url string, icon 
 }
 
 func (flimsyDB *FlimsyDB) SaveItem(item *Item) error {
-  _, err := flimsyDB.sqlDb.Exec("UPDATE item SET list_id = ?, title = ?, url = ?, icon = ?, position = ? WHERE id = ?", item.List_id, item.Title, item.Url, item.Icon, item.Position, item.Id)
+  _, err := flimsyDB.sqlDb.Exec("UPDATE item SET list_id = ?, title = ?, url = ?, icon = ?, position = ?, skip_certificate_verification = ? WHERE id = ?", item.List_id, item.Title, item.Url, item.Icon, item.Position, item.Skip_certificate_verification, item.Id)
   return err
 }
 

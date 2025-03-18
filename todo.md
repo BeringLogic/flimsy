@@ -33,6 +33,7 @@
 * [x] Server status (public IP)
 * [x] Make RAM, SWAP, public ip and storage optional (/ is there by default)
 * [x] Display online status
+* [x] Allow skipping certificate verification for online status
 * [ ] UI to customize login variables
 * [ ] UI to customize weather widget variables
 * [ ] Update README.md with screenshots, features, infos on how to install and how to use the app

@@ -10,6 +10,10 @@
         <input id="itemUrl" type="text" name="url" value="{{ .Url }}" required>
       </div>
       <div class="dialog-field">
+        <label for="itemSkipCertificateVerification">Skip certificate verification</label>
+        <input id="itemSkipCertificateVerification" style="width:auto;" type="checkbox" name="skip_certificate_verification" value="1" {{ if eq .Skip_certificate_verification 1 }}checked{{ end }}>
+      </div>
+      <div class="dialog-field">
         <label for="itemIcon">Icon</label>
         <input id="itemIcon" type="text" name="icon" value="{{ .Icon }}" required>
       </div>

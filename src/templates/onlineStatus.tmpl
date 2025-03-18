@@ -1,1 +1,1 @@
-<i class="status {{ .class }} nf nf-oct-dot_fill" style="color:{{ .color }};" title="{{ .title }}" hx-get="/onlineStatus?url={{ .Url }}" hx-swap="outerHTML" hx-trigger="load delay:60m"></i>
+<i class="status {{ .class }} nf nf-oct-dot_fill" style="color:{{ .color }};" title="{{ .title }}" hx-get="/onlineStatus/{{ .Id }}" hx-swap="outerHTML" hx-trigger="load delay:60m"></i>

@@ -2,6 +2,7 @@ package server
 
 import (
 	"bytes"
+  "crypto/tls"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -60,7 +61,7 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
   flimsyServer.router.Handle("GET /data/backgrounds/", http.StripPrefix("/data/backgrounds", http.FileServer(http.Dir("/data/backgrounds"))))
   flimsyServer.router.HandleFunc("GET /{$}", flimsyServer.GET_root)
   flimsyServer.router.HandleFunc("GET /style.css", flimsyServer.GET_style)
-  flimsyServer.router.HandleFunc("GET /onlineStatus", flimsyServer.GET_onlineStatus)
+  flimsyServer.router.HandleFunc("GET /onlineStatus/{id}", flimsyServer.GET_onlineStatus)
   flimsyServer.router.HandleFunc("GET /systemInfo", flimsyServer.GET_systemInfo)
   flimsyServer.router.HandleFunc("GET /weather", flimsyServer.GET_weather)
   flimsyServer.router.HandleFunc("GET /login", flimsyServer.GET_login)
@@ -144,18 +145,40 @@ func (flimsyServer *FlimsyServer) GET_style(w http.ResponseWriter, r *http.Reque
 }
 
 func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *http.Request) {
-  url := r.URL.Query().Get("url")
-  
-  client := http.Client{
+  idString := r.PathValue("id")
+  if idString == "" {
+    flimsyServer.error(w, http.StatusBadRequest, "Missing id")
+    return
+  }
+
+  id, err := strconv.ParseInt(idString, 10, 64); if err != nil {
+    flimsyServer.error(w, http.StatusBadRequest, err.Error())
+    return
+  }
+
+  item, err := flimsyServer.storage.GetItem(id); if err != nil {
+    flimsyServer.error(w, http.StatusNotFound, "Item not found")
+    return
+  }
+
+  transport := &http.Transport{
+		TLSClientConfig: &tls.Config{
+    },
+	}
+  if item.Skip_certificate_verification == 1 {
+    transport.TLSClientConfig.InsecureSkipVerify = true
+  }
+  client := &http.Client{
+    Transport: transport,
     Timeout: 5 * time.Second,
   }
 
-  resp, err := client.Get(url); if err != nil {
+  resp, err := client.Get(item.Url); if err != nil {
     flimsyServer.executeTemplate("onlineStatus.tmpl", &w, map[string]string{
       "class" : "offline",
       "color" : "red",
       "title" : err.Error(),
-      "Url" : url,
+      "Id" : idString,
     })
     return
   }
@@ -165,7 +188,7 @@ func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *htt
       "class" : "offline",
       "color" : "red",
       "title" : fmt.Sprintf("%d %s", resp.StatusCode, http.StatusText(resp.StatusCode)),
-      "Url" : url,
+      "Id" : idString,
     })
     return
   }
@@ -176,7 +199,7 @@ func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *htt
     "class" : "online",
     "color" : "green",
     "title" : "Online",
-    "Url" : url,
+    "Id" : idString,
   })
 }
 
@@ -662,8 +685,14 @@ func (flimsyServer *FlimsyServer) PUT_item(w http.ResponseWriter, r *http.Reques
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
+  
+  var skipCertificateVerification int
+  skipCertificateVerificationString := r.FormValue("skip_certificate_verification")
+  if skipCertificateVerificationString == "1" {
+    skipCertificateVerification = 1
+  }
 
-  item, err := flimsyServer.storage.AddItem(listId, title, url, icon); if err != nil {
+  item, err := flimsyServer.storage.AddItem(listId, title, url, icon, skipCertificateVerification); if err != nil {
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
@@ -713,6 +742,11 @@ func (flimsyServer *FlimsyServer) PATCH_item(w http.ResponseWriter, r *http.Requ
   item.Title = r.FormValue("title")
   item.Url = r.FormValue("url")
   item.Icon = r.FormValue("icon")
+  
+  skipCertificateVerificationString := r.FormValue("skip_certificate_verification")
+  if skipCertificateVerificationString == "1" {
+    item.Skip_certificate_verification = 1
+  }
 
   if err := icons.DownloadIcon(item.Icon); err != nil {
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
