@@ -85,6 +85,7 @@ func (flimsyDB *FlimsyDB) Seed() error {
       icon TEXT NOT NULL,
       position INTEGER NOT NULL,
       skip_certificate_verification INTEGER NOT NULL,
+      check_url TEXT,
       FOREIGN KEY(list_id) REFERENCES list(id)
     );`,
     `CREATE TABLE session (

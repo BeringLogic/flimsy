@@ -161,6 +161,10 @@ func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *htt
     return
   }
 
+  if item.Check_url == "" {
+    return
+  }
+
   transport := &http.Transport{
 		TLSClientConfig: &tls.Config{
     },
@@ -173,7 +177,7 @@ func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *htt
     Timeout: 5 * time.Second,
   }
 
-  resp, err := client.Get(item.Url); if err != nil {
+  resp, err := client.Get(item.Check_url); if err != nil {
     flimsyServer.executeTemplate("onlineStatus.tmpl", &w, map[string]string{
       "class" : "offline",
       "color" : "red",
@@ -692,7 +696,9 @@ func (flimsyServer *FlimsyServer) PUT_item(w http.ResponseWriter, r *http.Reques
     skipCertificateVerification = 1
   }
 
-  item, err := flimsyServer.storage.AddItem(listId, title, url, icon, skipCertificateVerification); if err != nil {
+  check_url := r.FormValue("check_url")
+
+  item, err := flimsyServer.storage.AddItem(listId, title, url, icon, skipCertificateVerification, check_url); if err != nil {
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
@@ -747,6 +753,8 @@ func (flimsyServer *FlimsyServer) PATCH_item(w http.ResponseWriter, r *http.Requ
   if skipCertificateVerificationString == "1" {
     item.Skip_certificate_verification = 1
   }
+
+  item.Check_url = r.FormValue("check_url")
 
   if err := icons.DownloadIcon(item.Icon); err != nil {
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())

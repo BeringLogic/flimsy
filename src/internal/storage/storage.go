@@ -220,8 +220,8 @@ func (flimsyStorage *FlimsyStorage) ReorderLists(list_ids []int64) error {
   return nil
 }
 
-func (flimsyStorage *FlimsyStorage) AddItem(list_id int64, title string, url string, icon string, skip_certificate_verification int) (*db.Item, error) {
-  item, err := flimsyStorage.db.AddItem(list_id, title, url, icon, skip_certificate_verification); if err != nil {
+func (flimsyStorage *FlimsyStorage) AddItem(list_id int64, title string, url string, icon string, skip_certificate_verification int, check_url string) (*db.Item, error) {
+  item, err := flimsyStorage.db.AddItem(list_id, title, url, icon, skip_certificate_verification, check_url); if err != nil {
     return nil, err
   }
 

@@ -9,7 +9,11 @@
         </div>
         <div class="dialog-field">
           <label for="itemUrl">URL</label>
-          <input id="itemUrl" type="text" name="url" required>
+          <input id="itemUrl" type="text" name="url" required onchange="if (!this.form.check_url.value) this.form.check_url.value = this.value">
+        </div>
+        <div class="dialog-field">
+          <label for="itemCheckUrl">Check URL</label>
+          <input id="itemCheckUrl" type="text" name="check_url">
         </div>
         <div class="dialog-field">
           <label for="itemSkipCertificateVerification">Skip certificate verification</label>
