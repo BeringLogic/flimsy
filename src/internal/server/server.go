@@ -174,7 +174,7 @@ func (flimsyServer *FlimsyServer) GET_onlineStatus(w http.ResponseWriter, r *htt
   }
   client := &http.Client{
     Transport: transport,
-    Timeout: 5 * time.Second,
+    Timeout: time.Duration(flimsyServer.storage.Config.Online_status_timeout) * time.Second,
   }
 
   resp, err := client.Get(item.Check_url); if err != nil {
@@ -375,6 +375,13 @@ func (flimsyServer *FlimsyServer) POST_config(w http.ResponseWriter, r *http.Req
   Show_free_swap := r.FormValue("show_free_swap")
   Show_public_ip := r.FormValue("show_public_ip")
   Show_free_space := r.FormValue("show_free_space")
+
+  var timeoutError error
+  flimsyServer.storage.Config.Online_status_timeout, timeoutError = strconv.Atoi(r.FormValue("online_status_timeout"))
+  if timeoutError != nil {
+    flimsyServer.error(w, http.StatusBadRequest, timeoutError.Error())
+    return
+  }
 
   switch Background_type {
   case "upload":

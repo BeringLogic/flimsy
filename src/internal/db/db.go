@@ -41,7 +41,8 @@ func (flimsyDB *FlimsyDB) Seed() error {
       show_free_ram INTEGER,
       show_free_swap INTEGER,
       show_public_ip INTEGER,
-      show_free_space INTEGER
+      show_free_space INTEGER,
+      online_status_timeout INTEGER
     );`,
     `INSERT INTO config (
       icon,
@@ -55,7 +56,8 @@ func (flimsyDB *FlimsyDB) Seed() error {
       show_free_ram,
       show_free_swap,
       show_public_ip, 
-      show_free_space
+      show_free_space,
+      online_status_timeout
     )
     VALUES (
       '',
@@ -69,7 +71,8 @@ func (flimsyDB *FlimsyDB) Seed() error {
       true,
       true,
       true,
-      true
+      true,
+      10
     );`,
     `CREATE TABLE list (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

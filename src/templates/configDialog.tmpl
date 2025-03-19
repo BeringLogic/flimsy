@@ -108,6 +108,13 @@
             <label for="configShowFreeSpace" style="display:inline-block">Show Free Space</label>
           </div>
         </fieldset>
+        <fieldset>
+          <legend>Online Status</legend>
+          <div class="dialog-field">
+            <label for="configOnlineStatusTimeout" style="display:inline-block">Timeout (seconds)</label>
+            <input id="configOnlineStatusTimeout" type="number" name="online_status_timeout" value="{{ .config.Online_status_timeout }}" min="0" step="1" required>
+          </div>
+        </fieldset>
       </div>
       <div class="dialog-buttons">
         <button type="submit">Save</button>

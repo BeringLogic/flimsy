@@ -15,6 +15,7 @@ type Config struct {
   Show_free_swap int
   Show_public_ip int
   Show_free_space int
+  Online_status_timeout int
 }
 
 
@@ -35,7 +36,8 @@ func (flimsyDB *FlimsyDB) LoadConfig() (*Config, error) {
       &config.Show_free_ram,
       &config.Show_free_swap,
       &config.Show_public_ip,
-      &config.Show_free_space); if err != nil {
+      &config.Show_free_space,
+      &config.Online_status_timeout); if err != nil {
     return nil, err
   }
 
@@ -56,7 +58,8 @@ func (flimsyDB *FlimsyDB) SaveConfig(config *Config) error {
       show_free_ram = ?,
       show_free_swap = ?,
       show_public_ip = ?,
-      show_free_space = ?
+      show_free_space = ?,
+      online_status_timeout = ?
     WHERE id = 1`,
     config.Icon,
     config.Title,
@@ -69,7 +72,8 @@ func (flimsyDB *FlimsyDB) SaveConfig(config *Config) error {
     config.Show_free_ram,
     config.Show_free_swap,
     config.Show_public_ip,
-    config.Show_free_space)
+    config.Show_free_space,
+    config.Online_status_timeout)
 
   return err
 }
