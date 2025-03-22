@@ -46,6 +46,7 @@ services:
       # Optional: Set if you want to bind to something else than 0.0.0.0:8080
       - FLIMSY_HOST=0.0.0.0
       - FLIMSY_PORT=8080
+    restart: unless-stopped
     ports:
       - 8080:${FLIMSY_PORT:-8080}
 volumes:
