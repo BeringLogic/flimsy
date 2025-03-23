@@ -45,13 +45,8 @@ func (storage *FlimsyStorage) Init() error {
     return errors.Join(OpenError, err)
   }
 
-  storage.Config, err = storage.db.LoadConfig(); if err != nil {
-    if err = storage.db.Seed(); err != nil {
-      return errors.Join(SeedError, err);
-    }
-    if storage.Config, err = storage.db.LoadConfig(); err != nil {
-      return errors.Join(LoadConfigError, err);
-    }
+  if storage.Config, err = storage.db.LoadConfig(); err != nil {
+    return errors.Join(LoadConfigError, err);
   }
 
   if err = storage.db.DeleteExpiredSessions(); err != nil {

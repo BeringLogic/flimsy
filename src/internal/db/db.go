@@ -1,11 +1,15 @@
 package db
 
-
 import (
-  "database/sql"
-  _ "github.com/mattn/go-sqlite3"
+	"database/sql"
 
-  "github.com/BeringLogic/flimsy/internal/utils"
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/sqlite3"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
+
+	"github.com/BeringLogic/flimsy/internal/utils"
 )
 
 
@@ -19,91 +23,41 @@ func CreateNew() *FlimsyDB {
 }
 
 func (flimsyDB *FlimsyDB) Open() (error) {
-  var err error
-  if flimsyDB.sqlDb, err = sql.Open("sqlite3", "/data/flimsy.db?_busy_timeout=5000&_foreign_keys=ON&_journal_mode=WAL"); err != nil {
+  var openError error
+  if flimsyDB.sqlDb, openError = sql.Open("sqlite3", "/data/flimsy.db?_busy_timeout=5000&_foreign_keys=ON&_journal_mode=WAL"); openError != nil {
+    return openError
+  }
+
+  // check if this is a first init
+  var tableCount int
+  if err := flimsyDB.sqlDb.QueryRow("SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'config'").Scan(&tableCount); err != nil {
     return err
   }
-  return nil
-}
+  firstInit := tableCount == 0
 
-func (flimsyDB *FlimsyDB) Seed() error {
-  queries := []string {
-    `CREATE TABLE config (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      icon TEXT NOT NULL,
-      title TEXT NOT NULL,
-      background_image TEXT NOT NULL,
-      color_background TEXT NOT NULL,
-      color_foreground TEXT NOT NULL,
-      color_items TEXT NOT NULL,
-      color_borders TEXT NOT NULL,
-      cpu_temp_sensor TEXT,
-      show_free_ram INTEGER,
-      show_free_swap INTEGER,
-      show_public_ip INTEGER,
-      show_free_space INTEGER,
-      online_status_timeout INTEGER
-    );`,
-    `INSERT INTO config (
-      icon,
-      title,
-      background_image,
-      color_background,
-      color_foreground,
-      color_items,
-      color_borders,
-      cpu_temp_sensor,
-      show_free_ram,
-      show_free_swap,
-      show_public_ip, 
-      show_free_space,
-      online_status_timeout
-    )
-    VALUES (
-      '',
-      'Flimsy Home Page',
-      '',
-      '#1e1e2e',
-      '#cdd6f4',
-      '#11111b',
-      '#6c7086',
-      '` + utils.GetEnv("FLIMSY_CPU_TEMP_SENSOR", "") + `',
-      true,
-      true,
-      true,
-      true,
-      10
-    );`,
-    `CREATE TABLE list (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
-      number_of_cols INTEGER NOT NULL,
-      position INTEGER NOT NULL
-    );`,
-    `CREATE TABLE item (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      list_id INTEGER NOT NULL,
-      title TEXT NOT NULL,
-      url TEXT NOT NULL,
-      icon TEXT NOT NULL,
-      position INTEGER NOT NULL,
-      skip_certificate_verification INTEGER NOT NULL,
-      check_url TEXT,
-      FOREIGN KEY(list_id) REFERENCES list(id)
-    );`,
-    `CREATE TABLE session (
-      token TEXT NOT NULL,
-      expires_at TEXT NOT NULL
-    );`,
+  // apply migrations
+  driver, err := sqlite3.WithInstance(flimsyDB.sqlDb, &sqlite3.Config{}); if err != nil {
+    return err
+  }
+  m, err := migrate.NewWithDatabaseInstance("file://migrations", "sqlite3", driver); if err != nil {
+    return err
+  }
+  if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+    return err
   }
 
-  for _, query := range queries {
-    if _, err := flimsyDB.sqlDb.Exec(query); err != nil {
+  // If this is the first init, set the cpu temp sensor
+  if firstInit {
+    _, err := flimsyDB.sqlDb.Exec("UPDATE config SET cpu_temp_sensor = ? WHERE id = 1", utils.GetEnv("FLIMSY_CPU_TEMP_SENSOR", "")); if err != nil {
       return err
     }
   }
 
   return nil 
+}
+
+func (flimsyDB *FlimsyDB) Migrate() error {
+  return nil
 }
 
 func (flimsyDB *FlimsyDB) Close() {
