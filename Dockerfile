@@ -10,7 +10,7 @@ COPY ./src/ .
 RUN go mod init github.com/BeringLogic/flimsy
 RUN go mod tidy
 
-RUN go build -o bin/flimsy cmd/flimsy/main.go
+RUN --mount=type=cache,target=/go/pkg/mod go build -o bin/flimsy cmd/flimsy/main.go
 
 
 
