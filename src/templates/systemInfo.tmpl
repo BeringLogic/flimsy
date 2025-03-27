@@ -1,11 +1,11 @@
 {{ if .Cpu_temp }}
   <div>
-    <i class="nf nf-oct-cpu"></i>
+    <i class="nf nf-cod-chip"></i>
     <span id="cpu-temp">{{ if .Cpu_temp_ends_with_c }}{{ .Cpu_temp }}{{ else }}{{ .Cpu_temp }} °C{{ end }}</span>
   </div>
 {{ end }}
 {{ if .Free_memory }}
-  <div><i class="nf nf-fa-memory"></i><span id="free-memory">{{ .Free_memory }}</span> free</div>
+  <div><i class="nf nf-fae-chip"></i><span id="free-memory">{{ .Free_memory }}</span> free</div>
 {{ end }}
 {{ if .Free_swap }}
   <div><i class="nf nf-md-file_swap"></i><span id="free-swap">{{ .Free_swap }}</span> free</div>
