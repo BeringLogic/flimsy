@@ -21,6 +21,10 @@
         <label for="itemIcon">Icon</label>
         <input id="itemIcon" type="text" name="icon" value="{{ .Icon }}" required>
       </div>
+      <div class="dialog-field">
+        <label for="itemShortcut">Shortcut</label>
+        <input id="itemShortcut" type="text" name="shortcut" value="{{ .Shortcut }}" maxlength="3">
+      </div>
       <div class="dialog-buttons">
         <button type="button" hx-delete="/item/{{ .Id }}" hx-target="#modal" hx-swap="outerHTML">Delete</button>
         <button type="submit">Save</button>

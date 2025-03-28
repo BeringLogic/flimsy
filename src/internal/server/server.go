@@ -705,7 +705,9 @@ func (flimsyServer *FlimsyServer) PUT_item(w http.ResponseWriter, r *http.Reques
 
   check_url := r.FormValue("check_url")
 
-  item, err := flimsyServer.storage.AddItem(listId, title, url, icon, skipCertificateVerification, check_url); if err != nil {
+  shortcut := r.FormValue("shortcut")
+
+  item, err := flimsyServer.storage.AddItem(listId, title, url, icon, skipCertificateVerification, check_url, shortcut); if err != nil {
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())
     return
   }
@@ -762,6 +764,8 @@ func (flimsyServer *FlimsyServer) PATCH_item(w http.ResponseWriter, r *http.Requ
   }
 
   item.Check_url = r.FormValue("check_url")
+
+  item.Shortcut = r.FormValue("shortcut")
 
   if err := icons.DownloadIcon(item.Icon); err != nil {
     flimsyServer.error(w, http.StatusInternalServerError, err.Error())

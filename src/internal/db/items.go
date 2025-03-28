@@ -10,6 +10,7 @@ type Item struct {
   Position int
   Skip_certificate_verification int
   Check_url string
+  Shortcut string
 }
 
 
@@ -23,7 +24,7 @@ func (flimsyDB *FlimsyDB) LoadItems() ([]*Item, error) {
   for rows.Next() {
     var item Item
 
-    if err = rows.Scan(&item.Id, &item.List_id, &item.Title, &item.Url, &item.Icon, &item.Position, &item.Skip_certificate_verification, &item.Check_url); err != nil {
+    if err = rows.Scan(&item.Id, &item.List_id, &item.Title, &item.Url, &item.Icon, &item.Position, &item.Skip_certificate_verification, &item.Check_url, &item.Shortcut); err != nil {
       return nil, err
     }
 
@@ -33,7 +34,7 @@ func (flimsyDB *FlimsyDB) LoadItems() ([]*Item, error) {
   return Items, nil
 }
 
-func (flimsyDB *FlimsyDB) AddItem(list_id int64, title string, url string, icon string, skip_certificate_verification int, check_url string) (*Item, error) {
+func (flimsyDB *FlimsyDB) AddItem(list_id int64, title string, url string, icon string, skip_certificate_verification int, check_url string, shortcut string) (*Item, error) {
   row := flimsyDB.sqlDb.QueryRow("SELECT IFNULL(MAX(position),0) FROM item")
 
   var position int
@@ -49,9 +50,10 @@ func (flimsyDB *FlimsyDB) AddItem(list_id int64, title string, url string, icon 
     Position: position,
     Skip_certificate_verification: skip_certificate_verification,
     Check_url: check_url,
+    Shortcut: shortcut,
   }
 
-  result, err := flimsyDB.sqlDb.Exec("INSERT INTO item (list_id, title, url, icon, position, skip_certificate_verification, check_url) VALUES (?, ?, ?, ?, ?, ?, ?)", list_id, title, url, icon, position, skip_certificate_verification, check_url); if err != nil {
+  result, err := flimsyDB.sqlDb.Exec("INSERT INTO item (list_id, title, url, icon, position, skip_certificate_verification, check_url, shortcut) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", list_id, title, url, icon, position, skip_certificate_verification, check_url, shortcut); if err != nil {
     return nil, err
   }
 
@@ -63,7 +65,7 @@ func (flimsyDB *FlimsyDB) AddItem(list_id int64, title string, url string, icon 
 }
 
 func (flimsyDB *FlimsyDB) SaveItem(item *Item) error {
-  _, err := flimsyDB.sqlDb.Exec("UPDATE item SET list_id = ?, title = ?, url = ?, icon = ?, position = ?, skip_certificate_verification = ?, check_url = ? WHERE id = ?", item.List_id, item.Title, item.Url, item.Icon, item.Position, item.Skip_certificate_verification, item.Check_url, item.Id)
+  _, err := flimsyDB.sqlDb.Exec("UPDATE item SET list_id = ?, title = ?, url = ?, icon = ?, position = ?, skip_certificate_verification = ?, check_url = ?, shortcut = ? WHERE id = ?", item.List_id, item.Title, item.Url, item.Icon, item.Position, item.Skip_certificate_verification, item.Check_url, item.Shortcut, item.Id)
   return err
 }
 

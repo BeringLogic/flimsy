@@ -53,6 +53,10 @@
       });
     </script>
   {{ else }}
+  <script>
+    var keyQueue = [];
+    var shortcuts = [];
+  </script>
   <div id="lists">
     {{ range .listsAndItems }}
       {{ template "list.tmpl" . }}
@@ -67,6 +71,22 @@
   <script type="text/javascript">
     {{ if .session_message }}
       alert("{{ .session_message }}");
+    {{ end }}
+
+    {{ if not .IsLoggedIn }}
+    document.addEventListener('keydown', function(event) {
+      keyQueue.push(event.key);
+      if (keyQueue.length > 3) {
+        keyQueue.shift();
+      }
+
+      var keysString = keyQueue.join('');
+      for (const [key, value] of Object.entries(shortcuts)) {
+        if (keysString.endsWith(key)) {
+          window.open(value, "_blank");
+        }
+      }
+    });
     {{ end }}
   </script>
 
