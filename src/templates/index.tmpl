@@ -81,11 +81,11 @@
       }
 
       var keysString = keyQueue.join('');
-      for (const [key, value] of Object.entries(shortcuts)) {
-        if (keysString.endsWith(key)) {
-          window.open(value, "_blank");
+      shortcuts.forEach((keyValue) => {
+        if (keysString.endsWith(keyValue[0])) {
+          window.open(keyValue[1], "_blank");
         }
-      }
+      });
     });
     {{ end }}
   </script>
