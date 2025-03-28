@@ -72,9 +72,7 @@
 
 # Docker stuff I need to learn
 * [ ] Docker secrets
-* [ ] How to deal with /data. I want it to work with a managed volume, but I want it to work with a bound volume too.
 * [ ] How to run rootless (https://docs.docker.com/engine/security/rootless/)
-* [ ] Find the proper way to deal with Dev and Production.
 
 # Bugs
 - http: superfluous response.WriteHeader call from github.com/BeringLogic/flimsy/internal/middleware.(*wrappedWriter).WriteHeader (logging.go:19)
@@ -86,3 +84,4 @@
 - /onlinestatus shows offline for glances, pi-hole, portainer, dockge, all the syncthings, and router, even though they are online
   Get "https://muthur:8381": tls: failed to verify certificate: x509: certificate signed by unknown authority
 - Error: Attempt to postMessage on disconnected port
+- hovering over a online status dot doesn't show the tooltip if the title is too long (wg-easy)
