@@ -1,12 +1,12 @@
 package db
 
 import (
+	"embed"
 	"database/sql"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/sqlite3"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
-	_ "github.com/lib/pq"
+	"github.com/golang-migrate/migrate/v4/source/iofs"
 	_ "github.com/mattn/go-sqlite3"
 
 	"github.com/BeringLogic/flimsy/internal/utils"
@@ -16,6 +16,10 @@ import (
 type FlimsyDB struct {
   sqlDb *sql.DB
 }
+
+
+//go:embed migrations
+var migrations embed.FS
 
 
 func CreateNew() *FlimsyDB {
@@ -36,15 +40,9 @@ func (flimsyDB *FlimsyDB) Open() (error) {
   firstInit := tableCount == 0
 
   // apply migrations
-  driver, err := sqlite3.WithInstance(flimsyDB.sqlDb, &sqlite3.Config{}); if err != nil {
+	if err := flimsyDB.Migrate(); err != nil {
     return err
-  }
-  m, err := migrate.NewWithDatabaseInstance("file://migrations", "sqlite3", driver); if err != nil {
-    return err
-  }
-  if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-    return err
-  }
+	}
 
   // If this is the first init, set the cpu temp sensor
   if firstInit {
@@ -57,6 +55,22 @@ func (flimsyDB *FlimsyDB) Open() (error) {
 }
 
 func (flimsyDB *FlimsyDB) Migrate() error {
+  source, err := iofs.New(migrations, "migrations"); if err != nil {
+    return err
+  }
+
+  dbDriver, err := sqlite3.WithInstance(flimsyDB.sqlDb, &sqlite3.Config{}); if err != nil {
+    return err
+  }
+
+  m, err := migrate.NewWithInstance("iofs", source, "sqlite3", dbDriver); if err != nil {
+    return err
+  }
+
+  if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+    return err
+  }
+
   return nil
 }
 
