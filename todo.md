@@ -69,6 +69,7 @@
 * [x] Logger
 * [ ] Let's Encrypt?
 * [ ] Use the 404 template
+* [x] Embed the templates, static files and migrations in the binary
 
 # Docker stuff I need to learn
 * [ ] Docker secrets
