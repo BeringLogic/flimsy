@@ -9,15 +9,13 @@ WORKDIR /usr/src/flimsy
 RUN go install github.com/air-verse/air@latest
 
 COPY ./src/ .
-COPY ./src/static /var/lib/flimsy/static
-COPY ./src/templates /var/lib/flimsy/templates
 
-# RUN --mount=type=cache,target=/go/pkg/mod go mod init github.com/BeringLogic/flimsy
-# RUN --mount=type=cache,target=/go/pkg/mod go mod tidy 
+RUN go mod init github.com/BeringLogic/flimsy
+RUN go mod tidy 
 
-RUN --mount=type=cache,target=/go/pkg/mod /root/go/bin/air init
+RUN /root/go/bin/air init
 
 RUN mkdir /data
 VOLUME /data
 
-CMD ["/root/go/bin/air", "--build.cmd", "go build -o bin/flimsy cmd/flimsy/main.go", "--build.bin", "./bin/flimsy", "-root", "../../..", "-build.include_dir", "usr/src/flimsy,var/lib/flimsy/static,var/lib/flimsy/templates", "-build.stop_on_error", "true"]
+CMD ["/root/go/bin/air", "--build.cmd", "go build -o bin/flimsy cmd/flimsy/main.go", "--build.bin", "./bin/flimsy", "-build.stop_on_error", "true"]
