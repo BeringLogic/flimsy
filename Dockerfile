@@ -1,4 +1,4 @@
-FROM alpine:3.21 AS builder
+FROM alpine:latest AS builder
 
 RUN apk add --no-cache git go gcc
 
@@ -7,14 +7,14 @@ WORKDIR /usr/src/flimsy
 
 COPY ./src/ .
 
-RUN go mod init github.com/BeringLogic/flimsy
-RUN go mod tidy
+# RUN go mod init github.com/BeringLogic/flimsy
+# RUN go mod tidy
 
 RUN --mount=type=cache,target=/go/pkg/mod go build -o bin/flimsy cmd/flimsy/main.go
 
 
 
-FROM alpine:3.21 AS runner
+FROM alpine:latest AS runner
 
 RUN apk add --no-cache lm-sensors tzdata
 
