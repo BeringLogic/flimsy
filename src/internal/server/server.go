@@ -26,6 +26,7 @@ import (
 	"github.com/dustin/go-humanize"
 	"github.com/BeringLogic/palette-extractor"
 
+	"github.com/BeringLogic/flimsy/assets"
 	"github.com/BeringLogic/flimsy/internal/icons"
 	"github.com/BeringLogic/flimsy/internal/logger"
 	"github.com/BeringLogic/flimsy/internal/middleware"
@@ -53,10 +54,10 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
   flimsyServer.log = log
   flimsyServer.storage = storage
 
-  flimsyServer.templates = template.Must(template.ParseGlob("/var/lib/flimsy/templates/*.tmpl"))
+  flimsyServer.templates = template.Must(template.ParseFS(assets.TemplatesFS, "templates/*.tmpl"))
 
   flimsyServer.router = http.NewServeMux()
-  flimsyServer.router.Handle("GET /static/", http.StripPrefix("/static", http.FileServer(http.Dir("/var/lib/flimsy/static"))))
+  flimsyServer.router.Handle("GET /static/", http.StripPrefix("/static", http.FileServer(http.FS(assets.StaticAssets()))))
   flimsyServer.router.Handle("GET /data/icons/", http.StripPrefix("/data/icons", http.FileServer(http.Dir("/data/icons"))))
   flimsyServer.router.Handle("GET /data/backgrounds/", http.StripPrefix("/data/backgrounds", http.FileServer(http.Dir("/data/backgrounds"))))
   flimsyServer.router.HandleFunc("GET /{$}", flimsyServer.GET_root)

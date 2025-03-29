@@ -1,7 +1,6 @@
 package db
 
 import (
-	"embed"
 	"database/sql"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -9,6 +8,7 @@ import (
 	"github.com/golang-migrate/migrate/v4/source/iofs"
 	_ "github.com/mattn/go-sqlite3"
 
+	"github.com/BeringLogic/flimsy/assets"
 	"github.com/BeringLogic/flimsy/internal/utils"
 )
 
@@ -16,10 +16,6 @@ import (
 type FlimsyDB struct {
   sqlDb *sql.DB
 }
-
-
-//go:embed migrations
-var migrations embed.FS
 
 
 func CreateNew() *FlimsyDB {
@@ -55,7 +51,7 @@ func (flimsyDB *FlimsyDB) Open() (error) {
 }
 
 func (flimsyDB *FlimsyDB) Migrate() error {
-  source, err := iofs.New(migrations, "migrations"); if err != nil {
+  source, err := iofs.New(assets.MigrationsFS, "migrations"); if err != nil {
     return err
   }
 
