@@ -31,12 +31,11 @@ jobs:
         go build ./cmd/flimsy/main.go
 
     - name: govulncheck
-      working-directory: ./src
       run: |
         go install golang.org/x/vuln/cmd/govulncheck@latest
-        govulncheck -format sarif ./... > govulncheck.sarif
+        govulncheck -C ./src -format sarif ./... > govulncheck.sarif
 
     - name: Upload sarif to GitHub Security tab
       uses: github/codeql-action/upload-sarif@v3
       with:
-        sarif_file: './src/govulncheck.sarif'
+        sarif_file: 'govulncheck.sarif'
