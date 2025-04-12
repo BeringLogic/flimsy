@@ -65,6 +65,7 @@ jobs:
     # - name: Setup runtime (example)
     #   uses: actions/setup-example@v1
     - name: go mod init && go mod tidy
+      working-directory: ./src
       run: |
         go mod init github.com/BeringLogic/flimsy
         go mod tidy
