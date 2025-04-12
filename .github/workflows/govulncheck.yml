@@ -1,0 +1,31 @@
+name: govulncheck
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: build
+      working-directory: ./src
+      run: |
+        go mod init github.com/BeringLogic/flimsy
+        go mod tidy
+        go build ./cmd/flimsy/main.go
+
+    - name: govulncheck
+      run: |
+        go install golang.org/x/vuln/cmd/govulncheck@latest
+        govulncheck ./...
