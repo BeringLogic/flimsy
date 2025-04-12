@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
 
 jobs:
 
@@ -38,4 +39,4 @@ jobs:
     - name: Upload sarif to GitHub Security tab
       uses: github/codeql-action/upload-sarif@v3
       with:
-        sarif_file: 'govulncheck.sarif'
+        sarif_file: './src/govulncheck.sarif'
