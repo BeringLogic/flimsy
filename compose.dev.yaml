@@ -1,5 +1,6 @@
 services:
   app:
+    container_name: flimsy
     build:
       dockerfile: Dockerfile.dev
       context: .
