@@ -34,14 +34,3 @@ services:
         - action: sync
           path: ./src
           target: /usr/src/flimsy
-          ignore:
-            - static/
-            - templates/
-        - action: sync
-          path: ./src/static
-          target: /var/lib/flimsy/static
-        - action: sync
-          path: ./src/templates
-          target: /var/lib/flimsy/templates
-#volumes:
-  #  data:
