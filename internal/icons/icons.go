@@ -17,12 +17,12 @@ func DownloadIcon(filename string) error {
 
   extension := strings.Replace(path.Ext(filename), ".", "", 1)
   source := "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/" + extension + "/" + filename
-  destination := "/data/icons/" + filename
+  destination := "data/icons/" + filename
 
-  _, err := os.Stat("/data/icons"); if err != nil {
+  _, err := os.Stat("data/icons"); if err != nil {
     if os.IsNotExist(err) {
-      if err := os.Mkdir("/data/icons", 0755); err != nil {
-        return fmt.Errorf("Could not create /data/icons directory: %w", err)
+      if err := os.Mkdir("data/icons", 0755); err != nil {
+        return fmt.Errorf("Could not create data/icons directory: %w", err)
       }
     } else {
       return fmt.Errorf("os.Stat error: %w", err)
@@ -37,12 +37,12 @@ func DownloadIcon(filename string) error {
   }
 
   f, err := os.Create(destination); if err != nil {
-    return fmt.Errorf("Could not create /data/icons/%s: %w", filename, err)
+    return fmt.Errorf("Could not create data/icons/%s: %w", filename, err)
   }
   defer f.Close()
 
   if _, err = f.Write(bytes); err != nil {
-    return fmt.Errorf("Could not write to /data/icons/%s: %w", filename, err)
+    return fmt.Errorf("Could not write to data/icons/%s: %w", filename, err)
   }
 
   return nil

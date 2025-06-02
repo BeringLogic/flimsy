@@ -479,7 +479,7 @@ func saveUploadedBackground(r *http.Request) (string, uint64, error) {
     return "", 0, fmt.Errorf("ReadAll error: %w", err)
   }
 
-  outputFileName := "/data/backgrounds/" + strings.ReplaceAll(header.Filename, "/", "_")
+  outputFileName := "data/backgrounds/" + strings.ReplaceAll(header.Filename, "/", "_")
 
   err = os.WriteFile(outputFileName, bytes, 0644); if err != nil {
     return "", 0, fmt.Errorf("WriteFile error: %w", err)
@@ -489,7 +489,7 @@ func saveUploadedBackground(r *http.Request) (string, uint64, error) {
 }
 
 func getColorsFromBackground(backgroundImageName string) (string, string, string, error) {
-  backgroundImage, err := os.Open("/data/backgrounds/" + backgroundImageName); if err != nil {
+  backgroundImage, err := os.Open("data/backgrounds/" + backgroundImageName); if err != nil {
     return "", "", "", fmt.Errorf("Open error: %w", err)
   }
   defer backgroundImage.Close()
