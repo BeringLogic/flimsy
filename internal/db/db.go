@@ -24,7 +24,7 @@ func CreateNew() *FlimsyDB {
 
 func (flimsyDB *FlimsyDB) Open() (error) {
   var openError error
-  if flimsyDB.sqlDb, openError = sql.Open("sqlite3", "/data/flimsy.db?_busy_timeout=5000&_foreign_keys=ON&_journal_mode=WAL"); openError != nil {
+  if flimsyDB.sqlDb, openError = sql.Open("sqlite3", "data/flimsy.db?_busy_timeout=5000&_foreign_keys=ON&_journal_mode=WAL"); openError != nil {
     return openError
   }
 

@@ -5,11 +5,11 @@ RUN apk add --no-cache git go gcc
 RUN mkdir -p /usr/src/flimsy
 WORKDIR /usr/src/flimsy
 
-COPY ./src/ .
+COPY go.mod go.sum ./
+RUN go mod download
 
-RUN go mod init github.com/BeringLogic/flimsy
-RUN go mod tidy
-RUN go build -o bin/flimsy cmd/flimsy/main.go
+COPY . .
+RUN go build -v -o bin/flimsy cmd/flimsy/main.go
 
 
 
