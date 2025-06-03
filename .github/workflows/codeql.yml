@@ -67,15 +67,14 @@ jobs:
 
     - uses: actions/setup-go@v5
       with:
-        go-version: 1.23.7
+        go-version: 1.24
         cache: false
         check-latest: true
     
-    - name: go mod init && go mod tidy
+    - name: go mod download
       working-directory: ./src
       run: |
-        go mod init github.com/BeringLogic/flimsy
-        go mod tidy
+        go mod download
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
