@@ -22,35 +22,39 @@ services:
     image: beringlogic/flimsy:latest
     volumes:
       - data:/data
-            
+      
       # If you want to monitor free space on a filesystem, mount it read-only on /mnt/name in the container
       - /home/phil/Data:/mnt/Data:ro
       - /mnt/backups:/mnt/backups:ro
-    environment:
-      # Optional: Only used for log files...
-      - TZ=America/New_York
-
-      # Optional: Login credentials. If none are specified, authentication is disabled.
-      - FLIMSY_USERNAME=admin
-      - FLIMSY_PASSWORD=admin
-
-      # Optional: OpenWeatherMap.org API settings.
-      - FLIMSY_WEATHER_API_KEY=abc123
-      - FLIMSY_WEATHER_LOCATION=New York
-      - FLIMSY_WEATHER_UNITS=imperial
-      - FLIMSY_WEATHER_LANGUAGE=en
-
-      # Optional: Name of the CPU Temp sensor in lm-sensors. ex: "Tctl" for Ryzen CPUs or "Package id 0" for Xeon CPUs.
-      - FLIMSY_CPU_TEMP_SENSOR=Package id 0
-
-      # Optional: Set if you want to bind to something else than 0.0.0.0:8080
-      - FLIMSY_HOST=0.0.0.0
-      - FLIMSY_PORT=8080
+    env_file: ".env"
     restart: unless-stopped
     ports:
       - 8080:${FLIMSY_PORT:-8080}
 volumes:
   data:
+```
+
+### Create a file named .env
+```bash
+# Optional: Only used for log files...
+TZ="America/New_York"
+
+# Optional: Set if you want to bind to something else than 0.0.0.0:8080
+FLIMSY_HOST="0.0.0.0"
+FLIMSY_PORT=8080
+
+# Optional: Login credentials. If none are specified, authentication is disabled.
+FLIMSY_USERNAME="admin"
+FLIMSY_PASSWORD="admin"
+
+# Optional: OpenWeatherMap.org API settings.
+FLIMSY_WEATHER_API_KEY="abc123"
+FLIMSY_WEATHER_LOCATION="New York"
+FLIMSY_WEATHER_UNITS="imperial"
+FLIMSY_WEATHER_LANGUAGE="en"
+
+# Optional: Name of the CPU Temp sensor in lm-sensors. ex: "Tctl" for Ryzen CPUs or "Package id 0" for Xeon CPUs.
+FLIMSY_CPU_TEMP_SENSOR="Package id 0"
 ```
 
 ### Start the container
