@@ -3,7 +3,7 @@ Flimsy home page for your homelab
 
 ## Features
 - Customizable icon, title, background image and colors
-- Use dashboard-icons from homarr-labs
+- Use dashboard-icons from https://dashboardicons.com/
 - Catppuccin Latte and Mocha themes
 - Autodetection of colors from the uploaded background image
 - System-information including CPU temperature, free memory and swap, public IP and free space on filesystems
@@ -77,7 +77,7 @@ docker compose logs -f
 
 ## References
 - [catppuccin themes](https://github.com/catppuccin/catppuccin/blob/main/docs/style-guide.md)
-- [dashboard-icons](https://github.com/homarr-labs/dashboard-icons)
+- [dashboard-icons](https://dashboardicons.com/)
 - The favicon is [homarr-labs/dashboard-icons homepage.png](https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png)
 - The autodetection of colors from the uploaded background is using this code: [palette-extractor](https://github.com/BeringLogic/palette-extractor)
 

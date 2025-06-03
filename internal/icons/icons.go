@@ -33,7 +33,7 @@ func DownloadIcon(filename string) error {
     _, err := os.Stat(destination); if err == nil {
       return nil
     }
-    return fmt.Errorf("Could not find icon: %s. Available icons: https://github.com/homarr-labs/dashboard-icons/blob/main/ICONS.md\n%w", filename, err)
+		return fmt.Errorf("Could not find icon: %s. Available icons: https://dashboardicons.com/\n%w", filename, err)
   }
 
   f, err := os.Create(destination); if err != nil {
