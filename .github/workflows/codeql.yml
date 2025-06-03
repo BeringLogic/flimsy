@@ -72,7 +72,6 @@ jobs:
         check-latest: true
     
     - name: go mod download
-      working-directory: ./src
       run: |
         go mod download
 
