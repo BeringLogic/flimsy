@@ -39,16 +39,19 @@
 * [ ] Update README.md with screenshots, features, infos on how to install and how to use the app
 * [ ] Docker integration
 * [ ] favicons for items (https://dashy.to/docs/icons/)
+* [ ] allow uploading icons
 * [x] HTMX ?
 * [x] Update system info every minute
 * [x] Update weather every hour
 * [x] Update onlineStatus every hour
 * [ ] /signup to create user
-* [ ] Keyboard shortcuts?
+* [x] Keyboard shortcuts?
+* [ ] Display keyboard shortcuts in tiny font
 * [ ] RSS feeds?
 * [ ] Pihole widget?
 * [ ] Autofocus
 * [ ] Try downloading the icon BEFORE saving dialogs
+* [ ] Clicking on the weather div should open openweathermap.org
 
 # Switch to golang
 * [x] golang base image
@@ -72,10 +75,11 @@
 * [ ] Let's Encrypt?
 * [ ] Use the 404 template
 * [x] Embed the templates, static files and migrations in the binary
+* [x] env_file: instead of all environment vars in compose.yaml
 
 # Docker stuff I need to learn
 * [ ] Docker secrets
-* [ ] How to run rootless (https://docs.docker.com/engine/security/rootless/)
+* [ ] [How to run rootless](https://docs.docker.com/engine/security/rootless/)
 
 # Bugs
 - http: superfluous response.WriteHeader call from github.com/BeringLogic/flimsy/internal/middleware.(*wrappedWriter).WriteHeader (logging.go:19)
