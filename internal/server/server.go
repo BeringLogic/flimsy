@@ -58,8 +58,8 @@ func CreateNew(log *logger.FlimsyLogger, storage *storage.FlimsyStorage) *Flimsy
 
   flimsyServer.router = http.NewServeMux()
   flimsyServer.router.Handle("GET /static/", http.StripPrefix("/static", http.FileServer(http.FS(assets.StaticAssets()))))
-  flimsyServer.router.Handle("GET /data/icons/", http.StripPrefix("/data/icons", http.FileServer(http.Dir("/data/icons"))))
-  flimsyServer.router.Handle("GET /data/backgrounds/", http.StripPrefix("/data/backgrounds", http.FileServer(http.Dir("/data/backgrounds"))))
+  flimsyServer.router.Handle("GET /data/icons/", http.StripPrefix("/data/icons", http.FileServer(http.Dir("data/icons"))))
+  flimsyServer.router.Handle("GET /data/backgrounds/", http.StripPrefix("/data/backgrounds", http.FileServer(http.Dir("data/backgrounds"))))
   flimsyServer.router.HandleFunc("GET /{$}", flimsyServer.GET_root)
   flimsyServer.router.HandleFunc("GET /style.css", flimsyServer.GET_style)
   flimsyServer.router.HandleFunc("GET /onlineStatus/{id}", flimsyServer.GET_onlineStatus)
