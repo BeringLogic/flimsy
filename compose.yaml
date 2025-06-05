@@ -4,7 +4,7 @@ services:
     build:
       context: .
     volumes:
-      - data:/data
+      - ./data:/data
     env_file: .env
     restart: unless-stopped
     ports:
