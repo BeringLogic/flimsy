@@ -6,8 +6,10 @@
     <div class="details">
       <i class="status nf nf-oct-dot_fill" hx-get="/onlineStatus/{{ .Id }}" hx-swap="outerHTML" hx-trigger="load"></i>
       <div class="title">{{ .Title }}</div>
-      <div class="shortcut">[{{ .Shortcut }}]</div>
-      <div class="url">{{ .Url }}</div>
+      <div class="url-and-shortcut">
+        <div class="url">{{ .Url }}</div>
+        <div class="shortcut">[{{ .Shortcut }}]</div>
+      </div>
     </div>
   </a>
 </div>

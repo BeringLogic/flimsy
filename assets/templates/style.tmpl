@@ -170,13 +170,18 @@ div.list div.items {
     font-size: xx-large;
   }
 
-  div.item div.shortcut {
-    float: right;
+  div.item div.url-and-shortcut {
+    display: flex;
+    justify-content: space-between;
   }
 
   div.item div.url {
-    width: calc(100% - 30px);
     overflow-x: hidden;
+  }
+
+  div.item div.shortcut {
+    flex-shrink: 0;
+    margin-left: 4px;
   }
 
 div.addItem {
